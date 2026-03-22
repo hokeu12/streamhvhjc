@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="description" content="StreamHub — Free video streaming, watch online"/>
 <title>StreamHub — Watch Free Videos Online</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap');
 :root{
-  --bg:#09090f;--s1:#111119;--s2:#181824;--s3:#20212e;
+  --bg:#09090f;--s1:#111119;--s2:#181824;--s3:#20212e;--s4:#28293a;
   --card:#141420;--bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);
   --red:#e8293e;--red2:#ff4d62;--gold:#f5c518;--grn:#22c55e;
   --tx:#f2f1fc;--tx2:#c0bfd8;--mt:#7a7994;--dim:#2c2d42;
@@ -32,6 +33,7 @@ img{display:block;max-width:100%}
 #si::placeholder{color:var(--mt)}
 #si:focus{border-color:var(--red);background:var(--s3);box-shadow:0 0 0 3px rgba(232,41,62,.1)}
 #si-x{position:absolute;right:.9rem;background:none;border:none;color:var(--mt);display:none;font-size:.9rem}
+#si-x:hover{color:var(--tx)}
 .nr{display:flex;align-items:center;gap:.6rem;margin-left:auto;flex-shrink:0}
 .btn{display:inline-flex;align-items:center;gap:.3rem;padding:.46rem 1rem;border-radius:8px;font-size:.8rem;font-weight:700;border:none;transition:all .18s;white-space:nowrap}
 .btn-r{background:var(--red);color:#fff}
@@ -95,20 +97,6 @@ img{display:block;max-width:100%}
 .vm-left{display:flex;align-items:center;gap:.65rem}
 .vviews{display:flex;align-items:center;gap:.25rem}
 .vcattag{background:rgba(232,41,62,.1);border:1px solid rgba(232,41,62,.2);color:var(--red2);border-radius:50px;padding:.07rem .46rem;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-#loading{text-align:center;padding:4rem 2rem}
-.spin{width:42px;height:42px;border:3px solid var(--s3);border-top-color:var(--red);border-radius:50%;animation:sp .75s linear infinite;margin:0 auto 1rem}
-@keyframes sp{to{transform:rotate(360deg)}}
-#loading p{font-size:.9rem;color:var(--mt)}
-#setup-banner{background:var(--s2);border:1px solid rgba(232,41,62,.3);border-radius:var(--r2);padding:1.5rem;margin-bottom:2rem;display:none}
-#setup-banner h3{font-size:1rem;font-weight:800;color:var(--red);margin-bottom:.5rem}
-#setup-banner p{font-size:.82rem;color:var(--tx2);line-height:1.7;margin-bottom:.8rem}
-#setup-banner a{color:var(--red);font-weight:700;text-decoration:underline}
-.setup-steps{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
-.setup-step{display:flex;align-items:flex-start;gap:.75rem;font-size:.82rem;color:var(--tx2);line-height:1.6}
-.step-num{width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;margin-top:.1rem}
-.sheet-input-wrap{display:flex;gap:.6rem;flex-wrap:wrap}
-.sheet-input-wrap input{flex:1;min-width:200px;background:var(--s3);border:1px solid var(--bd2);border-radius:9px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:.85rem;padding:.6rem 1rem;outline:none}
-.sheet-input-wrap input:focus{border-color:var(--red)}
 #srch-sec{display:none;margin-bottom:3rem}
 .srch-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem}
 .srch-hdr h2{font-size:1rem;font-weight:800}
@@ -119,21 +107,56 @@ img{display:block;max-width:100%}
 .empty-ico{font-size:4rem;opacity:.2;margin-bottom:1rem}
 .empty h3{font-size:1.05rem;font-weight:800;margin-bottom:.5rem}
 .empty p{font-size:.84rem;color:var(--mt);line-height:1.7}
+#upov{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:1rem}
+#upov.open{display:flex;animation:fi .2s ease}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+.upanel{background:var(--s1);border-radius:18px;border:1px solid var(--bd2);width:100%;max-width:580px;max-height:92vh;overflow-y:auto;animation:su .28s ease}
+@keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.up-hdr{padding:1.3rem 1.8rem;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--s1);z-index:2}
+.up-hdr h2{font-size:1.2rem;font-weight:900;background:linear-gradient(135deg,var(--red),#ff9966);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.up-cl{background:var(--s2);border:1px solid var(--bd2);color:var(--tx2);border-radius:8px;padding:.36rem .7rem;font-size:.82rem;transition:all .18s}
+.up-cl:hover{background:var(--s3);color:var(--tx)}
+.up-body{padding:1.7rem}
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--mt);margin-bottom:.35rem}
+.fg input,.fg select,.fg textarea{width:100%;background:var(--s2);border:1px solid var(--bd2);border-radius:9px;color:var(--tx);font-family:'Nunito',sans-serif;font-size:.86rem;padding:.62rem 1rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(232,41,62,.1)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--dim)}
+.fg textarea{resize:vertical;min-height:72px}
+.fg select option{background:var(--s2);color:var(--tx)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.dropz{border:2px dashed var(--bd2);border-radius:12px;padding:2.2rem 1.5rem;text-align:center;cursor:pointer;margin-bottom:1rem;transition:border-color .2s,background .2s}
+.dropz:hover,.dropz.ov{border-color:var(--red);background:rgba(232,41,62,.03)}
+.dz-ico{font-size:2.3rem;display:block;margin-bottom:.5rem}
+.dropz p{font-size:.8rem;color:var(--mt);line-height:1.6}
+.dropz span{color:var(--red);font-weight:700}
+.fp{display:none;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:.82rem 1rem;margin-bottom:1rem;align-items:center;gap:.8rem}
+.fp.on{display:flex}
+.fp-info{flex:1}
+.fp-n{font-size:.82rem;font-weight:700;word-break:break-all}
+.fp-s{font-size:.68rem;color:var(--mt);margin-top:.12rem}
+.fp-x{background:none;border:none;color:var(--mt);font-size:1.1rem;transition:color .18s}
+.fp-x:hover{color:var(--red)}
+.pgw{display:none;background:var(--s2);border-radius:9px;padding:.88rem 1rem;margin-bottom:1rem}
+.pgl{display:flex;justify-content:space-between;font-size:.72rem;color:var(--mt);margin-bottom:.44rem}
+.pgt{height:5px;background:var(--bd);border-radius:3px}
+.pgf{height:100%;background:linear-gradient(90deg,var(--red),#ff9966);border-radius:3px;width:0%;transition:width .28s}
+.up-ftr{padding:1rem 1.8rem 1.8rem;display:flex;gap:.75rem;justify-content:flex-end;border-top:1px solid var(--bd)}
 #mobd{display:none;position:fixed;inset:0;z-index:980;background:rgba(9,9,15,.97);flex-direction:column;padding-top:var(--nav);overflow-y:auto}
 #mobd.open{display:flex;animation:fi .2s ease}
-@keyframes fi{from{opacity:0}to{opacity:1}}
 .mi{padding:1rem 2rem;font-size:1rem;font-weight:700;color:var(--mt);border:none;background:none;text-align:left;cursor:pointer;width:100%;font-family:'Nunito',sans-serif;border-bottom:1px solid var(--bd);transition:all .18s}
 .mi:hover,.mi.on{color:var(--red);background:rgba(232,41,62,.06)}
 #btt{position:fixed;bottom:2rem;right:2rem;z-index:500;background:var(--red);color:#fff;border:none;border-radius:50%;width:46px;height:46px;display:none;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(232,41,62,.4);transition:all .22s;cursor:pointer}
-#btt:hover{transform:translateY(-3px)}
+#btt:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(232,41,62,.5)}
 #btt.show{display:flex}
 #tst{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(30px);z-index:3000;background:var(--s2);border:1px solid var(--bd2);border-radius:50px;padding:.7rem 1.4rem;font-size:.83rem;font-weight:600;opacity:0;transition:all .26s;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.6);white-space:nowrap}
 #tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
 #tst.ok{border-color:rgba(34,197,94,.4)}
+#tst.er{border-color:rgba(232,41,62,.5)}
 #footer{background:var(--s1);border-top:1px solid var(--bd);padding:1.8rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.8rem;font-size:.76rem;color:var(--mt)}
 .ftl{font-family:'Bebas Neue',cursive;font-size:1.3rem;letter-spacing:.1em;background:linear-gradient(135deg,var(--red),#ff9966);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 @media(max-width:960px){.vgrid{grid-template-columns:repeat(3,1fr);gap:1rem}}
-@media(max-width:768px){.vgrid{grid-template-columns:repeat(2,1fr);gap:.9rem}#nav{padding:0 1.2rem}.sw{max-width:none;flex:1}.ham{display:flex}.btn-g{display:none}#page{padding:1.3rem 1.2rem 4rem}#catbar{padding:0 1.2rem}#hero{padding:2.5rem 1.5rem 2rem}.hero-stats{gap:1.5rem}}
+@media(max-width:768px){.vgrid{grid-template-columns:repeat(2,1fr);gap:.9rem}#nav{padding:0 1.2rem}.sw{max-width:none;flex:1}.ham{display:flex}.btn-g{display:none}#page{padding:1.3rem 1.2rem 4rem}#catbar{padding:0 1.2rem}.frow{grid-template-columns:1fr}#hero{padding:2.5rem 1.5rem 2rem}.hero-stats{gap:1.5rem}}
 @media(max-width:480px){.vgrid{grid-template-columns:1fr;gap:.9rem}}
 </style>
 </head>
@@ -147,8 +170,11 @@ img{display:block;max-width:100%}
     <button id="si-x" onclick="clearSearch()">&#x2715;</button>
   </div>
   <div class="nr">
-    <button class="btn btn-r" onclick="window.open(SHEET_URL,'_blank')">+ Add Video</button>
-    <button class="btn btn-g" onclick="loadVideos()">&#8635; Refresh</button>
+    <button class="btn btn-g" onclick="openUp()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+      Upload
+    </button>
+    <button class="btn btn-r" onclick="openUp()">+ Add Video</button>
     <button class="ham" onclick="togMob()"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -165,13 +191,13 @@ img{display:block;max-width:100%}
       style="width:100%;background:var(--s2);border:1px solid var(--bd2);border-radius:9px;color:var(--tx);font-size:.9rem;padding:.62rem 1rem;outline:none;font-family:'Nunito',sans-serif"/>
   </div>
   <div style="padding:.5rem 1.5rem 1.5rem">
-    <button class="btn btn-r" style="width:100%;justify-content:center;padding:.7rem 1rem" onclick="window.open(SHEET_URL,'_blank');togMob()">+ Add Video to Sheet</button>
+    <button class="btn btn-r" style="width:100%;justify-content:center;padding:.7rem 1rem" onclick="openUp();togMob()">+ Add Video</button>
   </div>
 </div>
 
 <div id="hero">
   <div class="hero-title">Watch <span>Free Videos</span> Online</div>
-  <div class="hero-sub">Add videos in Google Sheets &middot; Appears on site instantly &middot; No coding ever</div>
+  <div class="hero-sub">Upload from your gallery &middot; Stream anywhere &middot; No subscription needed</div>
   <div class="hero-stats">
     <div class="hstat"><span class="hstat-val" id="hs-total">0</span><span class="hstat-lbl">Videos</span></div>
     <div class="hstat"><span class="hstat-val" id="hs-cats">0</span><span class="hstat-lbl">Categories</span></div>
@@ -184,7 +210,7 @@ img{display:block;max-width:100%}
   <span class="ad-tag">Advertisement</span>
   <!-- PASTE YOUR ADSTERRA 728x90 SCRIPT HERE - delete .ad-ph div -->
   <div class="ad-ph">
-    <b>728 x 90 &mdash; Top Banner Ad</b>
+    <b>728 x 90 &mdash; Top Leaderboard Ad</b>
     <p>Paste your Adsterra script inside #top-ad</p>
   </div>
 </div>
@@ -196,24 +222,6 @@ img{display:block;max-width:100%}
 </div>
 
 <main id="page">
-
-  <div id="setup-banner">
-    <h3>&#128196; Connect Your Google Sheet in 3 Steps</h3>
-    <p>You only do this once. After setup, just add rows to your Google Sheet and your videos appear here automatically!</p>
-    <div class="setup-steps">
-      <div class="setup-step"><span class="step-num">1</span><span>Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a> &rarr; create a new sheet &rarr; name it StreamHub Videos</span></div>
-      <div class="setup-step"><span class="step-num">2</span><span>Add these headers in Row 1 exactly: <strong>id | title | cat | dur | q | rt | yr | url | th | ds | nw</strong></span></div>
-      <div class="setup-step"><span class="step-num">3</span><span>Click Share &rarr; Anyone with the link &rarr; Viewer &rarr; copy the Sheet ID from URL and paste below</span></div>
-    </div>
-    <div class="sheet-input-wrap">
-      <input id="sheet-id-input" type="text" placeholder="Paste your Google Sheet ID here..."/>
-      <button class="btn btn-r" onclick="saveSheetId()">Connect Sheet</button>
-    </div>
-    <div style="font-size:.72rem;color:var(--mt);margin-top:.6rem;line-height:1.6">
-      &#128161; Sheet ID is the long code in the URL between /d/ and /edit
-    </div>
-  </div>
-
   <div id="srch-sec">
     <div class="srch-hdr">
       <h2 id="srch-title">Results</h2>
@@ -229,25 +237,19 @@ img{display:block;max-width:100%}
       <div style="font-size:.84rem">Try a different search term</div>
     </div>
   </div>
-
   <div id="allv">
     <div class="slabel">
       <h2 id="page-title">All Videos</h2>
       <span class="cnt" id="vcnt">0</span>
       <span class="sright" id="vinfo">Showing all videos</span>
     </div>
-    <div id="loading">
-      <div class="spin"></div>
-      <p>Loading videos from your Google Sheet...</p>
-    </div>
     <div id="vcontainer"></div>
     <div class="empty" id="emp">
       <div class="empty-ico">&#127916;</div>
       <h3>No videos yet</h3>
-      <p>Open your Google Sheet and add a row<br/>with your video details to get started</p>
+      <p>Click <strong>+ Add Video</strong> to upload your first video</p>
     </div>
   </div>
-
 </main>
 
 <footer id="footer">
@@ -255,213 +257,174 @@ img{display:block;max-width:100%}
   <div>&#169; 2026 StreamHub &middot; Free Video Streaming</div>
   <div style="display:flex;gap:1rem">
     <span onclick="goHome()" style="cursor:pointer" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color=''">Home</span>
-    <span onclick="window.open(SHEET_URL,'_blank')" style="cursor:pointer" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color=''">Add Video</span>
+    <span onclick="openUp()" style="cursor:pointer" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color=''">Upload</span>
   </div>
 </footer>
+
+<div id="upov" onclick="ovCl(event)">
+  <div class="upanel">
+    <div class="up-hdr">
+      <h2>Upload Video</h2>
+      <button class="up-cl" onclick="closeUp()">&#x2715; Close</button>
+    </div>
+    <div class="up-body">
+      <div class="dropz" id="dropz" onclick="document.getElementById('finp').click()" ondrop="onDrop(event)" ondragover="onDrOv(event)" ondragleave="onDrLv(event)">
+        <span class="dz-ico">&#127916;</span>
+        <p><span>Click to choose a video file</span> or drag &amp; drop here<br/>MP4 &bull; MOV &bull; AVI &bull; MKV &bull; WEBM</p>
+      </div>
+      <div class="fp" id="fp">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg>
+        <div class="fp-info">
+          <div class="fp-n" id="fp-n">&mdash;</div>
+          <div class="fp-s" id="fp-s">&mdash;</div>
+        </div>
+        <button class="fp-x" onclick="rmFile()">&#x2715;</button>
+      </div>
+      <div class="pgw" id="pgw">
+        <div class="pgl"><span id="pgtx">Processing...</span><span id="pgpc">0%</span></div>
+        <div class="pgt"><div class="pgf" id="pgf"></div></div>
+      </div>
+      <input type="file" id="finp" accept="video/*" style="display:none" onchange="onFS(event)"/>
+      <div class="fg"><label>Video Title *</label><input id="ut" type="text" placeholder="Enter video title..."/></div>
+      <div class="frow">
+        <div class="fg">
+          <label>Category</label>
+          <select id="uc">
+            <option value="">Select...</option>
+            <option>Movies</option><option>Education</option><option>Sports</option>
+            <option>Music</option><option>Gaming</option><option>Comedy</option>
+            <option>Action</option><option>Travel</option><option>Cooking</option>
+            <option>Technology</option><option>Fitness</option><option>Documentary</option>
+            <option>News</option><option>Vlogs</option><option>Anime</option><option>Other</option>
+          </select>
+        </div>
+        <div class="fg"><label>Custom Category</label><input id="uc2" type="text" placeholder="Or type your own..."/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Duration</label><input id="ud" type="text" placeholder="e.g. 1:24:35"/></div>
+        <div class="fg"><label>Quality</label><select id="uq"><option>HD</option><option>4K</option><option>1080p</option><option>720p</option><option>SD</option></select></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Rating</label><input id="urt" type="text" placeholder="e.g. 8.5"/></div>
+        <div class="fg"><label>Year</label><input id="uyr" type="text" placeholder="e.g. 2024"/></div>
+      </div>
+      <div class="fg"><label>Thumbnail URL</label><input id="uth" type="text" placeholder="https://..."/></div>
+      <div class="fg"><label>Description</label><textarea id="uds" placeholder="Describe your video..."></textarea></div>
+      <div class="fg">
+        <label>Video URL</label>
+        <input id="uu" type="text" placeholder="https://..."/>
+        <div style="font-size:.68rem;color:var(--dim);margin-top:.38rem;line-height:1.6">&#128161; Upload to <strong>cloudinary.com</strong> free then paste URL here</div>
+      </div>
+    </div>
+    <div class="up-ftr">
+      <button class="btn btn-g" onclick="closeUp()">Cancel</button>
+      <button class="btn btn-r" onclick="pubVid()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Generate Code
+      </button>
+    </div>
+  </div>
+</div>
 
 <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
 </button>
-
 <div id="tst"></div>
 
 <script>
 var PL = 'https://yummycorn.netlify.app/player.html';
-var SHEET_ID = localStorage.getItem('sh_sheet_id') || '';
-var SHEET_URL = SHEET_ID ? 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit' : 'https://sheets.google.com';
-var VV = [];
-var AC = 'All';
 
-document.addEventListener('DOMContentLoaded', function(){
-  window.addEventListener('scroll', function(){
-    document.getElementById('nav').classList.toggle('sd', window.scrollY > 20);
-    document.getElementById('btt').classList.toggle('show', window.scrollY > 400);
+var VV = [
+  // ── PASTE NEW VIDEOS HERE ──────────────────────────────────
+
+  {id:1,title:"Big Buck Bunny",cat:"Movies",dur:"9:56",q:"HD",rt:"7.8",yr:"2008",vw:24000,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+   th:"https://peach.blender.org/wp-content/uploads/bbb-splash.png",
+   ds:"A gentle rabbit battles three bullying rodents.",nw:false},
+
+  {id:2,title:"Elephant Dream",cat:"Movies",dur:"10:54",q:"HD",rt:"7.2",yr:"2006",vw:11200,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+   th:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Elephants_Dream_s5_both.jpg/640px-Elephants_Dream_s5_both.jpg",
+   ds:"Two characters explore a surreal mechanical world.",nw:false},
+
+  {id:3,title:"Tears of Steel",cat:"Action",dur:"12:14",q:"1080p",rt:"6.9",yr:"2012",vw:18500,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+   th:"",ds:"Warriors fight an army of robots in a dystopian future.",nw:true},
+
+  {id:4,title:"Web Dev Full Course",cat:"Education",dur:"45:00",q:"1080p",rt:"",yr:"2024",vw:34000,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+   th:"",ds:"Complete HTML CSS JavaScript crash course.",nw:true},
+
+  {id:5,title:"Mountain Hiking Vlog",cat:"Travel",dur:"22:08",q:"4K",rt:"",yr:"2024",vw:12500,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+   th:"",ds:"Epic 3-day Alps hiking adventure.",nw:false},
+
+  {id:6,title:"Comedy Night Highlights",cat:"Comedy",dur:"18:33",q:"HD",rt:"",yr:"2024",vw:22000,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+   th:"",ds:"Best moments from the comedy festival.",nw:true},
+
+  {id:7,title:"Action Sports Reel",cat:"Sports",dur:"5:30",q:"HD",rt:"",yr:"2024",vw:8700,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+   th:"",ds:"Extreme sports compilation.",nw:true},
+
+  {id:8,title:"Pasta Masterclass",cat:"Cooking",dur:"31:45",q:"HD",rt:"",yr:"2024",vw:14200,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+   th:"",ds:"3 authentic Italian pasta recipes.",nw:false},
+
+  {id:9,title:"Gaming PC Build Guide",cat:"Gaming",dur:"28:10",q:"1080p",rt:"",yr:"2024",vw:19800,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+   th:"",ds:"Build a gaming PC on a budget.",nw:true},
+
+  {id:10,title:"Tokyo Travel Guide",cat:"Travel",dur:"35:22",q:"4K",rt:"",yr:"2024",vw:27000,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+   th:"",ds:"Complete Tokyo travel guide.",nw:false},
+
+  {id:11,title:"Morning Yoga Flow",cat:"Fitness",dur:"30:00",q:"1080p",rt:"",yr:"2024",vw:9400,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+   th:"",ds:"30-minute full body yoga session.",nw:false},
+
+  {id:12,title:"Top 10 Comedy Sketches",cat:"Comedy",dur:"14:00",q:"HD",rt:"",yr:"2024",vw:31000,
+   url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+   th:"",ds:"Funniest comedy sketches compilation.",nw:true}
+
+  // ── END OF VIDEO LIST ──────────────────────────────────────
+];
+
+var AC='All';var SF=null;
+document.addEventListener('DOMContentLoaded',function(){
+  bCats();renderAll();updateStats();
+  window.addEventListener('scroll',function(){
+    document.getElementById('nav').classList.toggle('sd',window.scrollY>20);
+    document.getElementById('btt').classList.toggle('show',window.scrollY>400);
   });
-  if(!SHEET_ID){
-    document.getElementById('setup-banner').style.display = 'block';
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('emp').style.display = 'block';
-  } else {
-    loadVideos();
-  }
 });
-
-function saveSheetId(){
-  var val = document.getElementById('sheet-id-input').value.trim();
-  var match = val.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  if(match) val = match[1];
-  if(!val){ toast('Please paste your Sheet ID', 'er'); return; }
-  SHEET_ID = val;
-  SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
-  localStorage.setItem('sh_sheet_id', SHEET_ID);
-  document.getElementById('setup-banner').style.display = 'none';
-  document.getElementById('emp').style.display = 'none';
-  loadVideos();
-  toast('Sheet connected! Loading videos...', 'ok');
-}
-
-function loadVideos(){
-  if(!SHEET_ID) return;
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('vcontainer').innerHTML = '';
-  document.getElementById('emp').style.display = 'none';
-  var url = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=Sheet1';
-  var script = document.createElement('script');
-  script.src = url + '&callback=onSheetData';
-  script.onerror = function(){
-    document.getElementById('loading').style.display = 'none';
-    toast('Could not load sheet. Check Sheet ID and sharing settings.', 'er');
-  };
-  document.head.appendChild(script);
-  setTimeout(function(){
-    if(document.getElementById('loading').style.display !== 'none'){
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('setup-banner').style.display = 'block';
-      toast('Sheet not found. Please check your Sheet ID.', 'er');
-    }
-  }, 8000);
-}
-
-function onSheetData(data){
-  document.getElementById('loading').style.display = 'none';
-  try {
-    var rows = data.table.rows;
-    var cols = data.table.cols.map(function(c){ return c.label.toLowerCase().trim(); });
-    VV = [];
-    rows.forEach(function(row, i){
-      if(!row.c || !row.c[0]) return;
-      var v = {};
-      cols.forEach(function(col, j){
-        v[col] = row.c[j] ? (row.c[j].v !== null ? String(row.c[j].v) : '') : '';
-      });
-      if(!v.title) return;
-      VV.push({
-        id:    v.id    || String(i+1),
-        title: v.title || '',
-        cat:   v.cat   || 'Other',
-        dur:   v.dur   || '',
-        q:     v.q     || 'HD',
-        rt:    v.rt    || '',
-        yr:    v.yr    || '',
-        vw:    parseInt(v.vw) || 0,
-        url:   v.url   || '',
-        th:    v.th    || '',
-        ds:    v.ds    || '',
-        nw:    v.nw === 'true' || v.nw === 'TRUE' || v.nw === '1'
-      });
-    });
-    SHEET_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
-    bCats(); renderAll(); updateStats();
-    toast('Loaded ' + VV.length + ' videos', 'ok');
-  } catch(e) {
-    toast('Error reading sheet data', 'er');
-    document.getElementById('emp').style.display = 'block';
-  }
-}
-
-function updateStats(){
-  document.getElementById('hs-total').textContent = VV.length;
-  var seen = {};
-  VV.forEach(function(v){ if(v.cat) seen[v.cat] = 1; });
-  document.getElementById('hs-cats').textContent = Object.keys(seen).length;
-}
-
-function bCats(){
-  var cats = ['All'], seen = {};
-  VV.forEach(function(v){ if(v.cat && !seen[v.cat]){ seen[v.cat]=1; cats.push(v.cat); }});
-  cats.sort(function(a,b){ return a==='All'?-1:b==='All'?1:a.localeCompare(b); });
-  var el = document.getElementById('cattabs');
-  el.innerHTML = '';
-  cats.forEach(function(c){
-    var b = document.createElement('button');
-    b.className = 'ctab' + (c===AC?' on':'');
-    b.setAttribute('data-c', c);
-    b.textContent = c;
-    b.onclick = function(){ filCat(c, b); };
-    el.appendChild(b);
-  });
-}
-
-function filCat(cat, btn){
-  AC = cat; clearSearch();
-  document.querySelectorAll('.ctab').forEach(function(t){ t.classList.remove('on'); });
-  if(btn) btn.classList.add('on');
-  else{ var b = document.querySelector('.ctab[data-c="'+cat+'"]'); if(b) b.classList.add('on'); }
-  renderAll();
-}
-
-function renderAll(){
-  var vids = AC === 'All' ? VV : VV.filter(function(v){ return v.cat === AC; });
-  var container = document.getElementById('vcontainer');
-  var empty = document.getElementById('emp');
-  document.getElementById('vcnt').textContent = vids.length;
-  document.getElementById('page-title').textContent = AC === 'All' ? 'All Videos' : AC;
-  document.getElementById('vinfo').textContent = AC === 'All' ? 'Showing all ' + vids.length + ' videos' : vids.length + ' video' + (vids.length!==1?'s':'') + ' in ' + AC;
-  container.innerHTML = '';
-  if(!vids.length){ empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
-  var grid = document.createElement('div');
-  grid.className = 'vgrid';
-  container.appendChild(grid);
-  var cardInRow = 0;
-  vids.forEach(function(v, i){
-    grid.appendChild(mkCard(v, i));
-    cardInRow++;
-    if(cardInRow === 3){
-      cardInRow = 0;
-      var adRow = document.createElement('div');
-      adRow.className = 'ad-row';
-      adRow.innerHTML = '<span class="ad-tag">Advertisement</span><div class="ad-ph" style="max-width:728px"><b>728 x 90 In-Grid Ad</b><p>Paste Adsterra script here</p></div>';
-      grid.appendChild(adRow);
-    }
-  });
-}
-
-function mkCard(v, i){
-  var purl = PL + '?id=' + encodeURIComponent(v.id) + '&title=' + encodeURIComponent(v.title) + '&cat=' + encodeURIComponent(v.cat) + '&url=' + encodeURIComponent(v.url) + '&th=' + encodeURIComponent(v.th) + '&dur=' + encodeURIComponent(v.dur) + '&q=' + encodeURIComponent(v.q) + '&yr=' + encodeURIComponent(v.yr) + '&rt=' + encodeURIComponent(v.rt) + '&ds=' + encodeURIComponent(v.ds);
-  var a = document.createElement('a');
-  a.className = 'vc'; a.href = purl; a.target = '_blank'; a.rel = 'noopener';
-  a.style.animationDelay = (Math.min(i,11)*0.06)+'s';
-  var bg = grd(v.cat);
-  var th = v.th ? '<img src="'+xe(v.th)+'" alt="'+xe(v.title)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="vth-bg" style="display:none;background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>' : '<div class="vth-bg" style="background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>';
-  a.innerHTML = '<div class="vth">'+th+'<div class="play-ov"><div class="play-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div></div>'+(v.nw?'<span class="vb vb-new">NEW</span>':'')+(v.q?'<span class="vb vb-hd">'+xe(v.q)+'</span>':'')+(v.rt?'<span class="vb vb-rt">&#9733; '+xe(v.rt)+'</span>':'')+(v.dur?'<span class="vb vb-dur">'+xe(v.dur)+'</span>':'')+'</div><div class="vbody"><div class="vtitle">'+xe(v.title)+'</div><div class="vmeta"><div class="vm-left"><span class="vviews"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> '+fmtN(v.vw)+'</span>'+(v.yr?'<span>'+xe(v.yr)+'</span>':'')+'</div><span class="vcattag">'+xe(v.cat)+'</span></div></div>';
-  return a;
-}
-
-function doSearch(q){
-  var val = q.trim().toLowerCase();
-  var sc=document.getElementById('si-x'), ss=document.getElementById('srch-sec'), av=document.getElementById('allv');
-  if(!val){ clearSearch(); return; }
-  sc.style.display='block'; ss.style.display='block'; av.style.display='none';
-  var hits=VV.filter(function(v){ return v.title.toLowerCase().indexOf(val)>-1||(v.cat||'').toLowerCase().indexOf(val)>-1||(v.ds||'').toLowerCase().indexOf(val)>-1; });
-  document.getElementById('srch-title').textContent='Results for "'+q+'"';
-  document.getElementById('srch-ct').textContent=hits.length+' video'+(hits.length!==1?'s':'')+' found';
-  var g=document.getElementById('srch-grid'), nr=document.getElementById('nores');
-  g.innerHTML=''; nr.style.display='none';
-  if(!hits.length){ nr.style.display='block'; return; }
-  hits.forEach(function(v,i){ g.appendChild(mkCard(v,i)); });
-}
-function clearSearch(){
-  document.getElementById('si').value='';
-  document.getElementById('si-x').style.display='none';
-  document.getElementById('srch-sec').style.display='none';
-  document.getElementById('allv').style.display='block';
-}
-function goHome(){
-  AC='All'; clearSearch();
-  document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('on');});
-  var a=document.querySelector('.ctab[data-c="All"]'); if(a)a.classList.add('on');
-  renderAll(); window.scrollTo({top:0,behavior:'smooth'});
-}
+function updateStats(){document.getElementById('hs-total').textContent=VV.length;var seen={};VV.forEach(function(v){if(v.cat)seen[v.cat]=1;});document.getElementById('hs-cats').textContent=Object.keys(seen).length;}
+function bCats(){var cats=['All'],seen={};VV.forEach(function(v){if(v.cat&&!seen[v.cat]){seen[v.cat]=1;cats.push(v.cat);}});cats.sort(function(a,b){return a==='All'?-1:b==='All'?1:a.localeCompare(b);});var el=document.getElementById('cattabs');el.innerHTML='';cats.forEach(function(c){var b=document.createElement('button');b.className='ctab'+(c===AC?' on':'');b.setAttribute('data-c',c);b.textContent=c;b.onclick=function(){filCat(c,b);};el.appendChild(b);});}
+function filCat(cat,btn){AC=cat;clearSearch();document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('on');});if(btn)btn.classList.add('on');else{var b=document.querySelector('.ctab[data-c="'+cat+'"]');if(b)b.classList.add('on');}renderAll();}
+function renderAll(){var vids=AC==='All'?VV:VV.filter(function(v){return v.cat===AC;});var container=document.getElementById('vcontainer');var empty=document.getElementById('emp');document.getElementById('vcnt').textContent=vids.length;document.getElementById('page-title').textContent=AC==='All'?'All Videos':AC;document.getElementById('vinfo').textContent=AC==='All'?'Showing all '+vids.length+' videos':vids.length+' video'+(vids.length!==1?'s':'')+' in '+AC;container.innerHTML='';if(!vids.length){empty.style.display='block';return;}empty.style.display='none';var grid=document.createElement('div');grid.className='vgrid';container.appendChild(grid);var cardInRow=0;vids.forEach(function(v,i){grid.appendChild(mkCard(v,i));cardInRow++;if(cardInRow===3){cardInRow=0;var adRow=document.createElement('div');adRow.className='ad-row';adRow.innerHTML='<span class="ad-tag">Advertisement</span><div class="ad-ph" style="max-width:728px"><b>728 x 90 In-Grid Ad</b><p>Paste Adsterra script here</p></div>';grid.appendChild(adRow);}});}
+function mkCard(v,i){var purl=PL+'?id='+v.id+'&title='+encodeURIComponent(v.title||'')+'&cat='+encodeURIComponent(v.cat||'')+'&url='+encodeURIComponent(v.url||'')+'&th='+encodeURIComponent(v.th||'')+'&dur='+encodeURIComponent(v.dur||'')+'&q='+encodeURIComponent(v.q||'')+'&yr='+encodeURIComponent(v.yr||'')+'&rt='+encodeURIComponent(v.rt||'')+'&ds='+encodeURIComponent(v.ds||'');var a=document.createElement('a');a.className='vc';a.href=purl;a.target='_blank';a.rel='noopener';a.style.animationDelay=(Math.min(i,11)*0.06)+'s';a.addEventListener('click',function(){v.vw=(v.vw||0)+1;});var bg=grd(v.cat);var th=v.th?'<img src="'+xe(v.th)+'" alt="'+xe(v.title)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="vth-bg" style="display:none;background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>':'<div class="vth-bg" style="background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>';a.innerHTML='<div class="vth">'+th+'<div class="play-ov"><div class="play-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div></div>'+(v.nw?'<span class="vb vb-new">NEW</span>':'')+(v.q?'<span class="vb vb-hd">'+xe(v.q)+'</span>':'')+(v.rt?'<span class="vb vb-rt">&#9733; '+xe(v.rt)+'</span>':'')+(v.dur?'<span class="vb vb-dur">'+xe(v.dur)+'</span>':'')+'</div><div class="vbody"><div class="vtitle">'+xe(v.title)+'</div><div class="vmeta"><div class="vm-left"><span class="vviews"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> '+fmtN(v.vw)+'</span>'+(v.yr?'<span>'+xe(v.yr)+'</span>':'')+'</div><span class="vcattag">'+xe(v.cat||'&mdash;')+'</span></div></div>';return a;}
+function doSearch(q){var val=q.trim().toLowerCase();var sc=document.getElementById('si-x'),ss=document.getElementById('srch-sec'),av=document.getElementById('allv');if(!val){clearSearch();return;}sc.style.display='block';ss.style.display='block';av.style.display='none';var hits=VV.filter(function(v){return v.title.toLowerCase().indexOf(val)>-1||(v.cat||'').toLowerCase().indexOf(val)>-1||(v.ds||'').toLowerCase().indexOf(val)>-1;});document.getElementById('srch-title').textContent='Results for "'+q+'"';document.getElementById('srch-ct').textContent=hits.length+' video'+(hits.length!==1?'s':'')+' found';var g=document.getElementById('srch-grid'),nr=document.getElementById('nores');g.innerHTML='';nr.style.display='none';if(!hits.length){nr.style.display='block';return;}hits.forEach(function(v,i){g.appendChild(mkCard(v,i));});}
+function clearSearch(){document.getElementById('si').value='';document.getElementById('si-x').style.display='none';document.getElementById('srch-sec').style.display='none';document.getElementById('allv').style.display='block';}
+function openUp(){document.getElementById('upov').classList.add('open');document.body.style.overflow='hidden';}
+function closeUp(){document.getElementById('upov').classList.remove('open');document.body.style.overflow='';resetF();}
+function ovCl(e){if(e.target===document.getElementById('upov'))closeUp();}
+function resetF(){['ut','uc2','ud','uth','uds','uu','urt','uyr'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});document.getElementById('uc').value='';document.getElementById('uq').value='HD';rmFile();document.getElementById('pgw').style.display='none';var cb=document.getElementById('code-out');if(cb)cb.remove();}
+function onFS(e){var f=e.target.files[0];if(f)setF(f);}
+function onDrop(e){e.preventDefault();onDrLv();var f=e.dataTransfer.files[0];if(f&&f.type.startsWith('video/'))setF(f);else toast('Please drop a video file','er');}
+function onDrOv(e){e.preventDefault();document.getElementById('dropz').classList.add('ov');}
+function onDrLv(){document.getElementById('dropz').classList.remove('ov');}
+function setF(f){SF=f;document.getElementById('fp-n').textContent=f.name;document.getElementById('fp-s').textContent=fmtB(f.size);document.getElementById('fp').classList.add('on');document.getElementById('dropz').style.display='none';var tmp=document.createElement('video');tmp.preload='metadata';var ou=URL.createObjectURL(f);tmp.src=ou;tmp.onloadedmetadata=function(){var s=Math.floor(tmp.duration),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;document.getElementById('ud').value=h?h+':'+pd(m)+':'+pd(sec):m+':'+pd(sec);URL.revokeObjectURL(ou);};if(!document.getElementById('uu').value)document.getElementById('uu').value=URL.createObjectURL(f);}
+function rmFile(){SF=null;document.getElementById('fp').classList.remove('on');document.getElementById('dropz').style.display='';document.getElementById('finp').value='';}
+function pubVid(){var title=document.getElementById('ut').value.trim();if(!title){toast('Please enter a video title','er');return;}var cat=document.getElementById('uc2').value.trim()||document.getElementById('uc').value||'Other';var url=document.getElementById('uu').value.trim();if(!url&&!SF){toast('Add a video URL or upload a file','er');return;}document.getElementById('pgw').style.display='block';var p=0,fl=document.getElementById('pgf'),pn=document.getElementById('pgpc'),pt=document.getElementById('pgtx');var iv=setInterval(function(){p+=Math.random()*12+5;if(p>=100){p=100;clearInterval(iv);pt.textContent='Code generated!';var nid=Date.now();var code='{id:'+nid+',title:"'+title.replace(/"/g,'\\"')+'",cat:"'+cat+'",dur:"'+document.getElementById('ud').value.trim()+'",q:"'+document.getElementById('uq').value+'",rt:"'+document.getElementById('urt').value.trim()+'",yr:"'+document.getElementById('uyr').value.trim()+'",vw:0,\n   url:"'+url+'",\n   th:"'+document.getElementById('uth').value.trim()+'",\n   ds:"'+document.getElementById('uds').value.trim().replace(/"/g,'\\"')+'",nw:true},';var old=document.getElementById('code-out');if(old)old.remove();var box=document.createElement('div');box.id='code-out';box.style.cssText='background:#09090f;border:1px solid var(--red);border-radius:10px;padding:1rem;margin-top:1rem';box.innerHTML='<div style="font-size:.68rem;color:var(--red);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Copy this code and paste at TOP of VV array in index.html</div><pre id="code-txt" style="font-size:.72rem;color:var(--tx2);white-space:pre-wrap;word-break:break-all;font-family:monospace;line-height:1.55">'+xe(code)+'</pre><button onclick="navigator.clipboard.writeText(document.getElementById(\'code-txt\').textContent).then(function(){toast(\'Code copied!\',\'ok\');})" style="margin-top:.75rem;background:var(--red);color:#fff;border:none;border-radius:7px;padding:.42rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;font-family:\'Nunito\',sans-serif">Copy Code</button>';document.querySelector('.up-body').appendChild(box);}fl.style.width=Math.min(p,100)+'%';pn.textContent=Math.min(Math.round(p),100)+'%';},130);}
+function goHome(){AC='All';clearSearch();document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('on');});var a=document.querySelector('.ctab[data-c="All"]');if(a)a.classList.add('on');renderAll();window.scrollTo({top:0,behavior:'smooth'});}
 function togMob(){var d=document.getElementById('mobd');d.classList.toggle('open');document.body.style.overflow=d.classList.contains('open')?'hidden':'';}
 function fmtN(n){if(!n)return'0';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return''+n;}
+function fmtB(b){if(b>=1073741824)return(b/1073741824).toFixed(1)+' GB';if(b>=1048576)return(b/1048576).toFixed(1)+' MB';return(b/1024).toFixed(0)+' KB';}
+function pd(n){return String(n).padStart(2,'0');}
 function xe(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function grd(c){var m={Movies:'linear-gradient(135deg,#1a0520,#3d0066)',Action:'linear-gradient(135deg,#1a0500,#6b1500)',Education:'linear-gradient(135deg,#051020,#003566)',Sports:'linear-gradient(135deg,#031a06,#006621)',Music:'linear-gradient(135deg,#12031a,#38006b)',Comedy:'linear-gradient(135deg,#1a1500,#6b5900)',Gaming:'linear-gradient(135deg,#051a0a,#006b25)',Travel:'linear-gradient(135deg,#03181a,#005f6b)',Cooking:'linear-gradient(135deg,#1a0a00,#6b3800)',Technology:'linear-gradient(135deg,#030518,#00166b)',Fitness:'linear-gradient(135deg,#1a0800,#6b2200)',Documentary:'linear-gradient(135deg,#101a10,#203d20)',News:'linear-gradient(135deg,#1a1010,#502000)',Vlogs:'linear-gradient(135deg,#0a1010,#004040)',Anime:'linear-gradient(135deg,#1a0318,#5c0060)'};return m[c]||'linear-gradient(135deg,#0e0e1e,#1e1e2e)';}
 function toast(msg,type){var t=document.getElementById('tst');t.textContent=msg;t.className='on'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},2800);}
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){var d=document.getElementById('mobd');if(d.classList.contains('open')){d.classList.remove('open');document.body.style.overflow='';}}
-  if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();document.getElementById('si').focus();}
-});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeUp();var d=document.getElementById('mobd');if(d.classList.contains('open')){d.classList.remove('open');document.body.style.overflow='';}}if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&document.activeElement.tagName!=='TEXTAREA'){e.preventDefault();document.getElementById('si').focus();}});
 </script>
 </body>
 </html>
