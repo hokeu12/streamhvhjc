@@ -426,9 +426,16 @@ function renderAll(){
       cardInRow=0;
       var adRow=document.createElement('div');
       adRow.className='ad-row';
-      adRow.innerHTML='<span class="ad-tag">Advertisement</span>'+
-        '<script>atOptions={"key":"3407cae831ba7308f892ce3e722d876e","format":"iframe","height":90,"width":728,"params":{}}<\/script>'+
-        '<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"><\/script>';
+      adRow.innerHTML='<span class="ad-tag">Advertisement</span>';
+
+      var s1=document.createElement('script');
+      s1.text='atOptions={"key":"3407cae831ba7308f892ce3e722d876e","format":"iframe","height":90,"width":728,"params":{}};';
+      adRow.appendChild(s1);
+
+      var s2=document.createElement('script');
+      s2.src='https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js';
+      adRow.appendChild(s2);
+
       grid.appendChild(adRow);
     }
   });
