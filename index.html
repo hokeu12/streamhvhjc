@@ -53,9 +53,6 @@ img{display:block;max-width:100%}
 .hstat-lbl{font-size:.72rem;color:var(--mt);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
 .ad-zone{background:var(--s1);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:center;min-height:90px;padding:.5rem;position:relative}
 .ad-tag{position:absolute;top:4px;right:8px;font-size:.55rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
-.ad-ph{width:100%;max-width:728px;min-height:90px;background:var(--s2);border:1px dashed var(--dim);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.2rem}
-.ad-ph b{font-size:.76rem;color:var(--mt);font-weight:600}
-.ad-ph p{font-size:.62rem;color:var(--dim)}
 #catbar{background:rgba(9,9,15,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--bd);padding:0 2rem;overflow-x:auto;position:sticky;top:var(--nav);z-index:700}
 #catbar::-webkit-scrollbar{height:0}
 .cattabs{display:flex;gap:.3rem;padding:.65rem 0;min-width:max-content}
@@ -160,6 +157,7 @@ img{display:block;max-width:100%}
 @media(max-width:480px){.vgrid{grid-template-columns:1fr;gap:.9rem}}
 </style>
 <script src="https://pl28958921.profitablecpmratenetwork.com/b3/28/e9/b328e9b01cf650c337e9dd25ed73947b.js"></script>
+</head>
 <body>
 
 <nav id="nav">
@@ -208,11 +206,16 @@ img{display:block;max-width:100%}
 
 <div class="ad-zone" id="top-ad">
   <span class="ad-tag">Advertisement</span>
-  <!-- PASTE YOUR ADSTERRA 728x90 SCRIPT HERE - delete .ad-ph div -->
-  <div class="ad-ph">
-    <b>728 x 90 &mdash; Top Leaderboard Ad</b>
-    <p>Paste your Adsterra script inside #top-ad</p>
-  </div>
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <div id="catbar">
@@ -335,22 +338,10 @@ img{display:block;max-width:100%}
 var PL = 'https://yummycorn.netlify.app/player.html';
 
 var VV = [
+
   // ── PASTE NEW VIDEOS HERE ──────────────────────────────────
 
- {
-  id: Date.now(),
-  title: "mms",
-  cat: "Other",
-  dur: "0:30",
-  q: "HD",
-  rt: "",
-  yr: "2026",
-  vw: 0,
-  url: "https://res.cloudinary.com/dabgszxqm/video/upload/Post_188_video_2_egdzpy.mp4",
-  th: "https://res.cloudinary.com/dabgszxqm/video/upload/so_1/Post_188_video_2_egdzpy.jpg",
-  ds: "test video",
-  nw: true
-}, {id:1,title:"Big Buck Bunny",cat:"Movies",dur:"9:56",q:"HD",rt:"7.8",yr:"2008",vw:24000,
+  {id:1,title:"Big Buck Bunny",cat:"Movies",dur:"9:56",q:"HD",rt:"7.8",yr:"2008",vw:24000,
    url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
    th:"https://peach.blender.org/wp-content/uploads/bbb-splash.png",
    ds:"A gentle rabbit battles three bullying rodents.",nw:false},
@@ -414,7 +405,34 @@ document.addEventListener('DOMContentLoaded',function(){
 function updateStats(){document.getElementById('hs-total').textContent=VV.length;var seen={};VV.forEach(function(v){if(v.cat)seen[v.cat]=1;});document.getElementById('hs-cats').textContent=Object.keys(seen).length;}
 function bCats(){var cats=['All'],seen={};VV.forEach(function(v){if(v.cat&&!seen[v.cat]){seen[v.cat]=1;cats.push(v.cat);}});cats.sort(function(a,b){return a==='All'?-1:b==='All'?1:a.localeCompare(b);});var el=document.getElementById('cattabs');el.innerHTML='';cats.forEach(function(c){var b=document.createElement('button');b.className='ctab'+(c===AC?' on':'');b.setAttribute('data-c',c);b.textContent=c;b.onclick=function(){filCat(c,b);};el.appendChild(b);});}
 function filCat(cat,btn){AC=cat;clearSearch();document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('on');});if(btn)btn.classList.add('on');else{var b=document.querySelector('.ctab[data-c="'+cat+'"]');if(b)b.classList.add('on');}renderAll();}
-function renderAll(){var vids=AC==='All'?VV:VV.filter(function(v){return v.cat===AC;});var container=document.getElementById('vcontainer');var empty=document.getElementById('emp');document.getElementById('vcnt').textContent=vids.length;document.getElementById('page-title').textContent=AC==='All'?'All Videos':AC;document.getElementById('vinfo').textContent=AC==='All'?'Showing all '+vids.length+' videos':vids.length+' video'+(vids.length!==1?'s':'')+' in '+AC;container.innerHTML='';if(!vids.length){empty.style.display='block';return;}empty.style.display='none';var grid=document.createElement('div');grid.className='vgrid';container.appendChild(grid);var cardInRow=0;vids.forEach(function(v,i){grid.appendChild(mkCard(v,i));cardInRow++;if(cardInRow===3){cardInRow=0;var adRow=document.createElement('div');adRow.className='ad-row';adRow.innerHTML='<span class="ad-tag">Advertisement</span><div class="ad-ph" style="max-width:728px"><b>728 x 90 In-Grid Ad</b><p>Paste Adsterra script here</p></div>';grid.appendChild(adRow);}});}
+function renderAll(){
+  var vids=AC==='All'?VV:VV.filter(function(v){return v.cat===AC;});
+  var container=document.getElementById('vcontainer');
+  var empty=document.getElementById('emp');
+  document.getElementById('vcnt').textContent=vids.length;
+  document.getElementById('page-title').textContent=AC==='All'?'All Videos':AC;
+  document.getElementById('vinfo').textContent=AC==='All'?'Showing all '+vids.length+' videos':vids.length+' video'+(vids.length!==1?'s':'')+' in '+AC;
+  container.innerHTML='';
+  if(!vids.length){empty.style.display='block';return;}
+  empty.style.display='none';
+  var grid=document.createElement('div');
+  grid.className='vgrid';
+  container.appendChild(grid);
+  var cardInRow=0;
+  vids.forEach(function(v,i){
+    grid.appendChild(mkCard(v,i));
+    cardInRow++;
+    if(cardInRow===3){
+      cardInRow=0;
+      var adRow=document.createElement('div');
+      adRow.className='ad-row';
+      adRow.innerHTML='<span class="ad-tag">Advertisement</span>'+
+        '<script>atOptions={"key":"3407cae831ba7308f892ce3e722d876e","format":"iframe","height":90,"width":728,"params":{}}<\/script>'+
+        '<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"><\/script>';
+      grid.appendChild(adRow);
+    }
+  });
+}
 function mkCard(v,i){var purl=PL+'?id='+v.id+'&title='+encodeURIComponent(v.title||'')+'&cat='+encodeURIComponent(v.cat||'')+'&url='+encodeURIComponent(v.url||'')+'&th='+encodeURIComponent(v.th||'')+'&dur='+encodeURIComponent(v.dur||'')+'&q='+encodeURIComponent(v.q||'')+'&yr='+encodeURIComponent(v.yr||'')+'&rt='+encodeURIComponent(v.rt||'')+'&ds='+encodeURIComponent(v.ds||'');var a=document.createElement('a');a.className='vc';a.href=purl;a.target='_blank';a.rel='noopener';a.style.animationDelay=(Math.min(i,11)*0.06)+'s';a.addEventListener('click',function(){v.vw=(v.vw||0)+1;});var bg=grd(v.cat);var th=v.th?'<img src="'+xe(v.th)+'" alt="'+xe(v.title)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="vth-bg" style="display:none;background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>':'<div class="vth-bg" style="background:'+bg+'"><svg width="40" height="40" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)"><path d="M8 5v14l11-7z"/></svg></div>';a.innerHTML='<div class="vth">'+th+'<div class="play-ov"><div class="play-ring"><svg width="18" height="18" viewBox="0 0 24 24" fill="white" style="margin-left:2px"><path d="M8 5v14l11-7z"/></svg></div></div>'+(v.nw?'<span class="vb vb-new">NEW</span>':'')+(v.q?'<span class="vb vb-hd">'+xe(v.q)+'</span>':'')+(v.rt?'<span class="vb vb-rt">&#9733; '+xe(v.rt)+'</span>':'')+(v.dur?'<span class="vb vb-dur">'+xe(v.dur)+'</span>':'')+'</div><div class="vbody"><div class="vtitle">'+xe(v.title)+'</div><div class="vmeta"><div class="vm-left"><span class="vviews"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> '+fmtN(v.vw)+'</span>'+(v.yr?'<span>'+xe(v.yr)+'</span>':'')+'</div><span class="vcattag">'+xe(v.cat||'&mdash;')+'</span></div></div>';return a;}
 function doSearch(q){var val=q.trim().toLowerCase();var sc=document.getElementById('si-x'),ss=document.getElementById('srch-sec'),av=document.getElementById('allv');if(!val){clearSearch();return;}sc.style.display='block';ss.style.display='block';av.style.display='none';var hits=VV.filter(function(v){return v.title.toLowerCase().indexOf(val)>-1||(v.cat||'').toLowerCase().indexOf(val)>-1||(v.ds||'').toLowerCase().indexOf(val)>-1;});document.getElementById('srch-title').textContent='Results for "'+q+'"';document.getElementById('srch-ct').textContent=hits.length+' video'+(hits.length!==1?'s':'')+' found';var g=document.getElementById('srch-grid'),nr=document.getElementById('nores');g.innerHTML='';nr.style.display='none';if(!hits.length){nr.style.display='block';return;}hits.forEach(function(v,i){g.appendChild(mkCard(v,i));});}
 function clearSearch(){document.getElementById('si').value='';document.getElementById('si-x').style.display='none';document.getElementById('srch-sec').style.display='none';document.getElementById('allv').style.display='block';}
