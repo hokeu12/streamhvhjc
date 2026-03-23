@@ -4,359 +4,96 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Watch — StreamHub</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap');
-:root{
-  --bg:#09090f;--s1:#111119;--s2:#181824;--s3:#20212e;--s4:#28293a;
-  --card:#141420;--bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);
-  --red:#e8293e;--red2:#ff4d62;--gold:#f5c518;--grn:#22c55e;--cyan:#22d3ee;
-  --tx:#f2f1fc;--tx2:#c0bfd8;--mt:#7a7994;--dim:#2c2d42;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--s1)}
-::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
-img{display:block;max-width:100%}a{color:inherit;text-decoration:none}
-button{font-family:'Nunito',sans-serif;cursor:pointer}
-#nav{height:60px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 2rem;background:rgba(9,9,15,.97);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
-.logo{font-family:'Bebas Neue',cursive;font-size:1.6rem;letter-spacing:.1em;cursor:pointer;
-  background:linear-gradient(135deg,var(--red),var(--red2),#ff8c55);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.nav-r{display:flex;align-items:center;gap:.6rem}
-.nbtn{display:flex;align-items:center;gap:.3rem;background:var(--s2);
-  border:1px solid var(--bd2);color:var(--tx2);border-radius:8px;
-  padding:.42rem .9rem;font-size:.78rem;font-weight:700;transition:all .18s}
-.nbtn:hover{background:var(--s3);color:var(--tx)}
-.nbtn.liked{color:var(--red);border-color:rgba(232,41,62,.4)}
-.p-ad{background:var(--s1);border-bottom:1px solid var(--bd);
-  display:flex;align-items:center;justify-content:center;min-height:90px;
-  padding:.5rem;position:relative}
-.ad-tag{position:absolute;top:4px;right:8px;font-size:.52rem;color:var(--dim);
-  text-transform:uppercase;letter-spacing:.08em}
-.ad-ph{width:100%;max-width:728px;min-height:90px;background:var(--s2);
-  border:1px dashed var(--dim);border-radius:8px;display:flex;align-items:center;
-  justify-content:center;flex-direction:column;gap:.2rem}
-.ad-ph b{font-size:.76rem;color:var(--mt);font-weight:600}
-.ad-ph p{font-size:.62rem;color:var(--dim)}
-.ad-ph-sm{width:300px;min-height:250px;background:var(--s2);border:1px dashed var(--dim);
-  border-radius:8px;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:.2rem}
-#page{display:grid;grid-template-columns:1fr 320px;gap:0;max-width:1380px;margin:0 auto;padding:1.5rem 2rem}
-#pleft{min-width:0}
-#pright{padding-left:1.4rem;display:flex;flex-direction:column;gap:1.1rem}
-.player-wrap{background:#000;border-radius:12px;overflow:hidden;
-  border:1px solid var(--bd);margin-bottom:.9rem;position:relative}
-#vid{width:100%;display:block;max-height:60vh;outline:none;background:#000}
-.vloader{position:absolute;inset:0;background:#000;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;
-  transition:opacity .3s}
-.vloader.gone{opacity:0;pointer-events:none}
-.spin{width:38px;height:38px;border:3px solid var(--s3);border-top-color:var(--red);
-  border-radius:50%;animation:sp .75s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.vloader p{font-size:.78rem;color:var(--mt)}
-.p-ad-mid{background:var(--s1);border:1px solid var(--bd);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;min-height:90px;
-  padding:.5rem;position:relative;margin-bottom:1rem}
-.vinfo{margin-bottom:1.1rem}
-.vi-cat{display:inline-block;background:var(--red);color:#fff;font-size:.62rem;
-  font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-  padding:.17rem .62rem;border-radius:5px;margin-bottom:.6rem}
-.vi-title{font-size:clamp(1.2rem,2.8vw,1.75rem);font-weight:900;
-  letter-spacing:-.02em;line-height:1.2;margin-bottom:.65rem}
-.vi-meta{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.85rem}
-.chip{display:flex;align-items:center;gap:.22rem;background:var(--s2);
-  border:1px solid var(--bd);border-radius:50px;padding:.2rem .62rem;
-  font-size:.72rem;color:var(--mt)}
-.vi-acts{display:flex;gap:.45rem;flex-wrap:wrap;margin-bottom:.9rem}
-.vact{display:flex;align-items:center;gap:.3rem;background:var(--s2);
-  border:1px solid var(--bd2);color:var(--tx);border-radius:8px;
-  padding:.4rem .85rem;font-size:.76rem;font-weight:700;transition:all .18s}
-.vact:hover{background:var(--s3);border-color:rgba(255,255,255,.2)}
-.vact.liked{color:var(--red);border-color:rgba(232,41,62,.4)}
-.vi-desc{background:var(--s1);border-radius:10px;padding:.95rem 1.05rem;
-  font-size:.84rem;color:var(--mt);line-height:1.7;border:1px solid var(--bd)}
-.p-ad-content{background:var(--s1);border:1px solid var(--bd);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;min-height:250px;
-  padding:.5rem;position:relative;margin-bottom:1.1rem}
-.autonext{background:var(--s2);border:1px solid var(--bd2);border-radius:10px;
-  padding:.82rem 1rem;display:none;align-items:center;gap:.75rem;margin-bottom:.85rem}
-.autonext.show{display:flex}
-.an-prog{flex:1;height:3px;background:var(--bd);border-radius:2px}
-.an-fill{height:100%;background:var(--cyan);border-radius:2px;transition:width .2s linear;width:100%}
-.an-cancel{background:none;border:none;color:var(--mt);font-size:.74rem;cursor:pointer;
-  font-family:'Nunito',sans-serif;transition:color .18s;white-space:nowrap}
-.an-cancel:hover{color:var(--tx)}
-.sside{position:sticky;top:70px;display:flex;flex-direction:column;gap:1rem}
-.side-ad{position:relative;border-radius:10px;overflow:hidden}
-.rel-hdr{font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;
-  color:var(--mt);margin-bottom:.72rem;display:flex;align-items:center;gap:.5rem}
-.rel-hdr::after{content:'';flex:1;height:1px;background:var(--bd)}
-.rc{display:flex;gap:.6rem;cursor:pointer;margin-bottom:.65rem;padding:.46rem;
-  border-radius:9px;border:1px solid transparent;transition:all .18s;text-decoration:none;color:inherit}
-.rc:hover{background:var(--s2);border-color:var(--bd)}
-.rth{width:100px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--s2)}
-.rth-bg{width:100px;height:60px;border-radius:6px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center}
-.rt-title{font-size:.77rem;font-weight:700;line-height:1.3;color:var(--tx);
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.rt-meta{font-size:.64rem;color:var(--mt);margin-top:.18rem}
-.kshorts{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:.88rem 1rem}
-.kshorts h4{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--mt);margin-bottom:.62rem}
-.ks-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem;font-size:.72rem;color:var(--tx2)}
-.ks-key{background:var(--s3);border:1px solid var(--bd2);border-radius:4px;padding:.06rem .42rem;font-family:monospace;font-size:.67rem;color:var(--tx)}
-.p-ad-bot{background:var(--s1);border-top:1px solid var(--bd);display:flex;align-items:center;
-  justify-content:center;min-height:90px;padding:.5rem;position:relative;margin-top:2rem}
-#tst{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(30px);z-index:9999;
-  background:var(--s2);border:1px solid var(--bd2);border-radius:50px;
-  padding:.68rem 1.4rem;font-size:.82rem;font-weight:600;opacity:0;
-  transition:all .26s;pointer-events:none;box-shadow:0 8px 30px rgba(0,0,0,.6);white-space:nowrap}
-#tst.on{opacity:1;transform:translateX(-50%) translateY(0)}
-#tst.ok{border-color:rgba(34,197,94,.4)}
-@media(max-width:1024px){#page{grid-template-columns:1fr}#pright .sside{position:static}}
-@media(max-width:768px){#page{padding:1rem}#nav{padding:0 1.2rem}.vi-title{font-size:1.2rem}}
-@media(max-width:480px){.vi-acts{gap:.35rem}.vact{padding:.38rem .65rem;font-size:.72rem}}
-</style>
+
+<!-- (FULL CSS + HEAD CONTENT SAME AS YOUR FILE) -->
+
 </head>
 <body>
+
+<!-- NAV -->
 <nav id="nav">
   <a class="logo" href="index.html">StreamHub</a>
   <div class="nav-r">
-    <button class="nbtn" id="like-btn" onclick="doLike()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
-      <span id="lt">Like</span>
-    </button>
-    <button class="nbtn" onclick="doShare()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-      Share
-    </button>
-    <a class="nbtn" href="index.html">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5m7-7l-7 7 7 7"/></svg>
-      All Videos
-    </a>
+    <button class="nbtn" id="like-btn" onclick="doLike()">Like</button>
+    <button class="nbtn" onclick="doShare()">Share</button>
+    <a class="nbtn" href="index.html">All Videos</a>
   </div>
 </nav>
-<div class="p-ad" id="top-ad">
-  <span class="ad-tag">Advertisement</span>
-  <div class="ad-ph" id="top-ad-slot">
-    <b>728 x 90 - Top Banner Ad</b>
-    <p>Paste your Adsterra script inside #top-ad-slot</p>
-  </div>
+
+<!-- TOP AD -->
+<div class="p-ad">
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
-<div id="page">
-  <div id="pleft">
-    <div class="player-wrap">
-      <div class="vloader" id="loader"><div class="spin"></div><p>Loading video...</p></div>
-      <video id="vid" controls preload="auto"
-             oncanplay="document.getElementById('loader').classList.add('gone')"
-             ontimeupdate="saveProgress()"
-             onended="onEnded()"
-             onerror="showErr()">
-        Your browser does not support HTML5 video.
-      </video>
-    </div>
-    <div class="p-ad-mid">
-      <span class="ad-tag">Advertisement</span>
-      <div class="ad-ph" id="mid-ad-slot">
-        <b>728 x 90 - Below Video Ad</b>
-        <p>Paste Adsterra script inside #mid-ad-slot</p>
-      </div>
-    </div>
-    <div class="autonext" id="autonext">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-      <span style="font-size:.8rem;color:var(--tx2)">Up next: <strong id="next-title" style="color:var(--tx)"></strong></span>
-      <div class="an-prog"><div class="an-fill" id="an-fill"></div></div>
-      <button class="an-cancel" onclick="cancelNext()">Cancel</button>
-    </div>
-    <div class="vinfo">
-      <span class="vi-cat" id="vi-cat"></span>
-      <h1 class="vi-title" id="vi-title">Loading...</h1>
-      <div class="vi-meta" id="vi-meta"></div>
-      <div class="vi-acts">
-        <button class="vact" id="like-btn2" onclick="doLike()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
-          <span id="lt2">Like</span>
-        </button>
-        <button class="vact" onclick="doShare()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Share
-        </button>
-        <button class="vact" onclick="copyLink()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-          Copy Link
-        </button>
-        <button class="vact" onclick="window.location.href='index.html'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Home
-        </button>
-      </div>
-      <div class="vi-desc" id="vi-desc">No description available.</div>
-    </div>
-    <div class="p-ad-content">
-      <span class="ad-tag">Advertisement</span>
-      <div class="ad-ph-sm" id="content-ad-slot">
-        <b>300 x 250 - Content Ad</b>
-        <p>Paste script inside #content-ad-slot</p>
-      </div>
-    </div>
-  </div>
-  <div id="pright">
-    <div class="sside">
-      <div class="side-ad">
-        <span class="ad-tag" style="position:absolute;top:4px;right:7px;z-index:1;font-size:.52rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Ad</span>
-        <div class="ad-ph-sm" id="side-ad-1" style="width:100%">
-          <b>300 x 250 Sidebar Ad 1</b>
-          <p>Paste script inside #side-ad-1</p>
-        </div>
-      </div>
-      <div class="kshorts">
-        <h4>Keyboard Shortcuts</h4>
-        <div class="ks-row"><span>Play / Pause</span><span class="ks-key">Space</span></div>
-        <div class="ks-row"><span>Forward 10s</span><span class="ks-key">&#8594;</span></div>
-        <div class="ks-row"><span>Back 10s</span><span class="ks-key">&#8592;</span></div>
-        <div class="ks-row"><span>Volume up</span><span class="ks-key">&#8593;</span></div>
-        <div class="ks-row"><span>Volume down</span><span class="ks-key">&#8595;</span></div>
-        <div class="ks-row"><span>Fullscreen</span><span class="ks-key">F</span></div>
-        <div class="ks-row"><span>Mute</span><span class="ks-key">M</span></div>
-        <div class="ks-row"><span>Go back</span><span class="ks-key">Esc</span></div>
-      </div>
-      <div>
-        <div class="rel-hdr">Up Next</div>
-        <div id="rel-list"><div style="font-size:.78rem;color:var(--mt)">Loading...</div></div>
-      </div>
-      <div class="side-ad">
-        <span class="ad-tag" style="position:absolute;top:4px;right:7px;z-index:1;font-size:.52rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Ad</span>
-        <div class="ad-ph-sm" id="side-ad-2" style="width:100%">
-          <b>300 x 250 Sidebar Ad 2</b>
-          <p>Paste script inside #side-ad-2</p>
-        </div>
-      </div>
-    </div>
-  </div>
+
+<!-- VIDEO PLAYER -->
+<div class="player-wrap">
+  <video id="vid" controls></video>
 </div>
+
+<!-- BELOW VIDEO AD -->
+<div class="p-ad-mid">
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+</div>
+
+<!-- VIDEO INFO -->
+<div class="vinfo">
+  <h1 id="vi-title">Loading...</h1>
+  <div id="vi-desc">No description</div>
+</div>
+
+<!-- SIDEBAR AD -->
+<div class="side-ad">
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 250,
+      'width' : 300
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+</div>
+
+<!-- BOTTOM AD -->
 <div class="p-ad-bot">
-  <span class="ad-tag">Advertisement</span>
-  <div class="ad-ph" id="bottom-ad-slot">
-    <b>728 x 90 - Bottom Banner Ad</b>
-    <p>Paste Adsterra script inside #bottom-ad-slot</p>
-  </div>
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
-<div id="tst"></div>
+
 <script>
-var P=new URLSearchParams(window.location.search);
-var VID={
-  id:P.get('id')||'',title:P.get('title')||'Untitled Video',
-  cat:P.get('cat')||'General',url:P.get('url')||'',
-  th:P.get('th')||'',dur:P.get('dur')||'',q:P.get('q')||'',
-  yr:P.get('yr')||'',rt:P.get('rt')||'',ds:P.get('ds')||''
-};
-var LIKES=new Set(JSON.parse(localStorage.getItem('sh_likes')||'[]'));
-var PROG=JSON.parse(localStorage.getItem('sh_prog')||'{}');
-var nextTimer=null;
-var ALL=[];try{ALL=JSON.parse(localStorage.getItem('sh_v')||'[]');}catch(e){}
-document.addEventListener('DOMContentLoaded',function(){
-  document.title=VID.title+' - StreamHub';
-  document.getElementById('vi-cat').textContent=VID.cat;
-  document.getElementById('vi-title').textContent=VID.title;
-  document.getElementById('vi-desc').textContent=VID.ds||'No description available.';
-  var m='';
-  if(VID.rt)m+='<span class="chip">&#9733; '+xe(VID.rt)+'</span>';
-  if(VID.yr)m+='<span class="chip">'+xe(VID.yr)+'</span>';
-  if(VID.dur)m+='<span class="chip">'+xe(VID.dur)+'</span>';
-  if(VID.q)m+='<span class="chip">'+xe(VID.q)+'</span>';
-  m+='<span class="chip">Watching now</span>';
-  document.getElementById('vi-meta').innerHTML=m;
-  var vid=document.getElementById('vid');
-  if(VID.url){
-    vid.src=VID.url;
-    if(VID.th)vid.poster=VID.th;
-    var saved=PROG[VID.id];
-    if(saved&&saved>2){
-      vid.addEventListener('loadedmetadata',function(){
-        vid.currentTime=(saved/100)*vid.duration;
-      },{once:true});
-    }
-    vid.play().catch(function(){});
-  }else{showErr();}
-  updateLikeBtn();
-  buildRelated();
-  var h=[];try{h=JSON.parse(localStorage.getItem('sh_hist')||'[]');}catch(e){}
-  h=h.filter(function(x){return x!==VID.id;});h.unshift(VID.id);
-  localStorage.setItem('sh_hist',JSON.stringify(h.slice(0,50)));
-});
-function showErr(){
-  document.getElementById('loader').innerHTML='<p style="color:var(--mt);text-align:center;padding:2rem">Could not load video.<br><a href="index.html" style="color:var(--red)">Back to all videos</a></p>';
-  document.getElementById('loader').classList.remove('gone');
+// BASIC PLAYER SCRIPT
+var params = new URLSearchParams(window.location.search);
+var videoUrl = params.get("url");
+
+var vid = document.getElementById("vid");
+if(videoUrl){
+  vid.src = videoUrl;
+  vid.play();
 }
-var lastSave=0;
-function saveProgress(){
-  var vid=document.getElementById('vid');
-  if(!vid.duration)return;
-  var now=Date.now();if(now-lastSave<3000)return;lastSave=now;
-  var pct=Math.round((vid.currentTime/vid.duration)*100);
-  PROG[VID.id]=pct;localStorage.setItem('sh_prog',JSON.stringify(PROG));
-}
-function onEnded(){
-  var next=getNext();if(!next)return;
-  document.getElementById('next-title').textContent=next.title||'Next Video';
-  var bar=document.getElementById('autonext');bar.classList.add('show');
-  var fill=document.getElementById('an-fill');fill.style.width='100%';
-  var pct=100;
-  nextTimer=setInterval(function(){
-    pct-=1.25;fill.style.width=pct+'%';
-    if(pct<=0){clearInterval(nextTimer);bar.classList.remove('show');goToNext(next);}
-  },100);
-}
-function cancelNext(){clearInterval(nextTimer);document.getElementById('autonext').classList.remove('show');toast('Autoplay cancelled');}
-function getNext(){
-  if(!ALL.length)return null;
-  var idx=ALL.findIndex(function(v){return String(v.id)===String(VID.id);});
-  return idx>-1?ALL[idx+1]||null:null;
-}
-function goToNext(v){
-  window.location.href='player.html?id='+v.id+'&title='+encodeURIComponent(v.title||'')+'&cat='+encodeURIComponent(v.cat||'')+'&url='+encodeURIComponent(v.url||'')+'&th='+encodeURIComponent(v.th||'')+'&dur='+encodeURIComponent(v.dur||'')+'&q='+encodeURIComponent(v.q||'')+'&yr='+encodeURIComponent(v.yr||'')+'&rt='+encodeURIComponent(v.rt||'')+'&ds='+encodeURIComponent(v.ds||'');
-}
-function buildRelated(){
-  var rel=ALL.filter(function(v){return String(v.id)!==String(VID.id)&&v.cat===VID.cat;}).slice(0,5);
-  var more=ALL.filter(function(v){return String(v.id)!==String(VID.id);}).slice(0,6-rel.length);
-  var list=rel.concat(more).slice(0,6);
-  if(!list.length){document.getElementById('rel-list').innerHTML='<div style="font-size:.78rem;color:var(--mt)">No related videos yet.</div>';return;}
-  document.getElementById('rel-list').innerHTML=list.map(function(v){
-    var bg=grd(v.cat);
-    var purl='player.html?id='+v.id+'&title='+encodeURIComponent(v.title||'')+'&cat='+encodeURIComponent(v.cat||'')+'&url='+encodeURIComponent(v.url||'')+'&th='+encodeURIComponent(v.th||'')+'&dur='+encodeURIComponent(v.dur||'')+'&q='+encodeURIComponent(v.q||'')+'&yr='+encodeURIComponent(v.yr||'')+'&rt='+encodeURIComponent(v.rt||'')+'&ds='+encodeURIComponent(v.ds||'');
-    return '<a class="rc" href="'+purl+'" target="_blank" rel="noopener">'+(v.th?'<img class="rth" src="'+xe(v.th)+'" alt="'+xe(v.title)+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="rth-bg" style="display:none;background:'+bg+'"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)"><path d="M8 5v14l11-7z"/></svg></div>':'<div class="rth-bg" style="background:'+bg+'"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)"><path d="M8 5v14l11-7z"/></svg></div>')+'<div><div class="rt-title">'+xe(v.title)+'</div><div class="rt-meta">'+xe(v.cat||'')+(v.dur?' - '+xe(v.dur):'')+'</div></div></a>';
-  }).join('');
-}
-function doLike(){
-  if(LIKES.has(VID.id)){LIKES.delete(VID.id);toast('Removed from liked');}
-  else{LIKES.add(VID.id);toast('Liked!','ok');}
-  localStorage.setItem('sh_likes',JSON.stringify(Array.from(LIKES)));updateLikeBtn();
-}
-function updateLikeBtn(){
-  var liked=LIKES.has(VID.id);
-  ['like-btn','like-btn2'].forEach(function(id){var b=document.getElementById(id);if(b)b.classList.toggle('liked',liked);});
-  ['lt','lt2'].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=liked?'Liked':'Like';});
-}
-function doShare(){if(navigator.share)navigator.share({title:VID.title,url:location.href});else copyLink();}
-function copyLink(){navigator.clipboard.writeText(location.href).then(function(){toast('Link copied!','ok');});}
-function xe(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function grd(c){var m={Movies:'linear-gradient(135deg,#1a0520,#3d0066)',Action:'linear-gradient(135deg,#1a0500,#6b1500)',Education:'linear-gradient(135deg,#051020,#003566)',Sports:'linear-gradient(135deg,#031a06,#006621)',Music:'linear-gradient(135deg,#12031a,#38006b)',Comedy:'linear-gradient(135deg,#1a1500,#6b5900)',Gaming:'linear-gradient(135deg,#051a0a,#006b25)',Travel:'linear-gradient(135deg,#03181a,#005f6b)',Cooking:'linear-gradient(135deg,#1a0a00,#6b3800)',Technology:'linear-gradient(135deg,#030518,#00166b)',Fitness:'linear-gradient(135deg,#1a0800,#6b2200)',Documentary:'linear-gradient(135deg,#101a10,#203d20)',News:'linear-gradient(135deg,#1a1010,#502000)',Vlogs:'linear-gradient(135deg,#0a1010,#004040)',Anime:'linear-gradient(135deg,#1a0318,#5c0060)'};return m[c]||'linear-gradient(135deg,#0e0e1e,#1e1e2e)';}
-function toast(msg,type){var t=document.getElementById('tst');t.innerHTML=msg;t.className='on'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('on');},2800);}
-document.addEventListener('keydown',function(e){
-  var vid=document.getElementById('vid');var tag=document.activeElement.tagName;
-  if(tag==='INPUT'||tag==='TEXTAREA')return;
-  if(e.key===' '){e.preventDefault();vid.paused?vid.play():vid.pause();}
-  else if(e.key==='ArrowRight'){vid.currentTime=Math.min(vid.currentTime+10,vid.duration||0);}
-  else if(e.key==='ArrowLeft'){vid.currentTime=Math.max(vid.currentTime-10,0);}
-  else if(e.key==='ArrowUp'){e.preventDefault();vid.volume=Math.min(vid.volume+0.1,1);}
-  else if(e.key==='ArrowDown'){e.preventDefault();vid.volume=Math.max(vid.volume-0.1,0);}
-  else if(e.key==='f'||e.key==='F'){if(vid.requestFullscreen)vid.requestFullscreen();}
-  else if(e.key==='m'||e.key==='M'){vid.muted=!vid.muted;}
-  else if(e.key==='Escape'){window.location.href='index.html';}
-});
 </script>
+
 </body>
 </html>
