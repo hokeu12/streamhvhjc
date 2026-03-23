@@ -1,97 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Watch — StreamHub</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamHub Player</title>
 
-<!-- (FULL CSS + HEAD CONTENT SAME AS YOUR FILE) -->
+<style>
+body{
+  margin:0;
+  background:#0b0b0f;
+  font-family:Arial;
+  color:white;
+}
+.nav{
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  background:#111;
+}
+.logo{font-size:20px;font-weight:bold;color:#ff3d5a}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:15px;
+}
+video{
+  width:100%;
+  border-radius:10px;
+  background:black;
+}
+.ad{
+  margin:15px 0;
+  display:flex;
+  justify-content:center;
+}
+</style>
+
+<!-- POPUNDER (Adsterra) -->
+<script type='text/javascript' src='//pl28958921.profitablecpmratenetwork.com/b3/28/e9/b328e9b01cf650c337e9dd25ed73947b.js'></script>
 
 </head>
 <body>
 
-<!-- NAV -->
-<nav id="nav">
-  <a class="logo" href="index.html">StreamHub</a>
-  <div class="nav-r">
-    <button class="nbtn" id="like-btn" onclick="doLike()">Like</button>
-    <button class="nbtn" onclick="doShare()">Share</button>
-    <a class="nbtn" href="index.html">All Videos</a>
-  </div>
-</nav>
+<div class="nav">
+  <div class="logo">StreamHub</div>
+  <a href="index.html" style="color:white">Home</a>
+</div>
 
-<!-- TOP AD -->
-<div class="p-ad">
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728
-    };
-  </script>
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+<div class="container">
+
+<!-- TOP BANNER -->
+<div class="ad">
+<script>
+atOptions = {
+  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'format' : 'iframe',
+  'height' : 90,
+  'width' : 728
+};
+</script>
+<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <!-- VIDEO PLAYER -->
-<div class="player-wrap">
-  <video id="vid" controls></video>
-</div>
+<video id="player" controls autoplay></video>
 
 <!-- BELOW VIDEO AD -->
-<div class="p-ad-mid">
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728
-    };
-  </script>
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+<div class="ad">
+<script>
+atOptions = {
+  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'format' : 'iframe',
+  'height' : 90,
+  'width' : 728
+};
+</script>
+<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
-<!-- VIDEO INFO -->
-<div class="vinfo">
-  <h1 id="vi-title">Loading...</h1>
-  <div id="vi-desc">No description</div>
+<h2 id="title">Loading...</h2>
+
+<!-- SIDEBAR STYLE AD -->
+<div class="ad">
+<script>
+atOptions = {
+  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'format' : 'iframe',
+  'height' : 250,
+  'width' : 300
+};
+</script>
+<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
-<!-- SIDEBAR AD -->
-<div class="side-ad">
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 250,
-      'width' : 300
-    };
-  </script>
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
-</div>
-
-<!-- BOTTOM AD -->
-<div class="p-ad-bot">
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728
-    };
-  </script>
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <script>
-// BASIC PLAYER SCRIPT
-var params = new URLSearchParams(window.location.search);
-var videoUrl = params.get("url");
+// GET DATA FROM URL
+const params = new URLSearchParams(window.location.search);
+const videoUrl = params.get("url");
+const title = params.get("title");
 
-var vid = document.getElementById("vid");
+const player = document.getElementById("player");
+
+// LOAD VIDEO
 if(videoUrl){
-  vid.src = videoUrl;
-  vid.play();
+  player.src = videoUrl;
+} else {
+  document.getElementById("title").innerText = "No video found!";
+}
+
+// SET TITLE
+if(title){
+  document.getElementById("title").innerText = title;
 }
 </script>
 
