@@ -6,39 +6,18 @@
 <title>StreamHub Player</title>
 
 <style>
-body{
-  margin:0;
-  background:#0b0b0f;
-  font-family:Arial;
-  color:white;
-}
-.nav{
-  height:60px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  background:#111;
-}
+body{margin:0;background:#0b0b0f;font-family:Arial;color:white}
+.nav{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:#111}
 .logo{font-size:20px;font-weight:bold;color:#ff3d5a}
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:15px;
-}
-video{
-  width:100%;
-  border-radius:10px;
-  background:black;
-}
-.ad{
-  margin:15px 0;
-  display:flex;
-  justify-content:center;
-}
+.container{max-width:1200px;margin:auto;padding:15px}
+video{width:100%;border-radius:10px;background:black}
+.ad{margin:15px 0;display:flex;justify-content:center}
+.row{display:flex;gap:20px}
+.left{flex:3}
+.right{flex:1}
 </style>
 
-<!-- POPUNDER (Adsterra) -->
+<!-- POPUNDER -->
 <script type='text/javascript' src='//pl28958921.profitablecpmratenetwork.com/b3/28/e9/b328e9b01cf650c337e9dd25ed73947b.js'></script>
 
 </head>
@@ -51,68 +30,117 @@ video{
 
 <div class="container">
 
-<!-- TOP BANNER -->
-<div class="ad">
+<!-- TOP BANNER (728x90) -->
+<div class="ad" id="top-ad-slot">
 <script>
 atOptions = {
-  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'key' : 'ef27147f3966499947f181bf69d46522',
   'format' : 'iframe',
   'height' : 90,
   'width' : 728
 };
 </script>
-<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
 </div>
 
-<!-- VIDEO PLAYER -->
+<div class="row">
+
+<div class="left">
+
+<!-- VIDEO -->
 <video id="player" controls autoplay></video>
 
-<!-- BELOW VIDEO AD -->
+<!-- BELOW VIDEO AD (728x90) -->
 <div class="ad">
 <script>
 atOptions = {
-  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'key' : 'ef27147f3966499947f181bf69d46522',
   'format' : 'iframe',
   'height' : 90,
   'width' : 728
 };
 </script>
-<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
 </div>
 
 <h2 id="title">Loading...</h2>
 
-<!-- SIDEBAR STYLE AD -->
+<!-- CONTENT AD (300x250) -->
 <div class="ad">
 <script>
 atOptions = {
-  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'key' : 'ef27147f3966499947f181bf69d46522',
   'format' : 'iframe',
   'height' : 250,
   'width' : 300
 };
 </script>
-<script src="//www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
+</div>
+
+</div>
+
+<div class="right">
+
+<!-- SIDEBAR AD 1 -->
+<div class="ad" id="side-ad-1">
+<script>
+atOptions = {
+  'key' : 'ef27147f3966499947f181bf69d46522',
+  'format' : 'iframe',
+  'height' : 250,
+  'width' : 300
+};
+</script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
+</div>
+
+<!-- SIDEBAR AD 2 -->
+<div class="ad">
+<script>
+atOptions = {
+  'key' : 'ef27147f3966499947f181bf69d46522',
+  'format' : 'iframe',
+  'height' : 250,
+  'width' : 300
+};
+</script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
+</div>
+
+</div>
+
+</div>
+
+<!-- BOTTOM BANNER -->
+<div class="ad">
+<script>
+atOptions = {
+  'key' : 'ef27147f3966499947f181bf69d46522',
+  'format' : 'iframe',
+  'height' : 90,
+  'width' : 728
+};
+</script>
+<script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
 </div>
 
 </div>
 
 <script>
-// GET DATA FROM URL
+// GET VIDEO FROM URL
 const params = new URLSearchParams(window.location.search);
 const videoUrl = params.get("url");
 const title = params.get("title");
 
 const player = document.getElementById("player");
 
-// LOAD VIDEO
 if(videoUrl){
   player.src = videoUrl;
 } else {
   document.getElementById("title").innerText = "No video found!";
 }
 
-// SET TITLE
 if(title){
   document.getElementById("title").innerText = title;
 }
