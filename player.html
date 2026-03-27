@@ -3,50 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Player</title>
+    <title>StreamHub - Premium Player</title>
     <style>
+        :root {
+            --bg-dark: #0f0f13;
+            --card-bg: #1a1a20;
+            --accent-red: #ff4d4d;
+            --text-gray: #aaaaaa;
+        }
+
         body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #0f0f13; /* Matching your dark theme */
-            color: #ffffff;
-            font-family: sans-serif;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
-        /* Header / Logo Section */
-        .header {
+        /* Clean Header - Ads removed from top */
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #2a2a32;
             margin-bottom: 20px;
         }
 
         .logo {
-            color: #ff4d4d;
-            font-weight: bold;
             font-size: 24px;
-            letter-spacing: 1px;
+            font-weight: 800;
+            color: var(--accent-red);
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* Layout for Video + Sidebar */
-        .player-layout {
+        .btn {
+            background: #2a2a32;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn:hover { background: #3a3a45; }
+
+        /* Main Content Grid */
+        .layout {
             display: grid;
-            grid-template-columns: 1fr 320px; /* Video takes primary space, sidebar is fixed */
-            gap: 20px;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
         }
 
-        /* The Video Container */
-        .video-container {
+        /* Video Area - Ads removed from bottom/mid */
+        .video-main {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-wrapper {
             width: 100%;
             background: #000;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             aspect-ratio: 16 / 9;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         video {
@@ -55,84 +84,115 @@
             display: block;
         }
 
-        /* Sidebar UI */
+        /* Sidebar - Ads removed */
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .card {
-            background: #1a1a20;
-            padding: 15px;
-            border-radius: 8px;
+        .panel {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
             border: 1px solid #2a2a32;
         }
 
-        .card h3 {
+        .panel h3 {
             margin-top: 0;
-            font-size: 14px;
-            color: #888;
+            font-size: 12px;
+            color: var(--text-gray);
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
         }
 
-        .shortcut-row {
+        .shortcut {
             display: flex;
             justify-content: space-between;
             font-size: 13px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: #ddd;
         }
 
         kbd {
             background: #333;
-            padding: 2px 5px;
-            border-radius: 3px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            border: 1px solid #444;
         }
 
-        /* Responsive: Stack sidebar below video on mobile */
-        @media (max-width: 900px) {
-            .player-layout {
-                grid-template-columns: 1fr;
-            }
+        /* Mobile Responsive */
+        @media (max-width: 950px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { order: 2; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="header">
+        <header>
             <div class="logo">STREAMHUB</div>
-            <div>
-                <button style="background:#2a2a32; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">All Videos</button>
+            <div class="nav">
+                <button class="btn">Like</button>
+                <button class="btn">Share</button>
+                <button class="btn">← All Videos</button>
             </div>
-        </div>
+        </header>
 
-        <div class="player-layout">
-            <div class="main-player">
-                <div class="video-container">
-                    <video controls>
+        <div class="layout">
+            <main class="video-main">
+                <div class="video-wrapper">
+                    <video id="stream-player" controls autoplay>
                         <source src="" type="video/mp4">
-                        Your browser does not support the video tag.
+                        Your browser does not support HTML5 video.
                     </video>
                 </div>
-            </div>
+                <h2 id="video-title" style="margin-top: 20px; font-size: 20px;">Loading Video...</h2>
+            </main>
 
-            <div class="sidebar">
-                <div class="card">
+            <aside class="sidebar">
+                <div class="panel">
                     <h3>Keyboard Shortcuts</h3>
-                    <div class="shortcut-row"><span>Play / Pause</span> <kbd>Space</kbd></div>
-                    <div class="shortcut-row"><span>Forward 10s</span> <kbd>→</kbd></div>
-                    <div class="shortcut-row"><span>Back 10s</span> <kbd>←</kbd></div>
-                    <div class="shortcut-row"><span>Fullscreen</span> <kbd>F</kbd></div>
+                    <div class="shortcut"><span>Play / Pause</span> <kbd>Space</kbd></div>
+                    <div class="shortcut"><span>Forward 10s</span> <kbd>→</kbd></div>
+                    <div class="shortcut"><span>Back 10s</span> <kbd>←</kbd></div>
+                    <div class="shortcut"><span>Fullscreen</span> <kbd>F</kbd></div>
+                    <div class="shortcut"><span>Mute</span> <kbd>M</kbd></div>
                 </div>
 
-                <div class="card">
+                <div class="panel">
                     <h3>Up Next</h3>
-                    <p style="color:#555; font-size: 12px;">No related videos yet.</p>
+                    <p style="font-size: 13px; color: #555; text-align: center;">No related videos available.</p>
                 </div>
-            </div>
+            </aside>
         </div>
     </div>
+
+    <script>
+        // Automatic Video Loader
+        // This grabs the "url" and "title" from your Netlify link automatically
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const videoUrl = params.get('url');
+            const videoTitle = params.get('title');
+            
+            const player = document.getElementById('stream-player');
+            const titleDisplay = document.getElementById('video-title');
+
+            if (videoUrl) {
+                player.src = decodeURIComponent(videoUrl);
+            } else {
+                titleDisplay.innerText = "No video source found.";
+            }
+
+            if (videoTitle) {
+                titleDisplay.innerText = decodeURIComponent(videoTitle).replace(/%20/g, ' ');
+            }
+        };
+    </script>
 
 </body>
 </html>
