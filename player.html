@@ -3,206 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">StreamHub Player</title>
+    <title>StreamHub - Premium</title>
     <style>
-        :root {
-            --bg: #0b0b0e;
-            --card: #16161d;
-            --accent: #ff4d4d;
-            --text-dim: #888;
-        }
+        :root { --bg: #0b0b0e; --card: #16161d; --accent: #ff4d4d; }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Header without top ad banner */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-size: 24px; font-weight: bold; color: var(--accent); text-decoration: none; }
 
-        body {
-            background-color: var(--bg);
-            color: white;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
+        .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+        
+        /* Video area without mid/bottom ad slots */
+        .player-box { background: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 16/9; width: 100%; }
+        video { width: 100%; height: 100%; }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .info { margin-top: 15px; }
+        .info h1 { margin: 0; font-size: 22px; }
+        .meta { color: #888; font-size: 14px; margin-top: 5px; }
+        .desc { margin-top: 15px; color: #ccc; line-height: 1.5; border-top: 1px solid #222; padding-top: 15px; }
 
-        /* Clean Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #222;
-        }
+        /* Sidebar without the 300x250 ad slot */
+        .sidebar { display: flex; flex-direction: column; gap: 15px; }
+        .card { background: var(--card); padding: 15px; border-radius: 8px; border: 1px solid #222; }
+        .card h3 { margin: 0 0 10px 0; font-size: 12px; color: #888; text-transform: uppercase; }
+        .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+        kbd { background: #333; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
 
-        .logo {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-decoration: none;
-        }
-
-        /* Layout Grid */
-        .layout {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 25px;
-        }
-
-        /* Video Section - All Ad Slots Removed */
-        .video-player-container {
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            aspect-ratio: 16 / 9;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            outline: none;
-        }
-
-        .video-info {
-            margin-top: 20px;
-        }
-
-        .video-info h1 {
-            font-size: 24px;
-            margin: 0 0 10px 0;
-        }
-
-        .metadata {
-            color: var(--text-dim);
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .description {
-            line-height: 1.6;
-            color: #ccc;
-            font-size: 15px;
-        }
-
-        /* Sidebar - Ad Slot Removed */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .panel {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #25252b;
-        }
-
-        .panel h3 {
-            margin: 0 0 15px 0;
-            font-size: 13px;
-            color: var(--text-dim);
-            text-transform: uppercase;
-        }
-
-        .shortcut {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        kbd {
-            background: #333;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-        }
-
-        @media (max-width: 900px) {
-            .layout { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <a href="/" class="logo">STREAMHUB</a>
-            <div>
-                <button style="background:var(--accent); color:white; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">All Videos</button>
+<div class="container">
+    <header>
+        <a href="#" class="logo">STREAMHUB</a>
+        <button style="background:var(--accent); border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer;">Back</button>
+    </header>
+
+    <div class="layout">
+        <main>
+            <div class="player-box">
+                <video id="mainVideo" controls autoplay src=""></video>
             </div>
-        </header>
-
-        <div class="layout">
-            <main>
-                <div class="video-player-container">
-                    <video id="main-video" controls autoplay>
-                        <source src="" type="video/mp4">
-                    </video>
+            <div class="info">
+                <h1 id="title">Loading...</h1>
+                <div class="meta">
+                    <span id="cat">Category</span> • <span id="year">2026</span> • <span id="qual">1080p</span> • ⭐ <span id="rate">0.0</span>
                 </div>
+                <div class="desc" id="desc">Description loading...</div>
+            </div>
+        </main>
 
-                <div class="video-info">
-                    <h1 id="v-title">Video Title</h1>
-                    <div class="metadata">
-                        <span id="v-cat">Category</span> • <span id="v-yr">Year</span> • <span id="v-q">1080p</span> • ⭐ <span id="v-rt">0.0</span>
-                    </div>
-                    <div class="description" id="v-ds">
-                        Video description will appear here.
-                    </div>
-                </div>
-            </main>
-
-            <aside class="sidebar">
-                <div class="panel">
-                    <h3>Keyboard Shortcuts</h3>
-                    <div class="shortcut"><span>Play/Pause</span> <kbd>Space</kbd></div>
-                    <div class="shortcut"><span>Jump +10s</span> <kbd>→</kbd></div>
-                    <div class="shortcut"><span>Jump -10s</span> <kbd>←</kbd></div>
-                    <div class="shortcut"><span>Fullscreen</span> <kbd>F</kbd></div>
-                    <div class="shortcut"><span>Mute</span> <kbd>M</kbd></div>
-                </div>
-
-                <div class="panel">
-                    <h3>Up Next</h3>
-                    <p style="font-size: 12px; color: #555; text-align:center;">No related videos found.</p>
-                </div>
-            </aside>
-        </div>
+        <aside class="sidebar">
+            <div class="card">
+                <h3>Controls</h3>
+                <div class="row"><span>Play</span> <kbd>Space</kbd></div>
+                <div class="row"><span>Forward</span> <kbd>→</kbd></div>
+                <div class="row"><span>Back</span> <kbd>←</kbd></div>
+                <div class="row"><span>Full</span> <kbd>F</kbd></div>
+            </div>
+            <div class="card">
+                <h3>Up Next</h3>
+                <p style="font-size:12px; color:#444; text-align:center;">No videos found.</p>
+            </div>
+        </aside>
     </div>
+</div>
 
-    <script>
-        // Automatic Data Extraction from your URL
-        function loadPlayer() {
-            const urlParams = new URLSearchParams(window.location.search);
-            
-            // Map URL parameters to HTML elements
-            const data = {
-                'url': urlParams.get('url'),
-                'title': urlParams.get('title'),
-                'cat': urlParams.get('cat'),
-                'ds': urlParams.get('ds'),
-                'yr': urlParams.get('yr'),
-                'q': urlParams.get('q'),
-                'rt': urlParams.get('rt')
-            };
+<script>
+    // This script replaces the old Adsterra logic with actual video loading
+    const params = new URLSearchParams(window.location.search);
+    const elements = {
+        video: document.getElementById('mainVideo'),
+        title: document.getElementById('title'),
+        desc: document.getElementById('desc'),
+        cat: document.getElementById('cat'),
+        year: document.getElementById('year'),
+        qual: document.getElementById('qual'),
+        rate: document.getElementById('rate')
+    };
 
-            if (data.url) document.getElementById('main-video').src = data.url;
-            if (data.title) {
-                document.getElementById('v-title').innerText = decodeURIComponent(data.title);
-                document.title = decodeURIComponent(data.title) + " - StreamHub";
-            }
-            if (data.ds) document.getElementById('v-ds').innerText = decodeURIComponent(data.ds);
-            if (data.cat) document.getElementById('v-cat').innerText = data.cat;
-            if (data.yr) document.getElementById('v-yr').innerText = data.yr;
-            if (data.q) document.getElementById('v-q').innerText = data.q;
-            if (data.rt) document.getElementById('v-rt').innerText = data.rt;
-        }
+    if (params.get('url')) elements.video.src = decodeURIComponent(params.get('url'));
+    if (params.get('title')) elements.title.innerText = decodeURIComponent(params.get('title'));
+    if (params.get('ds')) elements.desc.innerText = decodeURIComponent(params.get('ds'));
+    if (params.get('cat')) elements.cat.innerText = params.get('cat');
+    if (params.get('yr')) elements.year.innerText = params.get('yr');
+    if (params.get('q')) elements.qual.innerText = params.get('q');
+    if (params.get('rt')) elements.rate.innerText = params.get('rt');
+</script>
 
-        window.onload = loadPlayer;
-    </script>
 </body>
 </html>
