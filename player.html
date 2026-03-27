@@ -3,88 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Premium Player</title>
+    <title id="page-title">StreamHub Player</title>
     <style>
         :root {
-            --bg-dark: #0f0f13;
-            --card-bg: #1a1a20;
-            --accent-red: #ff4d4d;
-            --text-gray: #aaaaaa;
+            --bg: #0b0b0e;
+            --card: #16161d;
+            --accent: #ff4d4d;
+            --text-dim: #888;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Clean Header - Ads removed from top */
+        /* Clean Header */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #2a2a32;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #222;
         }
 
         .logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
-            color: var(--accent-red);
-            letter-spacing: 2px;
+            color: var(--accent);
             text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-decoration: none;
         }
 
-        .btn {
-            background: #2a2a32;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-
-        .btn:hover { background: #3a3a45; }
-
-        /* Main Content Grid */
+        /* Layout Grid */
         .layout {
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr 300px;
             gap: 25px;
         }
 
-        /* Video Area - Ads removed from bottom/mid */
-        .video-main {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-wrapper {
-            width: 100%;
+        /* Video Section - All Ad Slots Removed */
+        .video-player-container {
             background: #000;
             border-radius: 12px;
             overflow: hidden;
             aspect-ratio: 16 / 9;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
         video {
             width: 100%;
             height: 100%;
-            display: block;
+            outline: none;
         }
 
-        /* Sidebar - Ads removed */
+        .video-info {
+            margin-top: 20px;
+        }
+
+        .video-info h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+        }
+
+        .metadata {
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .description {
+            line-height: 1.6;
+            color: #ccc;
+            font-size: 15px;
+        }
+
+        /* Sidebar - Ad Slot Removed */
         .sidebar {
             display: flex;
             flex-direction: column;
@@ -92,19 +95,17 @@
         }
 
         .panel {
-            background: var(--card-bg);
-            border-radius: 10px;
+            background: var(--card);
             padding: 20px;
-            border: 1px solid #2a2a32;
+            border-radius: 10px;
+            border: 1px solid #25252b;
         }
 
         .panel h3 {
-            margin-top: 0;
-            font-size: 12px;
-            color: var(--text-gray);
+            margin: 0 0 15px 0;
+            font-size: 13px;
+            color: var(--text-dim);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
         }
 
         .shortcut {
@@ -112,7 +113,6 @@
             justify-content: space-between;
             font-size: 13px;
             margin-bottom: 10px;
-            color: #ddd;
         }
 
         kbd {
@@ -120,13 +120,10 @@
             padding: 2px 6px;
             border-radius: 4px;
             font-family: monospace;
-            border: 1px solid #444;
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 950px) {
+        @media (max-width: 900px) {
             .layout { grid-template-columns: 1fr; }
-            .sidebar { order: 2; }
         }
     </style>
 </head>
@@ -134,65 +131,78 @@
 
     <div class="container">
         <header>
-            <div class="logo">STREAMHUB</div>
-            <div class="nav">
-                <button class="btn">Like</button>
-                <button class="btn">Share</button>
-                <button class="btn">← All Videos</button>
+            <a href="/" class="logo">STREAMHUB</a>
+            <div>
+                <button style="background:var(--accent); color:white; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">All Videos</button>
             </div>
         </header>
 
         <div class="layout">
-            <main class="video-main">
-                <div class="video-wrapper">
-                    <video id="stream-player" controls autoplay>
+            <main>
+                <div class="video-player-container">
+                    <video id="main-video" controls autoplay>
                         <source src="" type="video/mp4">
-                        Your browser does not support HTML5 video.
                     </video>
                 </div>
-                <h2 id="video-title" style="margin-top: 20px; font-size: 20px;">Loading Video...</h2>
+
+                <div class="video-info">
+                    <h1 id="v-title">Video Title</h1>
+                    <div class="metadata">
+                        <span id="v-cat">Category</span> • <span id="v-yr">Year</span> • <span id="v-q">1080p</span> • ⭐ <span id="v-rt">0.0</span>
+                    </div>
+                    <div class="description" id="v-ds">
+                        Video description will appear here.
+                    </div>
+                </div>
             </main>
 
             <aside class="sidebar">
                 <div class="panel">
                     <h3>Keyboard Shortcuts</h3>
-                    <div class="shortcut"><span>Play / Pause</span> <kbd>Space</kbd></div>
-                    <div class="shortcut"><span>Forward 10s</span> <kbd>→</kbd></div>
-                    <div class="shortcut"><span>Back 10s</span> <kbd>←</kbd></div>
+                    <div class="shortcut"><span>Play/Pause</span> <kbd>Space</kbd></div>
+                    <div class="shortcut"><span>Jump +10s</span> <kbd>→</kbd></div>
+                    <div class="shortcut"><span>Jump -10s</span> <kbd>←</kbd></div>
                     <div class="shortcut"><span>Fullscreen</span> <kbd>F</kbd></div>
                     <div class="shortcut"><span>Mute</span> <kbd>M</kbd></div>
                 </div>
 
                 <div class="panel">
                     <h3>Up Next</h3>
-                    <p style="font-size: 13px; color: #555; text-align: center;">No related videos available.</p>
+                    <p style="font-size: 12px; color: #555; text-align:center;">No related videos found.</p>
                 </div>
             </aside>
         </div>
     </div>
 
     <script>
-        // Automatic Video Loader
-        // This grabs the "url" and "title" from your Netlify link automatically
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const videoUrl = params.get('url');
-            const videoTitle = params.get('title');
+        // Automatic Data Extraction from your URL
+        function loadPlayer() {
+            const urlParams = new URLSearchParams(window.location.search);
             
-            const player = document.getElementById('stream-player');
-            const titleDisplay = document.getElementById('video-title');
+            // Map URL parameters to HTML elements
+            const data = {
+                'url': urlParams.get('url'),
+                'title': urlParams.get('title'),
+                'cat': urlParams.get('cat'),
+                'ds': urlParams.get('ds'),
+                'yr': urlParams.get('yr'),
+                'q': urlParams.get('q'),
+                'rt': urlParams.get('rt')
+            };
 
-            if (videoUrl) {
-                player.src = decodeURIComponent(videoUrl);
-            } else {
-                titleDisplay.innerText = "No video source found.";
+            if (data.url) document.getElementById('main-video').src = data.url;
+            if (data.title) {
+                document.getElementById('v-title').innerText = decodeURIComponent(data.title);
+                document.title = decodeURIComponent(data.title) + " - StreamHub";
             }
+            if (data.ds) document.getElementById('v-ds').innerText = decodeURIComponent(data.ds);
+            if (data.cat) document.getElementById('v-cat').innerText = data.cat;
+            if (data.yr) document.getElementById('v-yr').innerText = data.yr;
+            if (data.q) document.getElementById('v-q').innerText = data.q;
+            if (data.rt) document.getElementById('v-rt').innerText = data.rt;
+        }
 
-            if (videoTitle) {
-                titleDisplay.innerText = decodeURIComponent(videoTitle).replace(/%20/g, ' ');
-            }
-        };
+        window.onload = loadPlayer;
     </script>
-
 </body>
 </html>
