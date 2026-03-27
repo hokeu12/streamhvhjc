@@ -1,69 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Watch — StreamHub</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap');
-:root{
-  --bg:#09090f;--s1:#111119;--s2:#181824;--s3:#20212e;
-  --card:#141420;--bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);
-  --red:#e8293e;--red2:#ff4d62;--gold:#f5c518;--grn:#22c55e;--cyan:#22d3ee;
-  --tx:#f2f1fc;--tx2:#c0bfd8;--mt:#7a7994;--dim:#2c2d42;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--s1)}
-::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
-img{display:block;max-width:100%}a{color:inherit;text-decoration:none}
-button{font-family:'Nunito',sans-serif;cursor:pointer}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamHub - Video Player</title>
+    <style>
+        :root {
+            --bg-color: #0f0f13;
+            --card-bg: #1a1a20;
+            --text-main: #ffffff;
+            --accent: #ff4d4d;
+        }
 
-#nav{height:60px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 2rem;background:rgba(9,9,15,.97);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:100}
-.logo{font-family:'Bebas Neue',cursive;font-size:1.6rem;letter-spacing:.1em;
-  background:linear-gradient(135deg,var(--red),var(--red2),#ff8c55);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.nav-r{display:flex;align-items:center;gap:.6rem}
-.nbtn{display:flex;align-items:center;gap:.3rem;background:var(--s2);
-  border:1px solid var(--bd2);color:var(--tx2);border-radius:8px;
-  padding:.42rem .9rem;font-size:.78rem;font-weight:700;transition:all .18s}
-.nbtn:hover{background:var(--s3);color:var(--tx)}
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+        }
 
-#page{display:grid;grid-template-columns:1fr 320px;gap:0;max-width:1380px;margin:0 auto;padding:1.5rem 2rem}
-#pleft{min-width:0}
-#pright{padding-left:1.4rem;display:flex;flex-direction:column;gap:1.1rem}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-.player-wrap{background:#000;border-radius:12px;overflow:hidden;
-  border:1px solid var(--bd);margin-bottom:.9rem;position:relative}
-#vid{width:100%;display:block;max-height:60vh;outline:none;background:#000}
-.vloader{position:absolute;inset:0;background:#000;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.8rem;transition:opacity .3s}
-.vloader.gone{opacity:0;pointer-events:none}
-.spin{width:38px;height:38px;border:3px solid var(--s3);border-top-color:var(--red);
-  border-radius:50%;animation:sp .75s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.vloader p{font-size:.78rem;color:var(--mt)}
+        /* Header Area */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
 
-/* NATIVE AD STYLING */
-.native-ad-container {
-  background: var(--s1);
-  border: 1px solid var(--bd);
-  border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  min-height: 100px;
-}
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-.vinfo{margin-bottom:1.1rem}
-.vi-cat{display:inline-block;background:var(--red);color:#fff;font-size:.62rem;
-  font-weight:800;letter-spacing:.08em;text-transform:uppercase;
-  padding:.17rem .62rem;border-radius:5px;margin-bottom:.6rem}
-.vi-title{font-size:clamp(1.2rem,2.8vw,1.75rem);font-weight:900;
-  letter-spacing:-.02em;line-height:1.2;margin-bottom:.65rem}
-.vi-meta{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.85rem}
-.chip{display:flex;align-items:center;gap:.22rem;background:var(--s2);
-  border:1px solid var(--bd);border-radius:50px;padding:.2rem .62rem;font-size:.72rem;color:var(--mt)}
-.vi-acts{display:flex;gap:.45rem;flex-wrap:
+        /* Main Player Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 20px;
+        }
+
+        .video-wrapper {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar - No Ads, Just Info */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #2a2a32;
+        }
+
+        .shortcuts-list {
+            list-style: none;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .shortcuts-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            color: #aaa;
+        }
+
+        kbd {
+            background: #333;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo">StreamHub</div>
+            <div class="nav-actions">
+                <button>Like</button>
+                <button>Share</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="video-section">
+                <div class="video-wrapper">
+                    <video controls poster="poster.jpg">
+                        <source src="your-video-file.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div class="info-card">
+                    <h3>Keyboard Shortcuts</h3>
+                    <ul class="shortcuts-list">
+                        <li>Play / Pause <kbd>Space</kbd></li>
+                        <li>Forward 10s <kbd>→</kbd></li>
+                        <li>Back 10s <kbd>←</kbd></li>
+                        <li>Fullscreen <kbd>F</kbd></li>
+                        <li>Mute <kbd>M</kbd></li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Up Next</h3>
+                    <p style="color:#666; font-size: 13px;">No related videos yet.</p>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+</body>
+</html>
