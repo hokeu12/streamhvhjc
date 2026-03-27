@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Premium</title>
+    <title id="page-title">StreamHub - Player</title>
     <style>
         :root { --bg: #0b0b0e; --card: #16161d; --accent: #ff4d4d; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        .container { max-width: 1300px; margin: 0 auto; }
         
-        /* Header without top ad banner */
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .logo { font-size: 24px; font-weight: bold; color: var(--accent); text-decoration: none; }
+        .logo { font-size: 26px; font-weight: bold; color: var(--accent); text-decoration: none; text-transform: uppercase; }
 
-        .layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+        .layout { display: grid; grid-template-columns: 1fr 320px; gap: 25px; }
         
-        /* Video area without mid/bottom ad slots */
-        .player-box { background: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 16/9; width: 100%; }
+        .player-box { background: #000; border-radius: 12px; overflow: hidden; aspect-ratio: 16/9; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         video { width: 100%; height: 100%; }
 
-        .info { margin-top: 15px; }
-        .info h1 { margin: 0; font-size: 22px; }
-        .meta { color: #888; font-size: 14px; margin-top: 5px; }
-        .desc { margin-top: 15px; color: #ccc; line-height: 1.5; border-top: 1px solid #222; padding-top: 15px; }
+        .info { margin-top: 25px; }
+        .badge { background: var(--accent); padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+        .info h1 { margin: 10px 0; font-size: 32px; }
+        .meta-row { display: flex; gap: 15px; color: #888; font-size: 14px; margin-bottom: 20px; }
+        .desc-box { background: #121218; padding: 20px; border-radius: 8px; color: #bbb; line-height: 1.6; border: 1px solid #1f1f27; }
 
-        /* Sidebar without the 300x250 ad slot */
-        .sidebar { display: flex; flex-direction: column; gap: 15px; }
-        .card { background: var(--card); padding: 15px; border-radius: 8px; border: 1px solid #222; }
-        .card h3 { margin: 0 0 10px 0; font-size: 12px; color: #888; text-transform: uppercase; }
-        .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
-        kbd { background: #333; padding: 2px 5px; border-radius: 4px; font-family: monospace; }
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 10px; border: 1px solid #222; }
+        .card h3 { margin: 0 0 15px 0; font-size: 12px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; color: #ddd; }
+        kbd { background: #333; padding: 2px 6px; border-radius: 4px; font-family: monospace; border: 1px solid #444; }
 
-        @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+        @media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -39,7 +37,11 @@
 <div class="container">
     <header>
         <a href="#" class="logo">STREAMHUB</a>
-        <button style="background:var(--accent); border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer;">Back</button>
+        <div style="display:flex; gap:10px;">
+            <button style="background:#222; border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer;">Like</button>
+            <button style="background:#222; border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer;">Share</button>
+            <button style="background:var(--accent); border:none; color:white; padding:8px 15px; border-radius:4px; cursor:pointer;">All Videos</button>
+        </div>
     </header>
 
     <div class="layout">
@@ -47,51 +49,51 @@
             <div class="player-box">
                 <video id="mainVideo" controls autoplay src=""></video>
             </div>
+
             <div class="info">
+                <span class="badge" id="cat">MOVIES</span>
                 <h1 id="title">Loading...</h1>
-                <div class="meta">
-                    <span id="cat">Category</span> • <span id="year">2026</span> • <span id="qual">1080p</span> • ⭐ <span id="rate">0.0</span>
+                <div class="meta-row">
+                    <span>⭐ <span id="rate">0.0</span></span>
+                    <span>📅 <span id="year">2000</span></span>
+                    <span>HD</span>
+                    <span>👁️ Watching now</span>
                 </div>
-                <div class="desc" id="desc">Description loading...</div>
+                <div class="desc-box" id="desc">Loading description...</div>
             </div>
         </main>
 
         <aside class="sidebar">
             <div class="card">
-                <h3>Controls</h3>
-                <div class="row"><span>Play</span> <kbd>Space</kbd></div>
-                <div class="row"><span>Forward</span> <kbd>→</kbd></div>
-                <div class="row"><span>Back</span> <kbd>←</kbd></div>
-                <div class="row"><span>Full</span> <kbd>F</kbd></div>
+                <h3>Keyboard Shortcuts</h3>
+                <div class="row"><span>Play / Pause</span> <kbd>Space</kbd></div>
+                <div class="row"><span>Forward 10s</span> <kbd>→</kbd></div>
+                <div class="row"><span>Back 10s</span> <kbd>←</kbd></div>
+                <div class="row"><span>Fullscreen</span> <kbd>F</kbd></div>
+                <div class="row"><span>Mute</span> <kbd>M</kbd></div>
             </div>
             <div class="card">
                 <h3>Up Next</h3>
-                <p style="font-size:12px; color:#444; text-align:center;">No videos found.</p>
+                <p style="font-size:12px; color:#444; text-align:center; margin:0;">No related videos yet.</p>
             </div>
         </aside>
     </div>
 </div>
 
 <script>
-    // This script replaces the old Adsterra logic with actual video loading
     const params = new URLSearchParams(window.location.search);
-    const elements = {
-        video: document.getElementById('mainVideo'),
-        title: document.getElementById('title'),
-        desc: document.getElementById('desc'),
-        cat: document.getElementById('cat'),
-        year: document.getElementById('year'),
-        qual: document.getElementById('qual'),
-        rate: document.getElementById('rate')
-    };
-
-    if (params.get('url')) elements.video.src = decodeURIComponent(params.get('url'));
-    if (params.get('title')) elements.title.innerText = decodeURIComponent(params.get('title'));
-    if (params.get('ds')) elements.desc.innerText = decodeURIComponent(params.get('ds'));
-    if (params.get('cat')) elements.cat.innerText = params.get('cat');
-    if (params.get('yr')) elements.year.innerText = params.get('yr');
-    if (params.get('q')) elements.qual.innerText = params.get('q');
-    if (params.get('rt')) elements.rate.innerText = params.get('rt');
+    
+    // Auto-load data from your URL
+    if (params.get('url')) document.getElementById('mainVideo').src = decodeURIComponent(params.get('url'));
+    if (params.get('title')) {
+        const t = decodeURIComponent(params.get('title'));
+        document.getElementById('title').innerText = t;
+        document.getElementById('page-title').innerText = t + " - StreamHub";
+    }
+    if (params.get('ds')) document.getElementById('desc').innerText = decodeURIComponent(params.get('ds'));
+    if (params.get('cat')) document.getElementById('cat').innerText = params.get('cat').toUpperCase();
+    if (params.get('yr')) document.getElementById('year').innerText = params.get('yr');
+    if (params.get('rt')) document.getElementById('rate').innerText = params.get('rt');
 </script>
 
 </body>
