@@ -3,104 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamHub - Video Player</title>
+    <title>StreamHub - Player</title>
     <style>
-        :root {
-            --bg-color: #0f0f13;
-            --card-bg: #1a1a20;
-            --text-main: #ffffff;
-            --accent: #ff4d4d;
-        }
-
         body {
             margin: 0;
             padding: 20px;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            background-color: #0f0f13; /* Matching your dark theme */
+            color: #ffffff;
+            font-family: sans-serif;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
         }
 
-        /* Header Area */
-        header {
+        /* Header / Logo Section */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
         }
 
         .logo {
-            font-size: 24px;
+            color: #ff4d4d;
             font-weight: bold;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            font-size: 24px;
+            letter-spacing: 1px;
         }
 
-        /* Main Player Layout */
-        .main-content {
+        /* Layout for Video + Sidebar */
+        .player-layout {
             display: grid;
-            grid-template-columns: 1fr 300px;
+            grid-template-columns: 1fr 320px; /* Video takes primary space, sidebar is fixed */
             gap: 20px;
         }
 
-        .video-wrapper {
+        /* The Video Container */
+        .video-container {
+            width: 100%;
             background: #000;
             border-radius: 8px;
             overflow: hidden;
             aspect-ratio: 16 / 9;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
         video {
             width: 100%;
             height: 100%;
+            display: block;
         }
 
-        /* Sidebar - No Ads, Just Info */
+        /* Sidebar UI */
         .sidebar {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .info-card {
-            background: var(--card-bg);
-            padding: 20px;
+        .card {
+            background: #1a1a20;
+            padding: 15px;
             border-radius: 8px;
             border: 1px solid #2a2a32;
         }
 
-        .shortcuts-list {
-            list-style: none;
-            padding: 0;
+        .card h3 {
+            margin-top: 0;
             font-size: 14px;
+            color: #888;
+            text-transform: uppercase;
         }
 
-        .shortcuts-list li {
+        .shortcut-row {
             display: flex;
             justify-content: space-between;
-            padding: 5px 0;
-            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
 
         kbd {
             background: #333;
-            padding: 2px 6px;
-            border-radius: 4px;
-            color: #fff;
+            padding: 2px 5px;
+            border-radius: 3px;
         }
 
+        /* Responsive: Stack sidebar below video on mobile */
         @media (max-width: 900px) {
-            .main-content {
+            .player-layout {
                 grid-template-columns: 1fr;
             }
         }
@@ -109,42 +100,38 @@
 <body>
 
     <div class="container">
-        <header>
-            <div class="logo">StreamHub</div>
-            <div class="nav-actions">
-                <button>Like</button>
-                <button>Share</button>
+        <div class="header">
+            <div class="logo">STREAMHUB</div>
+            <div>
+                <button style="background:#2a2a32; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">All Videos</button>
             </div>
-        </header>
+        </div>
 
-        <main class="main-content">
-            <section class="video-section">
-                <div class="video-wrapper">
-                    <video controls poster="poster.jpg">
-                        <source src="your-video-file.mp4" type="video/mp4">
+        <div class="player-layout">
+            <div class="main-player">
+                <div class="video-container">
+                    <video controls>
+                        <source src="" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
-            </section>
+            </div>
 
-            <aside class="sidebar">
-                <div class="info-card">
+            <div class="sidebar">
+                <div class="card">
                     <h3>Keyboard Shortcuts</h3>
-                    <ul class="shortcuts-list">
-                        <li>Play / Pause <kbd>Space</kbd></li>
-                        <li>Forward 10s <kbd>→</kbd></li>
-                        <li>Back 10s <kbd>←</kbd></li>
-                        <li>Fullscreen <kbd>F</kbd></li>
-                        <li>Mute <kbd>M</kbd></li>
-                    </ul>
+                    <div class="shortcut-row"><span>Play / Pause</span> <kbd>Space</kbd></div>
+                    <div class="shortcut-row"><span>Forward 10s</span> <kbd>→</kbd></div>
+                    <div class="shortcut-row"><span>Back 10s</span> <kbd>←</kbd></div>
+                    <div class="shortcut-row"><span>Fullscreen</span> <kbd>F</kbd></div>
                 </div>
-                
-                <div class="info-card">
+
+                <div class="card">
                     <h3>Up Next</h3>
-                    <p style="color:#666; font-size: 13px;">No related videos yet.</p>
+                    <p style="color:#555; font-size: 12px;">No related videos yet.</p>
                 </div>
-            </aside>
-        </main>
+            </div>
+        </div>
     </div>
 
 </body>
