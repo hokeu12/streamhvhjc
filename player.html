@@ -1,166 +1,602 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">StreamHub</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>StreamHub — Video Player</title>
+  <!-- Google Fonts & simple reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-:root{
-  --bg:#050507;
-  --card:#0f0f13;
-  --accent:#ff4d4d;
-  --border:#1e1e24;
-  --text:#94a3b8;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      color: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:#fff;
-  font-family:system-ui;
-}
+    /* glassmorphism containers */
+    .glass-card {
+      background: rgba(15, 25, 45, 0.55);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
 
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
+    /* navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 20, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-video{
-  width:100%;
-  border-radius:12px;
-  background:#000;
-}
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
 
-h1{margin:10px 0;}
+    .logo-icon {
+      font-size: 1.8rem;
+    }
 
-.meta{color:var(--text);font-size:14px;}
+    .logo-text {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(120deg, #fff, #a78bfa);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
 
-.desc{
-  background:var(--card);
-  padding:15px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  margin-top:15px;
-}
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+    }
 
-/* SOCIAL BAR */
-#social-bar{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:#111;
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:10px;
-  border-top:1px solid #222;
-  z-index:9999;
-}
+    .nav-link {
+      text-decoration: none;
+      color: #ddd;
+      font-weight: 500;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-#social-bar a{
-  background:var(--accent);
-  padding:6px 12px;
-  color:#fff;
-  border-radius:6px;
-  text-decoration:none;
-  font-weight:600;
-}
+    .nav-link:hover {
+      color: white;
+      text-shadow: 0 0 5px rgba(167, 139, 250, 0.6);
+    }
 
-#close-bar{
-  position:absolute;
-  right:10px;
-  background:none;
-  border:none;
-  color:#aaa;
-  cursor:pointer;
-}
-</style>
+    /* main container */
+    .player-container {
+      flex: 1;
+      max-width: 1300px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 2rem;
+      width: 100%;
+    }
+
+    .video-section {
+      margin-bottom: 2rem;
+    }
+
+    .video-wrapper {
+      border-radius: 1.8rem;
+      overflow: hidden;
+      background: #00000055;
+      box-shadow: 0 20px 35px -12px black;
+      transition: all 0.2s;
+    }
+
+    video {
+      width: 100%;
+      display: block;
+      background: #0a0a1a;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+    }
+
+    /* video info panel */
+    .info-panel {
+      margin-top: 1.2rem;
+      padding: 1rem 1.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .video-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      word-break: break-word;
+    }
+
+    .url-badge {
+      font-size: 0.75rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      font-family: monospace;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* controls card */
+    .control-card {
+      padding: 1.5rem 1.8rem;
+      margin: 1.5rem 0;
+    }
+
+    .url-input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .url-input {
+      flex: 4;
+      min-width: 220px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 60px;
+      padding: 0.9rem 1.5rem;
+      color: white;
+      font-size: 0.95rem;
+      font-family: 'Inter', monospace;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .url-input:focus {
+      border-color: #a78bfa;
+      box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+    }
+
+    button {
+      background: linear-gradient(105deg, #6c47ff, #a155f0);
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 60px;
+      font-weight: 600;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    button:hover {
+      transform: scale(1.02);
+      opacity: 0.92;
+    }
+
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .secondary-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .example-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #bbb;
+    }
+
+    .example-badge {
+      background: rgba(167, 139, 250, 0.2);
+      padding: 0.3rem 0.9rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: 0.1s;
+      font-family: monospace;
+    }
+
+    .example-badge:hover {
+      background: rgba(167, 139, 250, 0.5);
+      color: white;
+    }
+
+    .status-msg {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      padding: 0.5rem;
+      border-radius: 40px;
+      display: inline-block;
+    }
+
+    .error-msg {
+      color: #ffb7b7;
+      background: rgba(220, 38, 38, 0.2);
+      padding: 0.4rem 1rem;
+      border-radius: 40px;
+    }
+
+    .success-msg {
+      color: #b9f6ca;
+      background: rgba(34, 197, 94, 0.2);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.8rem;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: 2rem;
+      background: rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 650px) {
+      .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .info-panel {
+        flex-direction: column;
+        align-items: start;
+      }
+      .url-badge {
+        max-width: 100%;
+        white-space: normal;
+        word-break: break-all;
+      }
+      .control-card {
+        padding: 1.2rem;
+      }
+    }
+
+    .loader {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
-  <video id="player" controls autoplay></video>
+<nav class="navbar">
+  <div class="logo-area">
+    <span class="logo-icon">🎬</span>
+    <span class="logo-text">StreamHub</span>
+  </div>
+  <div class="nav-links">
+    <a href="https://yummydcorn.netlify.app/" class="nav-link" target="_blank">🏠 Home</a>
+    <a href="#" class="nav-link" id="uploadRedirect">📤 Upload</a>
+    <a href="#" class="nav-link" id="galleryLink">🎞️ Gallery</a>
+    <a href="player.html" class="nav-link" style="background: rgba(167,139,250,0.2); padding: 0.3rem 1rem; border-radius: 40px;">▶️ Player</a>
+  </div>
+</nav>
 
-  <h1 id="title">Loading...</h1>
-  <div class="meta">
-    ⭐ <span id="rating">-</span> |
-    📅 <span id="year">-</span> |
-    🎬 <span id="category">-</span>
+<div class="player-container">
+  <div class="video-section">
+    <div class="video-wrapper glass-card">
+      <video id="mainVideo" controls controlslist="nodownload" style="width:100%;">
+        <source src="" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="info-panel glass-card">
+      <div class="video-title" id="videoTitleDisplay">🎥 No video loaded</div>
+      <div class="url-badge" id="currentUrlBadge">—</div>
+    </div>
   </div>
 
-  <div class="desc" id="desc">Loading description...</div>
+  <div class="control-card glass-card">
+    <div class="url-input-group">
+      <input type="text" id="videoUrlInput" class="url-input" placeholder="Paste video URL (MP4, MOV, MKV, WebM, or Cloudinary direct link) ..." value="">
+      <button id="loadVideoBtn">📀 Load Video</button>
+      <button id="clearBtn" class="secondary-btn">🗑️ Clear</button>
+    </div>
+
+    <div class="example-row">
+      <span>✨ Try samples:</span>
+      <span class="example-badge" data-url="https://res.cloudinary.com/demo/video/upload/sample.mp4">🌊 Cloudinary Sample</span>
+      <span class="example-badge" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">🎬 Big Buck Bunny</span>
+      <span class="example-badge" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4">🐘 Elephants Dream</span>
+    </div>
+    <div id="statusMessage" class="status-msg"></div>
+    <div class="example-row" style="margin-top: 12px;">
+      💡 <strong>Tip:</strong> Supports direct video URLs (MP4, WebM, MOV). You can upload to Cloudinary and paste the raw video link.
+    </div>
+  </div>
+
+  <div style="margin-top: 1rem; text-align: center; font-size:0.85rem; opacity:0.7;">
+    ⚡ Fullscreen • Playback speed • Stream any compatible video
+  </div>
 </div>
 
-<!-- SOCIAL BAR -->
-<div id="social-bar" hidden>
-  <span>🔥 Watch More:</span>
-  <a href="https://your-link.com" target="_blank">Explore</a>
-  <a href="https://your-link.com" target="_blank">Download</a>
-  <button id="close-bar">✕</button>
-</div>
+<footer>
+  <p>StreamHub — Free video streaming • No subscription needed • Upload from gallery or paste Cloudinary URL</p>
+  <p style="margin-top: 8px;">🎬 Player works with any direct video URL • HTML5 technology</p>
+</footer>
 
 <script>
-const q = new URLSearchParams(location.search);
-
-const video = document.getElementById('player');
-const id = q.get('id');
-
-function decode(v){ return decodeURIComponent(v || ""); }
-
-// Load video
-if(q.get('url')){
-  video.src = decode(q.get('url'));
-}
-
-// Inject data
-document.getElementById('title').innerText = decode(q.get('title')) || "Untitled";
-document.getElementById('category').innerText = decode(q.get('cat')) || "-";
-document.getElementById('year').innerText = decode(q.get('yr')) || "-";
-document.getElementById('rating').innerText = decode(q.get('rt')) || "-";
-document.getElementById('desc').innerText = decode(q.get('ds')) || "No description";
-
-document.title = document.getElementById('title').innerText + " | StreamHub";
-
-// Save progress
-video.ontimeupdate = () => {
-  if(!video.duration) return;
-  const pct = Math.floor((video.currentTime / video.duration) * 100);
-  localStorage.setItem("prog_"+id, pct);
-};
-
-// Resume
-video.onloadedmetadata = () => {
-  const saved = localStorage.getItem("prog_"+id);
-  if(saved){
-    video.currentTime = (saved/100) * video.duration;
-  }
-};
-
-// Keyboard controls
-document.addEventListener('keydown', e=>{
-  if(e.key===" ") { e.preventDefault(); video.paused?video.play():video.pause(); }
-  if(e.key==="ArrowRight") video.currentTime += 10;
-  if(e.key==="ArrowLeft") video.currentTime -= 10;
-  if(e.key==="f") video.requestFullscreen();
-});
-
-// SOCIAL BAR LOGIC
-(function(){
-  if(localStorage.getItem("sb_hide")) return;
-
-  setTimeout(()=>{
-    document.getElementById('social-bar').hidden = false;
-  }, 5000);
-
-  document.getElementById('close-bar').onclick = ()=>{
-    document.getElementById('social-bar').remove();
-    localStorage.setItem("sb_hide","1");
-  };
-})();
+  (function() {
+    // DOM elements
+    const videoEl = document.getElementById('mainVideo');
+    const urlInput = document.getElementById('videoUrlInput');
+    const loadBtn = document.getElementById('loadVideoBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const videoTitleSpan = document.getElementById('videoTitleDisplay');
+    const currentUrlBadge = document.getElementById('currentUrlBadge');
+    const statusDiv = document.getElementById('statusMessage');
+    
+    // Helper: show status message (auto-fade after 4s)
+    let statusTimeout = null;
+    function showStatus(message, isError = false) {
+      if (statusTimeout) clearTimeout(statusTimeout);
+      statusDiv.innerHTML = isError ? `<span class="error-msg">⚠️ ${message}</span>` : `<span class="success-msg">✅ ${message}</span>`;
+      statusTimeout = setTimeout(() => {
+        if (statusDiv) statusDiv.innerHTML = '';
+      }, 4500);
+    }
+    
+    // Helper: extract filename from URL or return generic
+    function getTitleFromUrl(urlString) {
+      try {
+        let url = new URL(urlString);
+        let pathParts = url.pathname.split('/');
+        let lastPart = pathParts.pop() || 'video';
+        let filename = decodeURIComponent(lastPart);
+        if (filename.includes('.')) filename = filename.split('.').slice(0, -1).join('.');
+        if (filename.length > 45) filename = filename.substring(0, 42) + '...';
+        return filename || 'Stream';
+      } catch(e) {
+        let raw = urlString.split('/').pop() || 'video';
+        if (raw.includes('?')) raw = raw.split('?')[0];
+        return raw.length > 40 ? raw.substring(0,37)+'...' : raw;
+      }
+    }
+    
+    // Core function to load video from URL string
+    function loadVideoFromUrl(videoUrl) {
+      if (!videoUrl || videoUrl.trim() === '') {
+        showStatus('Please enter a valid video URL', true);
+        return false;
+      }
+      
+      let trimmedUrl = videoUrl.trim();
+      // Basic validation: must start with http:// or https:// (most direct links)
+      if (!trimmedUrl.match(/^https?:\/\//i)) {
+        showStatus('URL must start with http:// or https:// (direct video link)', true);
+        return false;
+      }
+      
+      // Additional check for common video extensions / cloudinary patterns
+      const isLikelyVideo = trimmedUrl.match(/\.(mp4|mov|avi|mkv|webm|m4v)(\?|$)/i) || 
+                            trimmedUrl.includes('cloudinary.com/video/') ||
+                            trimmedUrl.includes('cloudinary.com/') && (trimmedUrl.includes('/upload/') || trimmedUrl.includes('video/upload'));
+      
+      if (!isLikelyVideo && !trimmedUrl.includes('blob:') && !trimmedUrl.includes('gtv-videos-bucket')) {
+        // Not a hard block, just warning because some CDNs don't have extension
+        console.warn("URL might not be a direct video asset, but attempting to load.");
+      }
+      
+      // Attempt to set video source
+      try {
+        // Remove any existing src to avoid conflicts
+        videoEl.removeAttribute('src');
+        videoEl.load();
+        
+        // Set new source
+        videoEl.src = trimmedUrl;
+        videoEl.load();
+        
+        // Update UI elements
+        let displayTitle = getTitleFromUrl(trimmedUrl);
+        videoTitleSpan.textContent = `🎬 ${displayTitle}`;
+        let shortUrl = trimmedUrl.length > 65 ? trimmedUrl.substring(0, 62) + '...' : trimmedUrl;
+        currentUrlBadge.textContent = shortUrl;
+        currentUrlBadge.title = trimmedUrl;
+        
+        // Store current URL in input field for consistency
+        urlInput.value = trimmedUrl;
+        
+        // Add event listeners to handle load errors gracefully
+        function onVideoCanPlay() {
+          showStatus('Video loaded successfully! Ready to play.');
+          videoEl.play().catch(e => {
+            // Autoplay policies might block, but not an error, user can click play
+            console.log("Autoplay prevented:", e);
+            showStatus('Video loaded. Click play to start.', false);
+          });
+          videoEl.removeEventListener('canplaythrough', onVideoCanPlay);
+          videoEl.removeEventListener('error', onVideoError);
+        }
+        
+        function onVideoError(e) {
+          let errorMsg = '';
+          if (videoEl.error) {
+            switch(videoEl.error.code) {
+              case MediaError.MEDIA_ERR_NETWORK: errorMsg = 'Network error while loading video.'; break;
+              case MediaError.MEDIA_ERR_DECODE: errorMsg = 'Video decoding error. File may be corrupted or unsupported.'; break;
+              case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: errorMsg = 'Video format not supported or invalid URL.'; break;
+              default: errorMsg = 'Unknown error loading video.';
+            }
+          } else {
+            errorMsg = 'Failed to load video. Check URL and CORS.';
+          }
+          showStatus(errorMsg, true);
+          videoTitleSpan.textContent = '⚠️ Failed to load';
+          currentUrlBadge.textContent = 'Invalid / unsupported video';
+          videoEl.removeAttribute('src');
+          videoEl.load();
+          videoEl.removeEventListener('canplaythrough', onVideoCanPlay);
+          videoEl.removeEventListener('error', onVideoError);
+        }
+        
+        videoEl.addEventListener('canplaythrough', onVideoCanPlay, { once: true });
+        videoEl.addEventListener('error', onVideoError, { once: true });
+        
+        // fallback timeout for safety
+        setTimeout(() => {
+          if (videoEl.readyState === 0 && !videoEl.error) {
+            // still no progress after 7s? show warning but not fatal
+            if (videoEl.src) showStatus('Still loading... large file or slow connection.', false);
+          }
+        }, 7000);
+        
+        return true;
+      } catch(err) {
+        console.error(err);
+        showStatus('Invalid URL format or security restriction', true);
+        return false;
+      }
+    }
+    
+    // load button click
+    function onLoadClick() {
+      let rawUrl = urlInput.value.trim();
+      if (!rawUrl) {
+        showStatus('Please paste a video URL first', true);
+        return;
+      }
+      loadVideoFromUrl(rawUrl);
+    }
+    
+    // clear button: resets video and fields
+    function onClear() {
+      videoEl.pause();
+      videoEl.removeAttribute('src');
+      videoEl.load();
+      videoTitleSpan.textContent = '🎥 No video loaded';
+      currentUrlBadge.textContent = '—';
+      urlInput.value = '';
+      showStatus('Player cleared. You can paste a new URL.', false);
+      // optional: reset status
+      statusDiv.innerHTML = '';
+    }
+    
+    // read URL parameter "url" from query string (player.html?url=encodedLink)
+    function getVideoFromQueryParam() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let videoParam = urlParams.get('url');
+      if (videoParam) {
+        try {
+          // Decode properly (sometimes encoded)
+          let decoded = decodeURIComponent(videoParam);
+          if (decoded && decoded.trim() !== '') {
+            urlInput.value = decoded;
+            showStatus('Loading video from shared link...', false);
+            loadVideoFromUrl(decoded);
+            return true;
+          }
+        } catch(e) {
+          console.warn("could not parse url param", e);
+        }
+      }
+      return false;
+    }
+    
+    // event listeners for example badges
+    document.querySelectorAll('.example-badge').forEach(badge => {
+      badge.addEventListener('click', (e) => {
+        let sampleUrl = badge.getAttribute('data-url');
+        if (sampleUrl) {
+          urlInput.value = sampleUrl;
+          loadVideoFromUrl(sampleUrl);
+        }
+      });
+    });
+    
+    // Upload redirect button: go back to main page upload section
+    const uploadRedirectBtn = document.getElementById('uploadRedirect');
+    if (uploadRedirectBtn) {
+      uploadRedirectBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'https://yummydcorn.netlify.app/#upload-section';
+      });
+    }
+    // Gallery link: back to main page results
+    const galleryLink = document.getElementById('galleryLink');
+    if (galleryLink) {
+      galleryLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'https://yummydcorn.netlify.app/';
+      });
+    }
+    
+    loadBtn.addEventListener('click', onLoadClick);
+    clearBtn.addEventListener('click', onClear);
+    
+    // Also allow pressing Enter in input field
+    urlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onLoadClick();
+      }
+    });
+    
+    // If video element ends, just log - no extra
+    videoEl.addEventListener('ended', () => {
+      showStatus('Playback finished. Load another video.', false);
+    });
+    
+    // try to load from URL param first
+    if (!getVideoFromQueryParam()) {
+      // optionally prefill a welcome hint? but not necessary
+      // Show friendly placeholder message
+      statusDiv.innerHTML = '<span class="success-msg">✨ Paste any direct video URL or try one of the sample links above</span>';
+      setTimeout(() => {
+        if (statusDiv.innerHTML.includes('✨ Paste any direct')) {
+          statusDiv.innerHTML = '';
+        }
+      }, 5000);
+    }
+    
+    // Additional cross-origin / CORS note: if video fails due to CORS, show helpful note
+    window.addEventListener('load', () => {
+      // small check for any pending error
+      if (videoEl.error && videoEl.src) {
+        // already handled by error event
+      }
+    });
+  })();
 </script>
-
 </body>
 </html>
