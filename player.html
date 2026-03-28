@@ -82,10 +82,28 @@
       text-shadow: 0 0 5px rgba(167, 139, 250, 0.6);
     }
 
+    /* Top ad banner container */
+    .top-banner {
+      max-width: 1400px;
+      margin: 1rem auto 0;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ad-container {
+      background: rgba(0,0,0,0.3);
+      border-radius: 1rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
     /* Layout: main video + sidebar */
     .player-layout {
       max-width: 1400px;
-      margin: 2rem auto;
+      margin: 1.5rem auto;
       padding: 0 1.5rem;
       display: grid;
       grid-template-columns: 1fr 360px;
@@ -259,6 +277,15 @@
       gap: 1.5rem;
     }
 
+    .sidebar-ad {
+      background: rgba(0,0,0,0.3);
+      border-radius: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
     .related-header {
       font-size: 1.2rem;
       font-weight: 600;
@@ -406,6 +433,22 @@
   </div>
 </nav>
 
+<!-- Top Banner Ad (728x90) -->
+<div class="top-banner">
+  <div class="ad-container" style="width: 728px; height: 90px;">
+    <script>
+      atOptions = {
+        'key' : '3407cae831ba7308f892ce3e722d876e',
+        'format' : 'iframe',
+        'height' : 90,
+        'width' : 728,
+        'params' : {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+  </div>
+</div>
+
 <div class="player-layout">
   <!-- Main video column -->
   <div class="video-column">
@@ -454,14 +497,30 @@
     </div>
   </div>
 
-  <!-- Sidebar: Related Videos -->
+  <!-- Sidebar: Related Videos + Ad -->
   <div class="sidebar">
+    <!-- Sidebar Ad (300x250) -->
+    <div class="sidebar-ad glass-card" style="padding: 0; justify-content: center;">
+      <div style="width: 300px; height: 250px;">
+        <script>
+          atOptions = {
+            'key' : 'ef27147f3966499947f181bf69d46522',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/ef27147f3966499947f181bf69d46522/invoke.js"></script>
+      </div>
+    </div>
+
+    <!-- Related Videos Section -->
     <div class="glass-card" style="padding: 1.2rem;">
       <div class="related-header">
         <i class="fas fa-list-ul"></i> Related Videos
       </div>
       <div class="related-list" id="relatedList">
-        <!-- Dynamic related videos will appear here -->
         <div style="text-align: center; color: #aaa;">Loading suggestions...</div>
       </div>
     </div>
@@ -525,19 +584,15 @@
       video.src = url;
       video.load();
       video.play().catch(e => {
-        // Autoplay may be blocked; not a critical error
         console.log("Autoplay prevented:", e);
         showStatus('Video loaded. Click play to start.', false);
       });
       showStatus('Loading video...', false);
       
-      // Update URL input field
       videoUrlInput.value = url;
       
-      // If we're loading from URL param, we already set metadata; but if manual load, update title from URL
       const params = getQueryParams();
       if (!params.title) {
-        // Extract filename as fallback title
         let title = url.split('/').pop().split('?')[0];
         title = decodeURIComponent(title).replace(/\.(mp4|mov|avi|mkv|webm)$/i, '');
         videoTitleElem.textContent = title || 'Custom Video';
@@ -563,7 +618,6 @@
       if (params.title) videoTitleElem.textContent = params.title;
       if (params.ds) videoDescElem.textContent = params.ds;
       
-      // Build badges
       const badges = [];
       if (params.cat) badges.push(`<span class="badge"><i class="fas fa-tag"></i> ${params.cat}</span>`);
       if (params.q) badges.push(`<span class="badge"><i class="fas fa-hd"></i> ${params.q}</span>`);
@@ -580,7 +634,6 @@
       const params = getQueryParams();
       if (params.url) {
         let videoUrl = params.url;
-        // Handle possible double encoding
         try {
           if (videoUrl.includes('%')) videoUrl = decodeURIComponent(videoUrl);
         } catch(e) {}
@@ -674,7 +727,6 @@
     function buildRelatedList() {
       const params = getQueryParams();
       let category = params.cat || '';
-      // Filter related based on category if available, otherwise show all
       let filtered = sampleRelated;
       if (category) {
         filtered = sampleRelated.filter(v => v.category.toLowerCase().includes(category.toLowerCase()));
@@ -692,7 +744,6 @@
           </div>
         `;
         div.addEventListener('click', () => {
-          // Load this video and update URL without reload (history pushState)
           const newUrl = new URL(window.location.href);
           newUrl.searchParams.set('url', item.url);
           newUrl.searchParams.set('title', item.title);
@@ -738,7 +789,6 @@
         return;
       }
       loadVideo(url, true);
-      // Update URL params to reflect manual load (so sharing works)
       const newUrl = new URL(window.location.href);
       newUrl.searchParams.set('url', url);
       newUrl.searchParams.delete('title');
@@ -800,14 +850,12 @@
 
     // --- Initialization ---
     if (!initFromParams()) {
-      // No video in URL, show placeholder
       videoTitleElem.textContent = 'No video selected';
       metaBadgesElem.innerHTML = '<span class="badge"><i class="fas fa-info-circle"></i> Paste a URL or select from related</span>';
       videoDescElem.textContent = 'Use the input above or click a related video to start watching.';
     }
     buildRelatedList();
 
-    // Update volume icon initial
     updateVolumeIcon();
   })();
 </script>
