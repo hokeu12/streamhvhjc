@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>StreamHub — Video Player</title>
-  <!-- Google Fonts & simple reset -->
+  <title>StreamHub — Premium Video Player</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -18,20 +18,18 @@
       background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
       color: #f0f0f0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* glassmorphism containers */
+    /* Glass morphism */
     .glass-card {
       background: rgba(15, 25, 45, 0.55);
       backdrop-filter: blur(12px);
-      border-radius: 2rem;
+      border-radius: 1.5rem;
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
-    /* navbar */
+    /* Navbar */
     .navbar {
       display: flex;
       justify-content: space-between;
@@ -84,25 +82,26 @@
       text-shadow: 0 0 5px rgba(167, 139, 250, 0.6);
     }
 
-    /* main container */
-    .player-container {
-      flex: 1;
-      max-width: 1300px;
+    /* Layout: main video + sidebar */
+    .player-layout {
+      max-width: 1400px;
       margin: 2rem auto;
-      padding: 0 1.5rem 2rem;
-      width: 100%;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1.8rem;
     }
 
-    .video-section {
-      margin-bottom: 2rem;
+    /* Video column */
+    .video-column {
+      min-width: 0;
     }
 
     .video-wrapper {
-      border-radius: 1.8rem;
+      border-radius: 1.5rem;
       overflow: hidden;
-      background: #00000055;
-      box-shadow: 0 20px 35px -12px black;
-      transition: all 0.2s;
+      background: #000;
+      position: relative;
     }
 
     video {
@@ -113,216 +112,284 @@
       object-fit: contain;
     }
 
-    /* video info panel */
-    .info-panel {
-      margin-top: 1.2rem;
-      padding: 1rem 1.6rem;
+    /* Custom controls */
+    .custom-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+      padding: 1rem 1rem 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 1rem;
+      flex-direction: column;
+      gap: 0.6rem;
     }
 
-    .title-section {
-      flex: 2;
+    .video-wrapper:hover .custom-controls {
+      opacity: 1;
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      width: 100%;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 5px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress-filled {
+      height: 100%;
+      background: #a78bfa;
+      border-radius: 5px;
+      width: 0%;
+      position: relative;
+    }
+
+    .progress-filled::after {
+      content: '';
+      position: absolute;
+      right: -6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      background: #a78bfa;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .progress-bar:hover .progress-filled::after {
+      opacity: 1;
+    }
+
+    .time-display {
+      font-size: 0.8rem;
+      font-family: monospace;
+      background: rgba(0,0,0,0.6);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .control-buttons {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 0.3rem;
+      border-radius: 6px;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+    }
+
+    .speed-select {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    /* Video info */
+    .video-info {
+      margin-top: 1rem;
+      padding: 1.2rem;
     }
 
     .video-title {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
-      word-break: break-word;
       margin-bottom: 0.5rem;
     }
 
-    .meta-details {
+    .meta-badges {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
-      color: #ccc;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
     }
 
-    .meta-badge {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.2rem 0.7rem;
-      border-radius: 30px;
+    .badge {
+      background: rgba(167, 139, 250, 0.2);
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
       display: inline-flex;
       align-items: center;
       gap: 6px;
     }
 
     .description {
+      color: #ccc;
+      line-height: 1.5;
       margin-top: 0.8rem;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .related-header {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .related-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .related-item {
+      display: flex;
+      gap: 0.8rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 1rem;
+      transition: 0.2s;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .related-item:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(4px);
+    }
+
+    .related-thumb {
+      width: 120px;
+      height: 68px;
+      background: linear-gradient(45deg, #2a2a4a, #1a1a3a);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .related-info {
+      flex: 1;
+    }
+
+    .related-title {
+      font-weight: 600;
       font-size: 0.9rem;
-      color: #ddd;
-      line-height: 1.4;
-      max-width: 90%;
-    }
-
-    .url-badge {
-      font-size: 0.7rem;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 0.3rem 0.8rem;
-      border-radius: 40px;
-      font-family: monospace;
-      max-width: 300px;
+      margin-bottom: 0.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      align-self: center;
     }
 
-    /* controls card */
-    .control-card {
-      padding: 1.5rem 1.8rem;
-      margin: 1.5rem 0;
+    .related-meta {
+      font-size: 0.7rem;
+      color: #aaa;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* URL input panel */
+    .url-panel {
+      padding: 1rem;
+      margin-top: 0.5rem;
     }
 
     .url-input-group {
       display: flex;
+      gap: 0.5rem;
       flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-      margin-bottom: 1.5rem;
     }
 
     .url-input {
-      flex: 4;
-      min-width: 220px;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 60px;
-      padding: 0.9rem 1.5rem;
+      flex: 1;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 40px;
+      padding: 0.6rem 1rem;
       color: white;
-      font-size: 0.95rem;
-      font-family: 'Inter', monospace;
+      font-size: 0.85rem;
       outline: none;
-      transition: 0.2s;
     }
 
     .url-input:focus {
       border-color: #a78bfa;
-      box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
     }
 
     button {
       background: linear-gradient(105deg, #6c47ff, #a155f0);
       border: none;
-      padding: 0.8rem 1.8rem;
-      border-radius: 60px;
+      padding: 0.6rem 1.2rem;
+      border-radius: 40px;
       font-weight: 600;
       color: white;
-      font-size: 0.9rem;
       cursor: pointer;
-      transition: transform 0.15s, opacity 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+      transition: 0.2s;
     }
 
     button:hover {
       transform: scale(1.02);
-      opacity: 0.92;
     }
 
-    .secondary-btn {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-
-    .example-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      align-items: center;
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      color: #bbb;
-    }
-
-    .example-badge {
-      background: rgba(167, 139, 250, 0.2);
-      padding: 0.3rem 0.9rem;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: 0.1s;
-      font-family: monospace;
-    }
-
-    .example-badge:hover {
-      background: rgba(167, 139, 250, 0.5);
-      color: white;
-    }
-
-    .status-msg {
-      margin-top: 1rem;
-      font-size: 0.85rem;
-      padding: 0.5rem;
-      border-radius: 40px;
-      display: inline-block;
-    }
-
-    .error-msg {
-      color: #ffb7b7;
-      background: rgba(220, 38, 38, 0.2);
-      padding: 0.4rem 1rem;
-      border-radius: 40px;
-    }
-
-    .success-msg {
-      color: #b9f6ca;
-      background: rgba(34, 197, 94, 0.2);
+    .status {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      color: #a0f0a0;
     }
 
     footer {
       text-align: center;
-      padding: 1.8rem;
-      font-size: 0.85rem;
+      padding: 1.5rem;
+      font-size: 0.8rem;
       border-top: 1px solid rgba(255,255,255,0.1);
       margin-top: 2rem;
-      background: rgba(0,0,0,0.3);
     }
 
-    @media (max-width: 650px) {
-      .navbar {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
+    @media (max-width: 900px) {
+      .player-layout {
+        grid-template-columns: 1fr;
       }
-      .nav-links {
-        justify-content: center;
+      .sidebar {
+        order: 2;
       }
-      .info-panel {
-        flex-direction: column;
-        align-items: start;
-      }
-      .url-badge {
-        max-width: 100%;
-        white-space: normal;
-        word-break: break-all;
-      }
-      .description {
-        max-width: 100%;
+      .related-thumb {
+        width: 100px;
+        height: 56px;
       }
     }
-
-    .loader {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.7s linear infinite;
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -333,96 +400,154 @@
     <span class="logo-text">StreamHub</span>
   </div>
   <div class="nav-links">
-    <a href="https://yummydcorn.netlify.app/" class="nav-link" target="_blank">🏠 Home</a>
-    <a href="#" class="nav-link" id="uploadRedirect">📤 Upload</a>
-    <a href="#" class="nav-link" id="galleryLink">🎞️ Gallery</a>
-    <a href="player.html" class="nav-link" style="background: rgba(167,139,250,0.2); padding: 0.3rem 1rem; border-radius: 40px;">▶️ Player</a>
+    <a href="https://yummydcorn.netlify.app/" class="nav-link" target="_blank"><i class="fas fa-home"></i> Home</a>
+    <a href="#" class="nav-link" id="uploadBtn"><i class="fas fa-upload"></i> Upload</a>
+    <a href="#" class="nav-link" id="galleryBtn"><i class="fas fa-film"></i> Gallery</a>
   </div>
 </nav>
 
-<div class="player-container">
-  <div class="video-section">
+<div class="player-layout">
+  <!-- Main video column -->
+  <div class="video-column">
     <div class="video-wrapper glass-card">
-      <video id="mainVideo" controls controlslist="nodownload" style="width:100%;">
-        <source src="" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="info-panel glass-card" id="infoPanel">
-      <div class="title-section">
-        <div class="video-title" id="videoTitleDisplay">🎥 No video loaded</div>
-        <div class="meta-details" id="metaDetails"></div>
-        <div class="description" id="descriptionDisplay"></div>
+      <video id="mainVideo" crossorigin="anonymous"></video>
+      <div class="custom-controls">
+        <div class="progress-container">
+          <span class="time-display" id="currentTimeDisplay">0:00</span>
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-filled" id="progressFilled"></div>
+          </div>
+          <span class="time-display" id="durationDisplay">0:00</span>
+        </div>
+        <div class="control-buttons">
+          <button class="ctrl-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+          <button class="ctrl-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" style="width: 80px;">
+          <button class="ctrl-btn" id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+          <select id="speedSelect" class="speed-select">
+            <option value="0.5">0.5x</option>
+            <option value="0.75">0.75x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+          <button class="ctrl-btn" id="skipBackBtn"><i class="fas fa-backward"></i> 10</button>
+          <button class="ctrl-btn" id="skipForwardBtn">10 <i class="fas fa-forward"></i></button>
+        </div>
       </div>
-      <div class="url-badge" id="currentUrlBadge">—</div>
+    </div>
+
+    <div class="video-info glass-card">
+      <div class="video-title" id="videoTitle">Loading...</div>
+      <div class="meta-badges" id="metaBadges"></div>
+      <div class="description" id="videoDescription"></div>
+    </div>
+
+    <div class="url-panel glass-card">
+      <div class="url-input-group">
+        <input type="text" id="videoUrlInput" class="url-input" placeholder="Paste direct video URL (MP4, WebM, MOV)..." autocomplete="off">
+        <button id="loadUrlBtn">Load Video</button>
+        <button id="clearBtn" style="background: rgba(255,255,255,0.2);">Clear</button>
+      </div>
+      <div id="statusMsg" class="status"></div>
     </div>
   </div>
 
-  <div class="control-card glass-card">
-    <div class="url-input-group">
-      <input type="text" id="videoUrlInput" class="url-input" placeholder="Paste video URL (MP4, MOV, MKV, WebM, or Cloudinary direct link) ..." value="">
-      <button id="loadVideoBtn">📀 Load Video</button>
-      <button id="clearBtn" class="secondary-btn">🗑️ Clear</button>
-    </div>
-
-    <div class="example-row">
-      <span>✨ Try samples:</span>
-      <span class="example-badge" data-url="https://res.cloudinary.com/demo/video/upload/sample.mp4">🌊 Cloudinary Sample</span>
-      <span class="example-badge" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">🎬 Big Buck Bunny</span>
-      <span class="example-badge" data-url="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4">🐘 Elephants Dream</span>
-    </div>
-    <div id="statusMessage" class="status-msg"></div>
-    <div class="example-row" style="margin-top: 12px;">
-      💡 <strong>Tip:</strong> Supports direct video URLs (MP4, WebM, MOV). You can upload to Cloudinary and paste the raw video link.
+  <!-- Sidebar: Related Videos -->
+  <div class="sidebar">
+    <div class="glass-card" style="padding: 1.2rem;">
+      <div class="related-header">
+        <i class="fas fa-list-ul"></i> Related Videos
+      </div>
+      <div class="related-list" id="relatedList">
+        <!-- Dynamic related videos will appear here -->
+        <div style="text-align: center; color: #aaa;">Loading suggestions...</div>
+      </div>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>StreamHub — Free video streaming • No subscription needed • Upload from gallery or paste Cloudinary URL</p>
-  <p style="margin-top: 8px;">🎬 Player works with any direct video URL • HTML5 technology</p>
+  <p>🎥 StreamHub — Immersive Video Experience | Custom controls, keyboard shortcuts, and full HTML5 power</p>
 </footer>
 
 <script>
   (function() {
-    // DOM elements
-    const videoEl = document.getElementById('mainVideo');
-    const urlInput = document.getElementById('videoUrlInput');
-    const loadBtn = document.getElementById('loadVideoBtn');
+    // --- DOM elements ---
+    const video = document.getElementById('mainVideo');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const speedSelect = document.getElementById('speedSelect');
+    const skipBackBtn = document.getElementById('skipBackBtn');
+    const skipForwardBtn = document.getElementById('skipForwardBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFilled = document.getElementById('progressFilled');
+    const currentTimeDisplay = document.getElementById('currentTimeDisplay');
+    const durationDisplay = document.getElementById('durationDisplay');
+    const videoTitleElem = document.getElementById('videoTitle');
+    const metaBadgesElem = document.getElementById('metaBadges');
+    const videoDescElem = document.getElementById('videoDescription');
+    const videoUrlInput = document.getElementById('videoUrlInput');
+    const loadUrlBtn = document.getElementById('loadUrlBtn');
     const clearBtn = document.getElementById('clearBtn');
-    const videoTitleSpan = document.getElementById('videoTitleDisplay');
-    const metaDetailsDiv = document.getElementById('metaDetails');
-    const descriptionSpan = document.getElementById('descriptionDisplay');
-    const currentUrlBadge = document.getElementById('currentUrlBadge');
-    const statusDiv = document.getElementById('statusMessage');
-    
-    let statusTimeout = null;
-    function showStatus(message, isError = false) {
-      if (statusTimeout) clearTimeout(statusTimeout);
-      statusDiv.innerHTML = isError ? `<span class="error-msg">⚠️ ${message}</span>` : `<span class="success-msg">✅ ${message}</span>`;
-      statusTimeout = setTimeout(() => {
-        if (statusDiv) statusDiv.innerHTML = '';
-      }, 4500);
-    }
-    
-    // Helper to extract filename from URL
-    function getTitleFromUrl(urlString) {
-      try {
-        let url = new URL(urlString);
-        let pathParts = url.pathname.split('/');
-        let lastPart = pathParts.pop() || 'video';
-        let filename = decodeURIComponent(lastPart);
-        if (filename.includes('.')) filename = filename.split('.').slice(0, -1).join('.');
-        if (filename.length > 45) filename = filename.substring(0, 42) + '...';
-        return filename || 'Stream';
-      } catch(e) {
-        let raw = urlString.split('/').pop() || 'video';
-        if (raw.includes('?')) raw = raw.split('?')[0];
-        return raw.length > 40 ? raw.substring(0,37)+'...' : raw;
+    const statusMsg = document.getElementById('statusMsg');
+    const relatedList = document.getElementById('relatedList');
+
+    // --- Helper functions ---
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      if (hrs > 0) {
+        return `${hrs}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`;
       }
+      return `${mins}:${secs.toString().padStart(2,'0')}`;
     }
 
-    // Parse query parameters (supports both single and multiple)
+    function showStatus(text, isError = false) {
+      statusMsg.innerHTML = text;
+      statusMsg.style.color = isError ? '#ffaaaa' : '#a0f0a0';
+      setTimeout(() => {
+        if (statusMsg.innerHTML === text) statusMsg.innerHTML = '';
+      }, 4000);
+    }
+
+    // Load video from URL
+    function loadVideo(url, updateHistory = true) {
+      if (!url || !url.match(/^https?:\/\//i)) {
+        showStatus('Invalid URL. Must start with http:// or https://', true);
+        return false;
+      }
+      video.src = url;
+      video.load();
+      video.play().catch(e => {
+        // Autoplay may be blocked; not a critical error
+        console.log("Autoplay prevented:", e);
+        showStatus('Video loaded. Click play to start.', false);
+      });
+      showStatus('Loading video...', false);
+      
+      // Update URL input field
+      videoUrlInput.value = url;
+      
+      // If we're loading from URL param, we already set metadata; but if manual load, update title from URL
+      const params = getQueryParams();
+      if (!params.title) {
+        // Extract filename as fallback title
+        let title = url.split('/').pop().split('?')[0];
+        title = decodeURIComponent(title).replace(/\.(mp4|mov|avi|mkv|webm)$/i, '');
+        videoTitleElem.textContent = title || 'Custom Video';
+        metaBadgesElem.innerHTML = '<span class="badge"><i class="fas fa-link"></i> Direct URL</span>';
+        videoDescElem.textContent = '';
+      }
+      return true;
+    }
+
+    // --- Parse query parameters (id, title, cat, url, dur, q, yr, ds, etc.) ---
     function getQueryParams() {
       const params = new URLSearchParams(window.location.search);
       const result = {};
@@ -432,222 +557,258 @@
       return result;
     }
 
-    // Update UI with metadata from query params
-    function updateMetadataFromParams(params) {
-      let title = params.title || '';
-      let category = params.cat || '';
-      let duration = params.dur || '';
-      let quality = params.q || '';
-      let year = params.yr || '';
-      let description = params.ds || '';
-
-      if (title) {
-        videoTitleSpan.textContent = title;
-      } else {
-        // fallback: use URL if available
-        if (params.url) videoTitleSpan.textContent = getTitleFromUrl(params.url);
-        else videoTitleSpan.textContent = '🎥 No video loaded';
+    // Update UI with metadata from URL params
+    function applyMetadataFromParams() {
+      const params = getQueryParams();
+      if (params.title) videoTitleElem.textContent = params.title;
+      if (params.ds) videoDescElem.textContent = params.ds;
+      
+      // Build badges
+      const badges = [];
+      if (params.cat) badges.push(`<span class="badge"><i class="fas fa-tag"></i> ${params.cat}</span>`);
+      if (params.q) badges.push(`<span class="badge"><i class="fas fa-hd"></i> ${params.q}</span>`);
+      if (params.dur) badges.push(`<span class="badge"><i class="fas fa-clock"></i> ${params.dur}</span>`);
+      if (params.yr) badges.push(`<span class="badge"><i class="fas fa-calendar"></i> ${params.yr}</span>`);
+      if (badges.length === 0 && params.url) {
+        badges.push(`<span class="badge"><i class="fas fa-video"></i> Stream</span>`);
       }
-
-      // Build meta badges
-      let metaHtml = '';
-      if (category) metaHtml += `<span class="meta-badge">📁 ${category}</span>`;
-      if (quality) metaHtml += `<span class="meta-badge">🎬 ${quality}</span>`;
-      if (duration) metaHtml += `<span class="meta-badge">⏱️ ${duration}</span>`;
-      if (year) metaHtml += `<span class="meta-badge">📅 ${year}</span>`;
-      if (!metaHtml) metaHtml = '<span class="meta-badge">🎞️ No additional info</span>';
-      metaDetailsDiv.innerHTML = metaHtml;
-
-      if (description) {
-        descriptionSpan.textContent = description;
-      } else {
-        descriptionSpan.textContent = '';
-      }
+      metaBadgesElem.innerHTML = badges.join('');
     }
 
-    // Core function to load video from URL
-    function loadVideoFromUrl(videoUrl, showSuccessMsg = true) {
-      if (!videoUrl || videoUrl.trim() === '') {
-        showStatus('Please provide a valid video URL', true);
-        return false;
-      }
-      
-      let trimmedUrl = videoUrl.trim();
-      if (!trimmedUrl.match(/^https?:\/\//i)) {
-        showStatus('URL must start with http:// or https:// (direct video link)', true);
-        return false;
-      }
-      
-      try {
-        videoEl.removeAttribute('src');
-        videoEl.load();
-        videoEl.src = trimmedUrl;
-        videoEl.load();
-        
-        // Update badge
-        let shortUrl = trimmedUrl.length > 65 ? trimmedUrl.substring(0, 62) + '...' : trimmedUrl;
-        currentUrlBadge.textContent = shortUrl;
-        currentUrlBadge.title = trimmedUrl;
-        urlInput.value = trimmedUrl;
-
-        function onVideoCanPlay() {
-          if (showSuccessMsg) showStatus('Video loaded successfully! Ready to play.');
-          videoEl.play().catch(e => {
-            console.log("Autoplay prevented:", e);
-            if (showSuccessMsg) showStatus('Video loaded. Click play to start.', false);
-          });
-          videoEl.removeEventListener('canplaythrough', onVideoCanPlay);
-          videoEl.removeEventListener('error', onVideoError);
-        }
-        
-        function onVideoError(e) {
-          let errorMsg = '';
-          if (videoEl.error) {
-            switch(videoEl.error.code) {
-              case MediaError.MEDIA_ERR_NETWORK: errorMsg = 'Network error while loading video.'; break;
-              case MediaError.MEDIA_ERR_DECODE: errorMsg = 'Video decoding error. File may be corrupted or unsupported.'; break;
-              case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: errorMsg = 'Video format not supported or invalid URL.'; break;
-              default: errorMsg = 'Unknown error loading video.';
-            }
-          } else {
-            errorMsg = 'Failed to load video. Check URL and CORS.';
-          }
-          showStatus(errorMsg, true);
-          if (!videoTitleSpan.textContent || videoTitleSpan.textContent === '🎥 No video loaded') {
-            videoTitleSpan.textContent = '⚠️ Failed to load';
-          }
-          currentUrlBadge.textContent = 'Invalid / unsupported video';
-          videoEl.removeAttribute('src');
-          videoEl.load();
-          videoEl.removeEventListener('canplaythrough', onVideoCanPlay);
-          videoEl.removeEventListener('error', onVideoError);
-        }
-        
-        videoEl.addEventListener('canplaythrough', onVideoCanPlay, { once: true });
-        videoEl.addEventListener('error', onVideoError, { once: true });
-        
-        setTimeout(() => {
-          if (videoEl.readyState === 0 && !videoEl.error) {
-            if (videoEl.src) showStatus('Still loading... large file or slow connection.', false);
-          }
-        }, 7000);
-        
-        return true;
-      } catch(err) {
-        console.error(err);
-        showStatus('Invalid URL format or security restriction', true);
-        return false;
-      }
-    }
-    
-    // Load video from query parameters
-    function initFromQueryParams() {
+    // Initialize video from URL parameter
+    function initFromParams() {
       const params = getQueryParams();
       if (params.url) {
-        // Decode the URL parameter (it might be already decoded, but safe to try)
         let videoUrl = params.url;
-        // Ensure it's a proper URL (sometimes double-encoded)
+        // Handle possible double encoding
         try {
-          // If it looks encoded, decode once more
           if (videoUrl.includes('%')) videoUrl = decodeURIComponent(videoUrl);
-        } catch(e) { /* ignore */ }
-        
-        // Update metadata using all params
-        updateMetadataFromParams(params);
-        // Load video without showing "success" message to avoid duplication
-        loadVideoFromUrl(videoUrl, true);
+        } catch(e) {}
+        loadVideo(videoUrl, false);
+        applyMetadataFromParams();
         return true;
       }
       return false;
     }
-    
-    // Manual load button
-    function onLoadClick() {
-      let rawUrl = urlInput.value.trim();
-      if (!rawUrl) {
-        showStatus('Please paste a video URL first', true);
+
+    // --- Custom Controls Event Handlers ---
+    function updatePlayPauseIcon() {
+      const icon = playPauseBtn.querySelector('i');
+      if (video.paused) {
+        icon.className = 'fas fa-play';
+      } else {
+        icon.className = 'fas fa-pause';
+      }
+    }
+
+    function togglePlayPause() {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+
+    function updateProgress() {
+      if (video.duration) {
+        const percent = (video.currentTime / video.duration) * 100;
+        progressFilled.style.width = `${percent}%`;
+        currentTimeDisplay.textContent = formatTime(video.currentTime);
+        durationDisplay.textContent = formatTime(video.duration);
+      }
+    }
+
+    function setProgress(e) {
+      const rect = progressBar.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      video.currentTime = pos * video.duration;
+    }
+
+    function updateVolumeIcon() {
+      const icon = muteBtn.querySelector('i');
+      if (video.muted || video.volume === 0) {
+        icon.className = 'fas fa-volume-mute';
+      } else if (video.volume < 0.5) {
+        icon.className = 'fas fa-volume-down';
+      } else {
+        icon.className = 'fas fa-volume-up';
+      }
+    }
+
+    function toggleMute() {
+      video.muted = !video.muted;
+      volumeSlider.value = video.muted ? 0 : video.volume;
+      updateVolumeIcon();
+    }
+
+    function changeVolume() {
+      video.volume = volumeSlider.value;
+      video.muted = false;
+      updateVolumeIcon();
+    }
+
+    function skip(seconds) {
+      video.currentTime = Math.min(Math.max(video.currentTime + seconds, 0), video.duration);
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function changePlaybackSpeed() {
+      video.playbackRate = parseFloat(speedSelect.value);
+    }
+
+    // --- Related Videos (static list + dynamic based on current video metadata) ---
+    const sampleRelated = [
+      { title: "Funny Animal Compilation", category: "Comedy", duration: "12:34", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", thumb: "🐾" },
+      { title: "Epic Nature Scenery", category: "Nature", duration: "8:22", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", thumb: "🌿" },
+      { title: "Tech Review 2025", category: "Tech", duration: "15:47", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4", thumb: "💻" },
+      { title: "Cinematic Drone Shots", category: "Travel", duration: "6:18", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", thumb: "🎥" }
+    ];
+
+    function buildRelatedList() {
+      const params = getQueryParams();
+      let category = params.cat || '';
+      // Filter related based on category if available, otherwise show all
+      let filtered = sampleRelated;
+      if (category) {
+        filtered = sampleRelated.filter(v => v.category.toLowerCase().includes(category.toLowerCase()));
+        if (filtered.length === 0) filtered = sampleRelated;
+      }
+      relatedList.innerHTML = '';
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'related-item';
+        div.innerHTML = `
+          <div class="related-thumb">${item.thumb}</div>
+          <div class="related-info">
+            <div class="related-title">${item.title}</div>
+            <div class="related-meta"><span>${item.category}</span> • <span>${item.duration}</span></div>
+          </div>
+        `;
+        div.addEventListener('click', () => {
+          // Load this video and update URL without reload (history pushState)
+          const newUrl = new URL(window.location.href);
+          newUrl.searchParams.set('url', item.url);
+          newUrl.searchParams.set('title', item.title);
+          newUrl.searchParams.set('cat', item.category);
+          newUrl.searchParams.set('dur', item.duration);
+          window.history.pushState({}, '', newUrl);
+          loadVideo(item.url, false);
+          videoTitleElem.textContent = item.title;
+          metaBadgesElem.innerHTML = `<span class="badge"><i class="fas fa-tag"></i> ${item.category}</span><span class="badge"><i class="fas fa-clock"></i> ${item.duration}</span>`;
+          videoDescElem.textContent = '';
+          showStatus(`Now playing: ${item.title}`, false);
+        });
+        relatedList.appendChild(div);
+      });
+    }
+
+    // --- Keyboard shortcuts ---
+    function handleKeyPress(e) {
+      const tag = document.activeElement.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      switch(e.key.toLowerCase()) {
+        case ' ': case 'k': e.preventDefault(); togglePlayPause(); break;
+        case 'arrowleft': e.preventDefault(); skip(-10); break;
+        case 'arrowright': e.preventDefault(); skip(10); break;
+        case 'arrowup': e.preventDefault(); video.volume = Math.min(video.volume + 0.1, 1); volumeSlider.value = video.volume; updateVolumeIcon(); break;
+        case 'arrowdown': e.preventDefault(); video.volume = Math.max(video.volume - 0.1, 0); volumeSlider.value = video.volume; updateVolumeIcon(); break;
+        case 'f': e.preventDefault(); toggleFullscreen(); break;
+        case 'm': e.preventDefault(); toggleMute(); break;
+        case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9':
+          const num = parseInt(e.key);
+          if (!isNaN(num)) {
+            video.currentTime = (num / 10) * video.duration;
+          }
+          break;
+      }
+    }
+
+    // --- Manual load from input ---
+    function manualLoad() {
+      let url = videoUrlInput.value.trim();
+      if (!url) {
+        showStatus('Please enter a video URL', true);
         return;
       }
-      // If manual load, we also might want to clear any existing metadata that came from URL
-      // But keep current title or overwrite? We'll set title based on URL if not present.
-      const params = getQueryParams();
-      if (!params.title) {
-        videoTitleSpan.textContent = getTitleFromUrl(rawUrl);
-        metaDetailsDiv.innerHTML = '<span class="meta-badge">🎬 Custom URL</span>';
-        descriptionSpan.textContent = '';
-      } else {
-        // Keep existing metadata from params, but maybe update if user wants
-        // We'll just keep as is
-      }
-      loadVideoFromUrl(rawUrl, true);
+      loadVideo(url, true);
+      // Update URL params to reflect manual load (so sharing works)
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.set('url', url);
+      newUrl.searchParams.delete('title');
+      newUrl.searchParams.delete('cat');
+      window.history.pushState({}, '', newUrl);
+      videoTitleElem.textContent = url.split('/').pop().split('?')[0] || 'Custom Video';
+      metaBadgesElem.innerHTML = '<span class="badge"><i class="fas fa-link"></i> Direct URL</span>';
+      videoDescElem.textContent = '';
     }
-    
-    function onClear() {
-      videoEl.pause();
-      videoEl.removeAttribute('src');
-      videoEl.load();
-      videoTitleSpan.textContent = '🎥 No video loaded';
-      metaDetailsDiv.innerHTML = '';
-      descriptionSpan.textContent = '';
-      currentUrlBadge.textContent = '—';
-      urlInput.value = '';
-      showStatus('Player cleared. You can paste a new URL.', false);
+
+    function clearPlayer() {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      videoTitleElem.textContent = 'No video loaded';
+      metaBadgesElem.innerHTML = '';
+      videoDescElem.textContent = '';
+      videoUrlInput.value = '';
+      currentTimeDisplay.textContent = '0:00';
+      durationDisplay.textContent = '0:00';
+      progressFilled.style.width = '0%';
+      showStatus('Player cleared', false);
     }
-    
-    // Event listeners
-    loadBtn.addEventListener('click', onLoadClick);
-    clearBtn.addEventListener('click', onClear);
-    urlInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        onLoadClick();
-      }
+
+    // --- Event listeners ---
+    video.addEventListener('play', updatePlayPauseIcon);
+    video.addEventListener('pause', updatePlayPauseIcon);
+    video.addEventListener('timeupdate', updateProgress);
+    video.addEventListener('loadedmetadata', () => {
+      durationDisplay.textContent = formatTime(video.duration);
+      updateProgress();
     });
-    
-    // Sample badges
-    document.querySelectorAll('.example-badge').forEach(badge => {
-      badge.addEventListener('click', (e) => {
-        let sampleUrl = badge.getAttribute('data-url');
-        if (sampleUrl) {
-          urlInput.value = sampleUrl;
-          videoTitleSpan.textContent = getTitleFromUrl(sampleUrl);
-          metaDetailsDiv.innerHTML = '<span class="meta-badge">🎬 Sample video</span>';
-          descriptionSpan.textContent = '';
-          loadVideoFromUrl(sampleUrl, true);
-        }
-      });
+    video.addEventListener('ended', () => {
+      playPauseBtn.querySelector('i').className = 'fas fa-play';
+      showStatus('Video ended', false);
     });
-    
-    // Navigation
-    const uploadRedirectBtn = document.getElementById('uploadRedirect');
-    if (uploadRedirectBtn) {
-      uploadRedirectBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'https://yummydcorn.netlify.app/#upload-section';
-      });
-    }
-    const galleryLink = document.getElementById('galleryLink');
-    if (galleryLink) {
-      galleryLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = 'https://yummydcorn.netlify.app/';
-      });
-    }
-    
-    // Initialize
-    if (!initFromQueryParams()) {
-      statusDiv.innerHTML = '<span class="success-msg">✨ Paste any direct video URL or try one of the sample links above</span>';
-      setTimeout(() => {
-        if (statusDiv.innerHTML.includes('✨ Paste any direct')) {
-          statusDiv.innerHTML = '';
-        }
-      }, 5000);
-    }
-    
-    // Optional: handle ended event
-    videoEl.addEventListener('ended', () => {
-      showStatus('Playback finished. Load another video.', false);
+
+    playPauseBtn.addEventListener('click', togglePlayPause);
+    muteBtn.addEventListener('click', toggleMute);
+    volumeSlider.addEventListener('input', changeVolume);
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    speedSelect.addEventListener('change', changePlaybackSpeed);
+    skipBackBtn.addEventListener('click', () => skip(-10));
+    skipForwardBtn.addEventListener('click', () => skip(10));
+    progressBar.addEventListener('click', setProgress);
+    loadUrlBtn.addEventListener('click', manualLoad);
+    clearBtn.addEventListener('click', clearPlayer);
+    document.addEventListener('keydown', handleKeyPress);
+
+    // Navigation buttons
+    document.getElementById('uploadBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'https://yummydcorn.netlify.app/#upload-section';
     });
+    document.getElementById('galleryBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.location.href = 'https://yummydcorn.netlify.app/';
+    });
+
+    // --- Initialization ---
+    if (!initFromParams()) {
+      // No video in URL, show placeholder
+      videoTitleElem.textContent = 'No video selected';
+      metaBadgesElem.innerHTML = '<span class="badge"><i class="fas fa-info-circle"></i> Paste a URL or select from related</span>';
+      videoDescElem.textContent = 'Use the input above or click a related video to start watching.';
+    }
+    buildRelatedList();
+
+    // Update volume icon initial
+    updateVolumeIcon();
   })();
 </script>
 </body>
