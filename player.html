@@ -347,6 +347,29 @@ document.addEventListener('keydown',function(e){
 });
 </script>
 <!-- SOCIAL BAR AD -->
-<script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
+
+<script>
+function loadSocialBar(position){
+  let s = document.createElement('script');
+  s.src = "https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js";
+  s.async = true;
+
+  if(position === 'top'){
+    document.getElementById('top-social-bar').appendChild(s);
+  } else {
+    document.getElementById('bottom-social-bar').appendChild(s);
+  }
+}
+
+// LOAD TOP BAR (after 3 sec)
+setTimeout(() => {
+  loadSocialBar('top');
+}, 3000);
+
+// LOAD BOTTOM BAR (after 6 sec)
+setTimeout(() => {
+  loadSocialBar('bottom');
+}, 6000);
+</script>
 </body>
 </html>
