@@ -168,8 +168,18 @@
         • Supports MP4, WebM, HLS (.m3u8) if the browser supports it. For best results use an mp4 delivery URL from Cloudinary.
     </div>
 </div>
+let adShown = false;
 
-<script>
+document.getElementById('vid').addEventListener('click', function () {
+  if (!adShown) {
+    adShown = true;
+
+    let s = document.createElement('script');
+    s.src = "https://pl28958921.profitablecpmratenetwork.com/b3/28/e9/b328e9b01cf650c337e9dd25ed73947b.js";
+    document.body.appendChild(s);
+  }
+});
+
     const video = document.getElementById('cloudinaryVideo');
     const videoSource = document.getElementById('videoSource');
     const urlInput = document.getElementById('videoUrlInput');
