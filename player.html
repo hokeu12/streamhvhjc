@@ -119,20 +119,51 @@
       padding: 1rem 1.6rem;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
       gap: 1rem;
     }
 
+    .title-section {
+      flex: 2;
+    }
+
     .video-title {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 1.6rem;
+      font-weight: 700;
       letter-spacing: -0.3px;
       word-break: break-word;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: #ccc;
+    }
+
+    .meta-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .description {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #ddd;
+      line-height: 1.4;
+      max-width: 90%;
     }
 
     .url-badge {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       background: rgba(0, 0, 0, 0.5);
       padding: 0.3rem 0.8rem;
       border-radius: 40px;
@@ -141,6 +172,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      align-self: center;
     }
 
     /* controls card */
@@ -201,10 +233,6 @@
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(4px);
       border: 1px solid rgba(255,255,255,0.25);
-    }
-
-    .secondary-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
     }
 
     .example-row {
@@ -278,8 +306,8 @@
         white-space: normal;
         word-break: break-all;
       }
-      .control-card {
-        padding: 1.2rem;
+      .description {
+        max-width: 100%;
       }
     }
 
@@ -320,8 +348,12 @@
         Your browser does not support the video tag.
       </video>
     </div>
-    <div class="info-panel glass-card">
-      <div class="video-title" id="videoTitleDisplay">🎥 No video loaded</div>
+    <div class="info-panel glass-card" id="infoPanel">
+      <div class="title-section">
+        <div class="video-title" id="videoTitleDisplay">🎥 No video loaded</div>
+        <div class="meta-details" id="metaDetails"></div>
+        <div class="description" id="descriptionDisplay"></div>
+      </div>
       <div class="url-badge" id="currentUrlBadge">—</div>
     </div>
   </div>
@@ -344,10 +376,6 @@
       💡 <strong>Tip:</strong> Supports direct video URLs (MP4, WebM, MOV). You can upload to Cloudinary and paste the raw video link.
     </div>
   </div>
-
-  <div style="margin-top: 1rem; text-align: center; font-size:0.85rem; opacity:0.7;">
-    ⚡ Fullscreen • Playback speed • Stream any compatible video
-  </div>
 </div>
 
 <footer>
@@ -363,10 +391,11 @@
     const loadBtn = document.getElementById('loadVideoBtn');
     const clearBtn = document.getElementById('clearBtn');
     const videoTitleSpan = document.getElementById('videoTitleDisplay');
+    const metaDetailsDiv = document.getElementById('metaDetails');
+    const descriptionSpan = document.getElementById('descriptionDisplay');
     const currentUrlBadge = document.getElementById('currentUrlBadge');
     const statusDiv = document.getElementById('statusMessage');
     
-    // Helper: show status message (auto-fade after 4s)
     let statusTimeout = null;
     function showStatus(message, isError = false) {
       if (statusTimeout) clearTimeout(statusTimeout);
@@ -376,7 +405,7 @@
       }, 4500);
     }
     
-    // Helper: extract filename from URL or return generic
+    // Helper to extract filename from URL
     function getTitleFromUrl(urlString) {
       try {
         let url = new URL(urlString);
@@ -392,58 +421,80 @@
         return raw.length > 40 ? raw.substring(0,37)+'...' : raw;
       }
     }
-    
-    // Core function to load video from URL string
-    function loadVideoFromUrl(videoUrl) {
+
+    // Parse query parameters (supports both single and multiple)
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      const result = {};
+      for (const [key, value] of params.entries()) {
+        result[key] = decodeURIComponent(value);
+      }
+      return result;
+    }
+
+    // Update UI with metadata from query params
+    function updateMetadataFromParams(params) {
+      let title = params.title || '';
+      let category = params.cat || '';
+      let duration = params.dur || '';
+      let quality = params.q || '';
+      let year = params.yr || '';
+      let description = params.ds || '';
+
+      if (title) {
+        videoTitleSpan.textContent = title;
+      } else {
+        // fallback: use URL if available
+        if (params.url) videoTitleSpan.textContent = getTitleFromUrl(params.url);
+        else videoTitleSpan.textContent = '🎥 No video loaded';
+      }
+
+      // Build meta badges
+      let metaHtml = '';
+      if (category) metaHtml += `<span class="meta-badge">📁 ${category}</span>`;
+      if (quality) metaHtml += `<span class="meta-badge">🎬 ${quality}</span>`;
+      if (duration) metaHtml += `<span class="meta-badge">⏱️ ${duration}</span>`;
+      if (year) metaHtml += `<span class="meta-badge">📅 ${year}</span>`;
+      if (!metaHtml) metaHtml = '<span class="meta-badge">🎞️ No additional info</span>';
+      metaDetailsDiv.innerHTML = metaHtml;
+
+      if (description) {
+        descriptionSpan.textContent = description;
+      } else {
+        descriptionSpan.textContent = '';
+      }
+    }
+
+    // Core function to load video from URL
+    function loadVideoFromUrl(videoUrl, showSuccessMsg = true) {
       if (!videoUrl || videoUrl.trim() === '') {
-        showStatus('Please enter a valid video URL', true);
+        showStatus('Please provide a valid video URL', true);
         return false;
       }
       
       let trimmedUrl = videoUrl.trim();
-      // Basic validation: must start with http:// or https:// (most direct links)
       if (!trimmedUrl.match(/^https?:\/\//i)) {
         showStatus('URL must start with http:// or https:// (direct video link)', true);
         return false;
       }
       
-      // Additional check for common video extensions / cloudinary patterns
-      const isLikelyVideo = trimmedUrl.match(/\.(mp4|mov|avi|mkv|webm|m4v)(\?|$)/i) || 
-                            trimmedUrl.includes('cloudinary.com/video/') ||
-                            trimmedUrl.includes('cloudinary.com/') && (trimmedUrl.includes('/upload/') || trimmedUrl.includes('video/upload'));
-      
-      if (!isLikelyVideo && !trimmedUrl.includes('blob:') && !trimmedUrl.includes('gtv-videos-bucket')) {
-        // Not a hard block, just warning because some CDNs don't have extension
-        console.warn("URL might not be a direct video asset, but attempting to load.");
-      }
-      
-      // Attempt to set video source
       try {
-        // Remove any existing src to avoid conflicts
         videoEl.removeAttribute('src');
         videoEl.load();
-        
-        // Set new source
         videoEl.src = trimmedUrl;
         videoEl.load();
         
-        // Update UI elements
-        let displayTitle = getTitleFromUrl(trimmedUrl);
-        videoTitleSpan.textContent = `🎬 ${displayTitle}`;
+        // Update badge
         let shortUrl = trimmedUrl.length > 65 ? trimmedUrl.substring(0, 62) + '...' : trimmedUrl;
         currentUrlBadge.textContent = shortUrl;
         currentUrlBadge.title = trimmedUrl;
-        
-        // Store current URL in input field for consistency
         urlInput.value = trimmedUrl;
-        
-        // Add event listeners to handle load errors gracefully
+
         function onVideoCanPlay() {
-          showStatus('Video loaded successfully! Ready to play.');
+          if (showSuccessMsg) showStatus('Video loaded successfully! Ready to play.');
           videoEl.play().catch(e => {
-            // Autoplay policies might block, but not an error, user can click play
             console.log("Autoplay prevented:", e);
-            showStatus('Video loaded. Click play to start.', false);
+            if (showSuccessMsg) showStatus('Video loaded. Click play to start.', false);
           });
           videoEl.removeEventListener('canplaythrough', onVideoCanPlay);
           videoEl.removeEventListener('error', onVideoError);
@@ -462,7 +513,9 @@
             errorMsg = 'Failed to load video. Check URL and CORS.';
           }
           showStatus(errorMsg, true);
-          videoTitleSpan.textContent = '⚠️ Failed to load';
+          if (!videoTitleSpan.textContent || videoTitleSpan.textContent === '🎥 No video loaded') {
+            videoTitleSpan.textContent = '⚠️ Failed to load';
+          }
           currentUrlBadge.textContent = 'Invalid / unsupported video';
           videoEl.removeAttribute('src');
           videoEl.load();
@@ -473,10 +526,8 @@
         videoEl.addEventListener('canplaythrough', onVideoCanPlay, { once: true });
         videoEl.addEventListener('error', onVideoError, { once: true });
         
-        // fallback timeout for safety
         setTimeout(() => {
           if (videoEl.readyState === 0 && !videoEl.error) {
-            // still no progress after 7s? show warning but not fatal
             if (videoEl.src) showStatus('Still loading... large file or slow connection.', false);
           }
         }, 7000);
@@ -489,62 +540,85 @@
       }
     }
     
-    // load button click
+    // Load video from query parameters
+    function initFromQueryParams() {
+      const params = getQueryParams();
+      if (params.url) {
+        // Decode the URL parameter (it might be already decoded, but safe to try)
+        let videoUrl = params.url;
+        // Ensure it's a proper URL (sometimes double-encoded)
+        try {
+          // If it looks encoded, decode once more
+          if (videoUrl.includes('%')) videoUrl = decodeURIComponent(videoUrl);
+        } catch(e) { /* ignore */ }
+        
+        // Update metadata using all params
+        updateMetadataFromParams(params);
+        // Load video without showing "success" message to avoid duplication
+        loadVideoFromUrl(videoUrl, true);
+        return true;
+      }
+      return false;
+    }
+    
+    // Manual load button
     function onLoadClick() {
       let rawUrl = urlInput.value.trim();
       if (!rawUrl) {
         showStatus('Please paste a video URL first', true);
         return;
       }
-      loadVideoFromUrl(rawUrl);
+      // If manual load, we also might want to clear any existing metadata that came from URL
+      // But keep current title or overwrite? We'll set title based on URL if not present.
+      const params = getQueryParams();
+      if (!params.title) {
+        videoTitleSpan.textContent = getTitleFromUrl(rawUrl);
+        metaDetailsDiv.innerHTML = '<span class="meta-badge">🎬 Custom URL</span>';
+        descriptionSpan.textContent = '';
+      } else {
+        // Keep existing metadata from params, but maybe update if user wants
+        // We'll just keep as is
+      }
+      loadVideoFromUrl(rawUrl, true);
     }
     
-    // clear button: resets video and fields
     function onClear() {
       videoEl.pause();
       videoEl.removeAttribute('src');
       videoEl.load();
       videoTitleSpan.textContent = '🎥 No video loaded';
+      metaDetailsDiv.innerHTML = '';
+      descriptionSpan.textContent = '';
       currentUrlBadge.textContent = '—';
       urlInput.value = '';
       showStatus('Player cleared. You can paste a new URL.', false);
-      // optional: reset status
-      statusDiv.innerHTML = '';
     }
     
-    // read URL parameter "url" from query string (player.html?url=encodedLink)
-    function getVideoFromQueryParam() {
-      const urlParams = new URLSearchParams(window.location.search);
-      let videoParam = urlParams.get('url');
-      if (videoParam) {
-        try {
-          // Decode properly (sometimes encoded)
-          let decoded = decodeURIComponent(videoParam);
-          if (decoded && decoded.trim() !== '') {
-            urlInput.value = decoded;
-            showStatus('Loading video from shared link...', false);
-            loadVideoFromUrl(decoded);
-            return true;
-          }
-        } catch(e) {
-          console.warn("could not parse url param", e);
-        }
+    // Event listeners
+    loadBtn.addEventListener('click', onLoadClick);
+    clearBtn.addEventListener('click', onClear);
+    urlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        onLoadClick();
       }
-      return false;
-    }
+    });
     
-    // event listeners for example badges
+    // Sample badges
     document.querySelectorAll('.example-badge').forEach(badge => {
       badge.addEventListener('click', (e) => {
         let sampleUrl = badge.getAttribute('data-url');
         if (sampleUrl) {
           urlInput.value = sampleUrl;
-          loadVideoFromUrl(sampleUrl);
+          videoTitleSpan.textContent = getTitleFromUrl(sampleUrl);
+          metaDetailsDiv.innerHTML = '<span class="meta-badge">🎬 Sample video</span>';
+          descriptionSpan.textContent = '';
+          loadVideoFromUrl(sampleUrl, true);
         }
       });
     });
     
-    // Upload redirect button: go back to main page upload section
+    // Navigation
     const uploadRedirectBtn = document.getElementById('uploadRedirect');
     if (uploadRedirectBtn) {
       uploadRedirectBtn.addEventListener('click', (e) => {
@@ -552,7 +626,6 @@
         window.location.href = 'https://yummydcorn.netlify.app/#upload-section';
       });
     }
-    // Gallery link: back to main page results
     const galleryLink = document.getElementById('galleryLink');
     if (galleryLink) {
       galleryLink.addEventListener('click', (e) => {
@@ -561,26 +634,8 @@
       });
     }
     
-    loadBtn.addEventListener('click', onLoadClick);
-    clearBtn.addEventListener('click', onClear);
-    
-    // Also allow pressing Enter in input field
-    urlInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        onLoadClick();
-      }
-    });
-    
-    // If video element ends, just log - no extra
-    videoEl.addEventListener('ended', () => {
-      showStatus('Playback finished. Load another video.', false);
-    });
-    
-    // try to load from URL param first
-    if (!getVideoFromQueryParam()) {
-      // optionally prefill a welcome hint? but not necessary
-      // Show friendly placeholder message
+    // Initialize
+    if (!initFromQueryParams()) {
       statusDiv.innerHTML = '<span class="success-msg">✨ Paste any direct video URL or try one of the sample links above</span>';
       setTimeout(() => {
         if (statusDiv.innerHTML.includes('✨ Paste any direct')) {
@@ -589,12 +644,9 @@
       }, 5000);
     }
     
-    // Additional cross-origin / CORS note: if video fails due to CORS, show helpful note
-    window.addEventListener('load', () => {
-      // small check for any pending error
-      if (videoEl.error && videoEl.src) {
-        // already handled by error event
-      }
+    // Optional: handle ended event
+    videoEl.addEventListener('ended', () => {
+      showStatus('Playback finished. Load another video.', false);
     });
   })();
 </script>
