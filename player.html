@@ -25,7 +25,6 @@ body{
   color:var(--text);
 }
 
-/* NAV */
 nav{
   height:60px;
   display:flex;
@@ -40,23 +39,11 @@ nav{
   color:var(--accent);
 }
 
-/* TOP AD (ONLY PLACE) */
+/* TOP AD */
 #top-ad{
   display:flex;
   justify-content:center;
   margin:15px 0;
-}
-
-.ad-placeholder{
-  width:728px;
-  max-width:100%;
-  height:90px;
-  border:1px dashed var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--muted);
-  font-size:0.85rem;
 }
 
 /* CONTAINER */
@@ -78,6 +65,13 @@ nav{
 video{
   width:100%;
   max-height:65vh;
+}
+
+/* NATIVE AD */
+.native-ad{
+  display:flex;
+  justify-content:center;
+  margin-top:15px;
 }
 
 /* LOADER */
@@ -103,7 +97,6 @@ video{
   to{transform:rotate(360deg)}
 }
 
-/* INFO */
 .title{
   font-size:1.3rem;
   font-weight:800;
@@ -119,7 +112,6 @@ video{
   color:var(--muted);
 }
 
-/* BUTTONS */
 .actions{
   margin-top:.7rem;
   display:flex;
@@ -134,32 +126,8 @@ video{
   cursor:pointer;
 }
 
-.btn:hover{
-  background:#202030;
-}
-
-/* RELATED */
 .related{
   margin-top:2rem;
-}
-
-.rel-item{
-  display:flex;
-  gap:.7rem;
-  padding:.5rem;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.rel-item:hover{
-  background:var(--card);
-}
-
-.thumb{
-  width:100px;
-  height:60px;
-  background:var(--card);
-  border-radius:6px;
 }
 </style>
 </head>
@@ -170,11 +138,18 @@ video{
   <div class="logo">StreamHub</div>
 </nav>
 
-<!-- ✅ ONLY AD PLACE -->
+<!-- ✅ TOP BANNER -->
 <div id="top-ad">
-  <div class="ad-placeholder">
-    TOP BANNER AD (728x90) — Paste your ad code here later
-  </div>
+  <script>
+    atOptions = {
+      key: '3407cae831ba7308f892ce3e722d876e',
+      format: 'iframe',
+      height: 90,
+      width: 728,
+      params: {}
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <div class="container">
@@ -182,10 +157,23 @@ video{
   <!-- PLAYER -->
   <div class="player">
     <div class="loader" id="loader"><div class="spinner"></div></div>
-    <video id="vid" controls preload="metadata" crossorigin="anonymous"></video>
+    <video id="vid" controls preload="metadata"></video>
   </div>
 
-  <!-- INFO -->
+  <!-- ✅ NATIVE AD -->
+  <div class="native-ad">
+    <script>
+      atOptions = {
+        key: 'YOUR_NATIVE_KEY',
+        format: 'iframe',
+        height: 250,
+        width: 300,
+        params: {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/YOUR_NATIVE_KEY/invoke.js"></script>
+  </div>
+
   <div class="title" id="title">Loading...</div>
 
   <div class="actions">
@@ -195,7 +183,6 @@ video{
 
   <div class="desc" id="desc">No description</div>
 
-  <!-- RELATED -->
   <div class="related">
     <h3>Up Next</h3>
     <div id="related"></div>
@@ -219,56 +206,28 @@ const loader = document.getElementById('loader');
 document.getElementById('title').textContent = VID.title || "Untitled";
 document.getElementById('desc').textContent = VID.desc || "No description";
 
-/* VIDEO LOAD */
-if (VID.url) {
-  video.src = VID.url;
-}
+if (VID.url) video.src = VID.url;
 
-/* EVENTS */
-video.addEventListener('loadeddata', () => {
-  loader.style.display = 'none';
-});
+video.addEventListener('loadeddata', ()=>loader.style.display='none');
+video.addEventListener('waiting', ()=>loader.style.display='flex');
+video.addEventListener('playing', ()=>loader.style.display='none');
+video.addEventListener('error', ()=>loader.innerHTML="<p style='color:white'>Failed to load</p>");
 
-video.addEventListener('waiting', () => {
-  loader.style.display = 'flex';
-});
-
-video.addEventListener('playing', () => {
-  loader.style.display = 'none';
-});
-
-video.addEventListener('error', () => {
-  loader.innerHTML = "<p style='color:white'>Failed to load video</p>";
-});
-
-/* LIKE */
-function like(){
-  alert("Liked!");
-}
-
-/* SHARE */
-function share(){
-  navigator.clipboard.writeText(location.href);
-  alert("Link copied!");
-}
-
-/* RELATED */
-let all = JSON.parse(localStorage.getItem('sh_v') || '[]');
-
-let rel = all.filter(v => v.id !== VID.id).slice(0,5);
-
-document.getElementById('related').innerHTML = rel.map(v=>`
-  <div class="rel-item" onclick="go('${v.id}')">
-    <div class="thumb"></div>
-    <div>${v.title}</div>
-  </div>
-`).join('');
-
-function go(id){
-  let v = all.find(x=>x.id==id);
-  location.href = 'player.html?id='+v.id+'&title='+encodeURIComponent(v.title)+'&url='+encodeURIComponent(v.url);
-}
+function like(){ alert("Liked!"); }
+function share(){ navigator.clipboard.writeText(location.href); alert("Link copied!"); }
 </script>
+
+<!-- ✅ SOCIAL BAR -->
+<script>
+  atOptions = {
+    key: 'YOUR_SOCIAL_BAR_KEY',
+    format: 'social',
+    height: 50,
+    width: 320,
+    params: {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/YOUR_SOCIAL_BAR_KEY/invoke.js"></script>
 
 </body>
 </html>
