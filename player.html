@@ -1,3 +1,4 @@
+<!-- /player.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,16 +40,12 @@ nav{
   color:var(--accent);
 }
 
-
-
-/* CONTAINER */
 .container{
   max-width:1100px;
   margin:auto;
   padding:1rem;
 }
 
-/* PLAYER */
 .player{
   background:black;
   border-radius:12px;
@@ -66,10 +63,9 @@ video{
 .native-ad{
   display:flex;
   justify-content:center;
-  margin-top:15px;
+  margin:20px 0;
 }
 
-/* LOADER */
 .loader{
   position:absolute;
   inset:0;
@@ -133,9 +129,6 @@ video{
   <div class="logo">StreamHub</div>
 </nav>
 
-
-</div>
-
 <div class="container">
 
   <!-- PLAYER -->
@@ -143,6 +136,13 @@ video{
     <div class="loader" id="loader"><div class="spinner"></div></div>
     <video id="vid" controls preload="metadata"></video>
   </div>
+
+  <!-- ✅ NATIVE AD (HIGH CTR) -->
+  <div class="native-ad">
+    <script async data-cfasync="false"
+      src="https://pl28972109.profitablecpmratenetwork.com/c1df7fbc6e920a6327e3382850f6ae9f/invoke.js">
+    </script>
+    <div id="container-c1df7fbc6e920a6327e3382850f6ae9f"></div>
   </div>
 
   <div class="title" id="title">Loading...</div>
@@ -182,12 +182,21 @@ if (VID.url) video.src = VID.url;
 video.addEventListener('loadeddata', ()=>loader.style.display='none');
 video.addEventListener('waiting', ()=>loader.style.display='flex');
 video.addEventListener('playing', ()=>loader.style.display='none');
-video.addEventListener('error', ()=>loader.innerHTML="<p style='color:white'>Failed to load</p>");
+
+video.addEventListener('error', ()=>{
+  loader.innerHTML="<p style='color:white'>Failed to load</p>";
+});
 
 function like(){ alert("Liked!"); }
-function share(){ navigator.clipboard.writeText(location.href); alert("Link copied!"); }
+
+function share(){
+  navigator.clipboard.writeText(location.href);
+  alert("Link copied!");
+}
 </script>
 
+<!-- ✅ SOCIAL BAR (AUTO FLOATING) -->
+<script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
 
 </body>
 </html>
