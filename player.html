@@ -6,132 +6,114 @@
 <title>Video Player</title>
 
 <style>
-body {
-    margin: 0;
+body{
+    margin:0;
     font-family: Arial, sans-serif;
-    background: #000;
-    color: #fff;
+    background:#0f0f0f;
+    color:white;
 }
 
-<script async="async" data-cfasync="false" src="https://pl28972109.profitablecpmratenetwork.com/c1df7fbc6e920a6327e3382850f6ae9f/invoke.js"></script>
-<div id="container-c1df7fbc6e920a6327e3382850f6ae9f"></div>
-
+/* TOP AD */
+.ad-top{
+    width:100%;
+    min-height:60px;
+    background:#1a1a1a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:14px;
+    color:#aaa;
 }
 
-/* Player Container */
-.player-container {
-    position: relative;
-    width: 100%;
-    max-width: 900px;
-    margin: auto;
+/* VIDEO WRAPPER */
+.container{
+    padding:10px;
 }
 
-/* Video */
-video {
-    width: 100%;
-    height: auto;
-    background: #000;
+video{
+    width:100%;
+    border-radius:10px;
+    background:black;
 }
 
-
-
-
+/* TITLE */
+.title{
+    margin:10px 0;
+    font-size:18px;
+    font-weight:bold;
 }
 
-
-}
-
-
-
-/* Controls */
-.controls {
-    text-align: center;
-    margin-top: 10px;
-}
-
-button.fullscreen {
-    padding: 10px 15px;
-    background: #222;
-    color: #fff;
-    border: none;
-    cursor: pointer;
+/* BOTTOM AD */
+.ad-bottom{
+    margin-top:15px;
+    width:100%;
+    min-height:80px;
+    background:#1a1a1a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-size:14px;
+    color:#aaa;
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOP AD (Ad Slot 1) -->
-<div class="top-ad">
-    <script async="async" data-cfasync="false" src="https://pl28972109.profitablecpmratenetwork.com/c1df7fbc6e920a6327e3382850f6ae9f/invoke.js"></script>
-<div id="container-c1df7fbc6e920a6327e3382850f6ae9f"></div>
-
+<!-- 🔝 AD SLOT 1 -->
+<div class="ad-top">
+    Your Ad Here (<script>
+  atOptions = {
+    'key' : '3407cae831ba7308f892ce3e722d876e',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+)
 </div>
 
-<!-- PLAYER -->
-<div class="player-container">
+<div class="container">
 
-    <!-- VIDEO -->
-    <video id="videoPlayer" controls>
-        <source src="YOUR_VIDEO_URL.mp4" type="video/mp4">
-        Your browser does not support video.
+    <!-- VIDEO TITLE -->
+    <div class="title" id="videoTitle">Loading Video...</div>
+
+    <!-- VIDEO PLAYER -->
+    <video id="videoPlayer" controls autoplay>
+        <source id="videoSource" src="" type="video/mp4">
+        Your browser does not support video tag.
     </video>
 
-    <!-- PRE-ROLL AD OVERLAY -->
-    <div id="adOverlay">
-        <h2>Advertisement</h2>
-        <p id="adTimer">Wait 5 seconds...</p>
-        <button id="skipBtn" disabled>Skip Ad</button>
+    <!-- 🔻 AD SLOT 2 -->
+    <div class="ad-bottom">
+        Your Ad Here (Bottom Banner)
     </div>
 
 </div>
 
-<!-- CONTROLS -->
-<div class="controls">
-    <button class="fullscreen" onclick="openFullscreen()">Fullscreen</button>
-</div>
-
-<!-- BOTTOM AD (Ad Slot 2) -->
-<div class="bottom-ad">
-    🔥 Your Ad Here (Bottom Banner Ad Slot)
-</div>
-
 <script>
-let timeLeft = 5;
-let skipBtn = document.getElementById("skipBtn");
-let adTimer = document.getElementById("adTimer");
-let adOverlay = document.getElementById("adOverlay");
-let video = document.getElementById("videoPlayer");
+// Get video from URL
+const params = new URLSearchParams(window.location.search);
+const videoUrl = params.get("video");
+const title = params.get("title");
 
-// Countdown for pre-roll ad
-let countdown = setInterval(() => {
-    timeLeft--;
-    adTimer.innerText = "Wait " + timeLeft + " seconds...";
+const videoPlayer = document.getElementById("videoPlayer");
+const videoSource = document.getElementById("videoSource");
+const videoTitle = document.getElementById("videoTitle");
 
-    if(timeLeft <= 0){
-        clearInterval(countdown);
-        skipBtn.disabled = false;
-        skipBtn.classList.add("active");
-        skipBtn.innerText = "Skip Ad";
-        adTimer.innerText = "You can now skip the ad";
-    }
-}, 1000);
+if(videoUrl){
+    videoSource.src = videoUrl;
+    videoPlayer.load();
+}
 
-// Skip ad
-skipBtn.addEventListener("click", () => {
-    if(!skipBtn.disabled){
-        adOverlay.style.display = "none";
-        video.play();
-    }
-});
-
-// Fullscreen
-function openFullscreen() {
-    if (video.requestFullscreen) {
-        video.requestFullscreen();
-    } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
-    }
+if(title){
+    videoTitle.innerText = title;
+} else {
+    videoTitle.innerText = "Now Playing";
 }
 </script>
 
