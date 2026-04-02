@@ -4,34 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Player</title>
+
 <style>
-body{margin:0;background:#000;color:#fff;font-family:Arial}
-video{width:100%}
-.container{padding:10px}
-.title{font-size:18px;font-weight:bold;margin:10px 0}
-.ad{background:#111;color:#aaa;text-align:center;padding:12px;margin:10px 0}
-</style>.ad-container{
+body{
+    margin:0;
+    background:#000;
+    color:#fff;
+    font-family:Arial;
+}
+
+video{
+    width:100%;
+}
+
+.container{
+    padding:10px;
+}
+
+.title{
+    font-size:18px;
+    font-weight:bold;
+    margin:10px 0;
+}
+
+/* ✅ FIXED AD STYLE (NOW INSIDE STYLE PROPERLY) */
+.ad-container{
     width:100%;
     display:flex;
     justify-content:center;
     margin:10px 0;
 }
+</style>
+
 </head>
+
 <body>
+
+<!-- 🔥 TOP AD -->
 <div class="ad-container">
-
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728,
-      'params' : {}
-    };
-  </script>
-
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
-
+<script>
+atOptions = {
+  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'format' : 'iframe',
+  'height' : 90,
+  'width' : 728,
+  'params' : {}
+};
+</script>
+<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <div class="container">
@@ -44,26 +64,23 @@ video{width:100%}
 
 </div>
 
+<!-- 🔥 BOTTOM AD -->
 <div class="ad-container">
-
-  <script>
-    atOptions = {
-      'key' : '3407cae831ba7308f892ce3e722d876e',
-      'format' : 'iframe',
-      'height' : 90,
-      'width' : 728,
-      'params' : {}
-    };
-  </script>
-
-  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
-
+<script>
+atOptions = {
+  'key' : '3407cae831ba7308f892ce3e722d876e',
+  'format' : 'iframe',
+  'height' : 90,
+  'width' : 728,
+  'params' : {}
+};
+</script>
+<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
 </div>
 
 <script>
 const p = new URLSearchParams(window.location.search);
 
-// IMPORTANT: match YOUR index.html params
 const url = p.get("url");
 const title = p.get("title");
 
