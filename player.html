@@ -1,1 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Player</title>
+<style>
+body{
+    margin:0;
+    background:#000;
+    font-family:Arial;
+    color:#fff;
+}
+video{
+    width:100%;
+    height:auto;
+}
+.container{
+    padding:10px;
+}
+.ad{
+    background:#111;
+    color:#aaa;
+    text-align:center;
+    padding:15px;
+    margin:10px 0;
+}
+</style>
+</head>
+<body>
 
+<div class="ad">Ad Space 1</div>
+
+<div class="container">
+    <video id="videoPlayer" controls autoplay>
+        <source id="source" src="" type="video/mp4">
+        Your browser does not support video.
+    </video>
+</div>
+
+<div class="ad">Ad Space 2</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const video = params.get("video");
+
+if(video){
+    document.getElementById("source").src = video;
+    document.getElementById("videoPlayer").load();
+}
+</script>
+
+</body>
+</html>
