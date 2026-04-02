@@ -5,48 +5,62 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Player</title>
 <style>
-body{
-    margin:0;
-    background:#000;
-    font-family:Arial;
-    color:#fff;
-}
-video{
+body{margin:0;background:#000;color:#fff;font-family:Arial}
+video{width:100%}
+.container{padding:10px}
+.title{font-size:18px;font-weight:bold;margin:10px 0}
+.ad{background:#111;color:#aaa;text-align:center;padding:12px;margin:10px 0}
+</style>.ad-container{
     width:100%;
-    height:auto;
-}
-.container{
-    padding:10px;
-}
-.ad{
-    background:#111;
-    color:#aaa;
-    text-align:center;
-    padding:15px;
+    display:flex;
+    justify-content:center;
     margin:10px 0;
 }
-</style>
 </head>
 <body>
 
-<div class="ad">Ad Space 1</div>
+<div class="ad">Ad Space Top</div>
 
 <div class="container">
-    <video id="videoPlayer" controls autoplay>
-        <source id="source" src="" type="video/mp4">
-        Your browser does not support video.
-    </video>
+
+<div class="title" id="title">Loading...</div>
+
+<video id="player" controls autoplay>
+<source id="src" src="" type="video/mp4">
+</video>
+
 </div>
 
-<div class="ad">Ad Space 2</div>
+<div class="ad-container">
+
+  <script>
+    atOptions = {
+      'key' : '3407cae831ba7308f892ce3e722d876e',
+      'format' : 'iframe',
+      'height' : 90,
+      'width' : 728,
+      'params' : {}
+    };
+  </script>
+
+  <script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
+
+</div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const video = params.get("video");
+const p = new URLSearchParams(window.location.search);
 
-if(video){
-    document.getElementById("source").src = video;
-    document.getElementById("videoPlayer").load();
+// IMPORTANT: match YOUR index.html params
+const url = p.get("url");
+const title = p.get("title");
+
+if(title){
+  document.getElementById("title").innerText = title;
+}
+
+if(url){
+  document.getElementById("src").src = url;
+  document.getElementById("player").load();
 }
 </script>
 
