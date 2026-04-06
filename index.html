@@ -13,6 +13,22 @@ body{
   color:#fff;
 }
 
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+}
+
+button{
+  background:#e8293e;
+  border:none;
+  color:#fff;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -28,7 +44,6 @@ body{
   background:#151522;
   border-radius:10px;
   overflow:hidden;
-  cursor:pointer;
 }
 
 .card img{
@@ -42,90 +57,116 @@ body{
   font-size:14px;
 }
 
+/* UPLOAD MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal-box{
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
+}
+
+.modal input{
+  width:100%;
+  margin-bottom:10px;
+  padding:8px;
+  border:none;
+}
+
+#codeBox{
+  background:#000;
+  padding:10px;
+  font-size:12px;
+  word-break:break-all;
+  margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ✅ TOP BANNER AD ONLY -->
+<!-- ✅ TOP BANNER AD -->
 <script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
 
-<h2 style="padding:15px">StreamHub Videos</h2>
+<div class="top">
+  <h2>StreamHub</h2>
+  <button onclick="openModal()">+ Upload</button>
+</div>
 
 <div class="grid" id="grid"></div>
 
+<!-- UPLOAD MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Add Video</h3>
+    <input id="title" placeholder="Title">
+    <input id="cat" placeholder="Category">
+    <input id="url" placeholder="Video URL">
+    <input id="th" placeholder="Thumbnail URL">
+
+    <button onclick="generate()">Generate Code</button>
+
+    <div id="codeBox"></div>
+
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
 <script>
-var PL = "player.html";
+var PL="player.html";
 
-/* ✅ FIXED ARRAY */
-var VV = [
-
+/* VIDEO LIST */
+var VV=[
 {id:1,title:"Big Buck Bunny",cat:"Movies",
 url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-th:"https://peach.blender.org/wp-content/uploads/bbb-splash.png"},
-
-{id:2,title:"Elephant Dream",cat:"Movies",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-th:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Elephants_Dream_s5_both.jpg/640px-Elephants_Dream_s5_both.jpg"},
-
-{id:3,title:"Tears of Steel",cat:"Action",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-th:""},
-
-{id:4,title:"Web Dev Course",cat:"Education",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-th:""},
-
-{id:5,title:"Travel Vlog",cat:"Travel",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-th:""},
-
-{id:6,title:"Comedy Clips",cat:"Comedy",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-th:""},
-
-{id:7,title:"Sports Reel",cat:"Sports",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-th:""},
-
-{id:8,title:"Cooking Pasta",cat:"Cooking",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-th:""},
-
-{id:9,title:"Gaming PC Build",cat:"Gaming",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-th:""},
-
-{id:10,title:"Tokyo Travel",cat:"Travel",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-th:""},
-
-{id:11,title:"Comedy Sketches",cat:"Comedy",
-url:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-th:""}
+th:"https://peach.blender.org/wp-content/uploads/bbb-splash.png"}
 ];
 
-/* ✅ RENDER */
-var grid = document.getElementById("grid");
+/* RENDER */
+function render(){
+  var grid=document.getElementById("grid");
+  grid.innerHTML="";
+  VV.forEach(v=>{
+    var a=document.createElement("a");
+    a.href=PL+"?url="+encodeURIComponent(v.url);
+    a.target="_blank";
 
-VV.forEach(v=>{
-  var a=document.createElement("a");
-  a.href=PL+"?url="+encodeURIComponent(v.url);
-  a.target="_blank";
+    a.innerHTML=`
+      <div class="card">
+        ${v.th ? `<img src="${v.th}">` : `<div style="height:160px;background:#222"></div>`}
+        <h3>${v.title}</h3>
+      </div>
+    `;
+    grid.appendChild(a);
+  });
+}
+render();
 
-  var th = v.th
-    ? `<img src="${v.th}" onerror="this.style.display='none'">`
-    : `<div style="height:160px;background:#222"></div>`;
+/* MODAL */
+function openModal(){document.getElementById("modal").style.display="flex";}
+function closeModal(){document.getElementById("modal").style.display="none";}
 
-  a.innerHTML=`
-    <div class="card">
-      ${th}
-      <h3>${v.title}</h3>
-    </div>
-  `;
+/* GENERATE CODE */
+function generate(){
+  var t=document.getElementById("title").value;
+  var c=document.getElementById("cat").value;
+  var u=document.getElementById("url").value;
+  var th=document.getElementById("th").value;
 
-  grid.appendChild(a);
-});
+  var id=Date.now();
+
+  var code=`{id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}"},`;
+
+  document.getElementById("codeBox").innerText=code;
+}
 </script>
 
 </body>
