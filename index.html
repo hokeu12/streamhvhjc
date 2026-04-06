@@ -29,7 +29,7 @@ button{
   cursor:pointer;
 }
 
-/* ✅ YOUR ORIGINAL GRID */
+/* ✅ ORIGINAL GRID (UNCHANGED) */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -204,8 +204,7 @@ function render(){
     a.innerHTML=`
       <div class="card"
         onmouseenter="playPreview(this)"
-        onmouseleave="stopPreview(this)"
-        onclick="tapPreview(event,this)">
+        onmouseleave="stopPreview(this)">
 
         <img src="${v.th}" loading="lazy">
 
@@ -221,7 +220,7 @@ function render(){
 }
 render();
 
-/* DESKTOP HOVER */
+/* HOVER PREVIEW (DESKTOP ONLY) */
 function playPreview(card){
   if(window.innerWidth < 768) return;
   var video = card.querySelector("video");
@@ -241,24 +240,6 @@ function stopPreview(card){
   video.pause();
   video.style.display="none";
   img.style.opacity="1";
-}
-
-/* MOBILE TAP */
-function tapPreview(e, card){
-  if(window.innerWidth > 768) return;
-
-  e.preventDefault();
-
-  var video = card.querySelector("video");
-  var img = card.querySelector("img");
-
-  if(video.style.display==="block"){
-    window.location.href = card.parentElement.href;
-  }else{
-    video.style.display="block";
-    video.play();
-    img.style.opacity="0";
-  }
 }
 
 /* MODAL */
