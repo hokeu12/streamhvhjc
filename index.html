@@ -29,6 +29,7 @@ button{
   cursor:pointer;
 }
 
+/* ✅ YOUR ORIGINAL GRID */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -41,6 +42,7 @@ button{
 }
 
 .card{
+  position:relative;
   background:#151522;
   border-radius:10px;
   overflow:hidden;
@@ -50,6 +52,18 @@ button{
   width:100%;
   height:160px;
   object-fit:cover;
+  transition:0.3s;
+}
+
+.card video{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  display:none;
+  z-index:2;
 }
 
 .card h3{
@@ -57,7 +71,7 @@ button{
   font-size:14px;
 }
 
-/* UPLOAD MODAL */
+/* MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -93,9 +107,6 @@ button{
 
 <body>
 
-<!-- ✅ TOP BANNER AD -->
-<script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
-
 <div class="top">
   <h2>StreamHub</h2>
   <button onclick="openModal()">+ Upload</button>
@@ -103,7 +114,7 @@ button{
 
 <div class="grid" id="grid"></div>
 
-<!-- UPLOAD MODAL -->
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
     <h3>Add Video</h3>
@@ -111,17 +122,15 @@ button{
     <input id="cat" placeholder="Category">
     <input id="url" placeholder="Video URL">
     <input id="th" placeholder="Thumbnail URL">
-
     <button onclick="generate()">Generate Code</button>
-
     <div id="codeBox"></div>
-
     <button onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <script>
 var PL="player.html";
+
 /* VIDEO LIST */
 var VV = [
   {
@@ -180,21 +189,30 @@ var VV = [
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
     th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775326499/680_vsuooe.jpg"
   }
-  
 ];
 
 /* RENDER */
 function render(){
   var grid=document.getElementById("grid");
   grid.innerHTML="";
+
   VV.forEach(v=>{
     var a=document.createElement("a");
     a.href=PL+"?url="+encodeURIComponent(v.url);
     a.target="_blank";
 
     a.innerHTML=`
-      <div class="card">
-        ${v.th ? `<img src="${v.th}">` : `<div style="height:160px;background:#222"></div>`}
+      <div class="card"
+        onmouseenter="playPreview(this)"
+        onmouseleave="stopPreview(this)"
+        onclick="tapPreview(event,this)">
+
+        <img src="${v.th}" loading="lazy">
+
+        <video muted loop preload="none">
+          <source src="${v.url}" type="video/mp4">
+        </video>
+
         <h3>${v.title}</h3>
       </div>
     `;
@@ -203,11 +221,51 @@ function render(){
 }
 render();
 
+/* DESKTOP HOVER */
+function playPreview(card){
+  if(window.innerWidth < 768) return;
+  var video = card.querySelector("video");
+  var img = card.querySelector("img");
+
+  video.style.display="block";
+  video.currentTime = 2;
+  video.play();
+  img.style.opacity="0";
+}
+
+function stopPreview(card){
+  if(window.innerWidth < 768) return;
+  var video = card.querySelector("video");
+  var img = card.querySelector("img");
+
+  video.pause();
+  video.style.display="none";
+  img.style.opacity="1";
+}
+
+/* MOBILE TAP */
+function tapPreview(e, card){
+  if(window.innerWidth > 768) return;
+
+  e.preventDefault();
+
+  var video = card.querySelector("video");
+  var img = card.querySelector("img");
+
+  if(video.style.display==="block"){
+    window.location.href = card.parentElement.href;
+  }else{
+    video.style.display="block";
+    video.play();
+    img.style.opacity="0";
+  }
+}
+
 /* MODAL */
 function openModal(){document.getElementById("modal").style.display="flex";}
 function closeModal(){document.getElementById("modal").style.display="none";}
 
-/* GENERATE CODE */
+/* GENERATE */
 function generate(){
   var t=document.getElementById("title").value;
   var c=document.getElementById("cat").value;
@@ -215,9 +273,7 @@ function generate(){
   var th=document.getElementById("th").value;
 
   var id=Date.now();
-
   var code=`{id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}"},`;
-
   document.getElementById("codeBox").innerText=code;
 }
 </script>
