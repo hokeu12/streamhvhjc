@@ -13,6 +13,7 @@ body{
   color:#fff;
 }
 
+/* TOP BAR */
 .top{
   display:flex;
   justify-content:space-between;
@@ -29,15 +30,15 @@ button{
   cursor:pointer;
 }
 
-/* GRID */
+/* GRID (4 per row desktop) */
 .grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
   padding:20px;
 }
 
-@media(max-width:768px){
+@media(max-width:900px){
   .grid{grid-template-columns:repeat(2,1fr);}
 }
 
@@ -68,8 +69,8 @@ button{
 
 /* TITLE */
 .card h3{
-  padding:10px;
-  font-size:14px;
+  padding:8px;
+  font-size:13px;
   margin:0;
 }
 
@@ -87,7 +88,7 @@ button{
   background:#111;
   padding:20px;
   border-radius:10px;
-  width:300px;
+  width:320px;
 }
 
 .modal input{
@@ -102,19 +103,6 @@ button{
   padding:10px;
   font-size:12px;
   word-break:break-all;
-  margin-top:10px;
-}
-
-/* skeleton loader */
-.skeleton{
-  height:160px;
-  background:linear-gradient(90deg,#222,#333,#222);
-  animation:shimmer 1.2s infinite;
-}
-
-@keyframes shimmer{
-  0%{background-position:-200px 0}
-  100%{background-position:200px 0}
 }
 </style>
 </head>
@@ -127,19 +115,19 @@ button{
   <button onclick="openModal()">+ Upload</button>
 </div>
 
-<!-- GRID -->
 <div class="grid" id="grid"></div>
 
 <!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
-    <h3>Add Video</h3>
+    <h3>Embed Upload System</h3>
+
     <input id="title" placeholder="Title">
     <input id="cat" placeholder="Category">
     <input id="url" placeholder="Video URL">
     <input id="th" placeholder="Thumbnail URL">
 
-    <button onclick="generate()">Add Video</button>
+    <button onclick="generate()">Generate Embed Code</button>
 
     <div id="codeBox"></div>
 
@@ -151,74 +139,79 @@ button{
 
 var PL="player.html";
 
-/* VIDEO LIST */
+/* =========================
+   FULL VIDEO DATABASE
+========================= */
 var VV = [
+
   {
     id: 1775464380763,
     title: "Desi Video",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
   },
   {
     id: 1775465413152,
     title: "mms 1",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
   },
   {
     id: 1775466142591,
     title: "mms 2",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
   },
   {
     id: 1775466284046,
     title: "mms 3",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
   },
   {
     id: 1775466312534,
     title: "mms 4",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
   },
   {
     id: 1775466395097,
     title: "mms 5",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
   },
   {
     id: 1775466443234,
     title: "mms 6",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
   },
   {
     id: 1775466552155,
     title: "mms 7",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775326499/680_vsuooe.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326499/680_vsuooe.jpg"
   }
+
 ];
 
-/* RENDER */
-var grid = document.getElementById("grid");
-
+/* =========================
+   RENDER SYSTEM
+========================= */
 function render(){
-  grid.innerHTML = "";
+  var grid=document.getElementById("grid");
+  grid.innerHTML="";
 
   VV.forEach(v=>{
-    let a=document.createElement("a");
+    var a=document.createElement("a");
     a.href=PL+"?url="+encodeURIComponent(v.url);
     a.target="_blank";
 
@@ -227,12 +220,10 @@ function render(){
         onmouseenter="playPreview(this)"
         onmouseleave="stopPreview(this)">
 
-        <div class="skeleton"></div>
+        <img src="${v.th}" loading="lazy">
 
-        <img src="${v.th}" loading="lazy" onload="this.previousElementSibling.style.display='none'">
-
-        <video muted loop preload="metadata">
-          <source src="${v.url}" type="video/mp4">
+        <video muted loop preload="none">
+          <source src="${v.url}">
         </video>
 
         <h3>${v.title}</h3>
@@ -244,15 +235,17 @@ function render(){
 }
 render();
 
-/* HOVER PREVIEW */
+/* =========================
+   HOVER PREVIEW (desktop)
+========================= */
 function playPreview(card){
   if(window.innerWidth < 768) return;
 
-  let video = card.querySelector("video");
-  let img = card.querySelector("img");
+  let video=card.querySelector("video");
+  let img=card.querySelector("img");
 
   video.style.display="block";
-  video.currentTime = 2;
+  video.currentTime=2;
   video.play();
 
   img.style.opacity="0";
@@ -261,16 +254,19 @@ function playPreview(card){
 function stopPreview(card){
   if(window.innerWidth < 768) return;
 
-  let video = card.querySelector("video");
-  let img = card.querySelector("img");
+  let video=card.querySelector("video");
+  let img=card.querySelector("img");
 
   video.pause();
   video.style.display="none";
   img.style.opacity="1";
 }
 
-/* UPLOAD FIX */
+/* =========================
+   OLD EMBED UPLOAD SYSTEM
+========================= */
 function generate(){
+
   var t=document.getElementById("title").value;
   var c=document.getElementById("cat").value;
   var u=document.getElementById("url").value;
@@ -278,6 +274,11 @@ function generate(){
 
   var id=Date.now();
 
+  var code = `{id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}"},`;
+
+  document.getElementById("codeBox").innerText = code;
+
+  // ALSO ADD LIVE (optional but useful)
   VV.unshift({
     id:id,
     title:t,
@@ -287,9 +288,6 @@ function generate(){
   });
 
   render();
-
-  document.getElementById("codeBox").innerText =
-    "✅ Video added successfully!";
 }
 
 /* MODAL */
