@@ -159,7 +159,7 @@ button{
 <script>
 var PL="player.html";
 
-/* VIDEO LIST (ALL YOUR VIDEOS) */
+/* VIDEO LIST */
 var VV = [
   {
     id: 1775464380763,
@@ -264,30 +264,24 @@ function render(){
 }
 render();
 
-/* HOVER */
+/* HOVER (NO BLUR) */
 function playPreview(card,index){
   if(window.innerWidth<768) return;
 
   preloadNextVideos(index);
 
   let v=card.querySelector("video");
-  let i=card.querySelector("img");
-
   v.style.display="block";
   v.currentTime=2;
   v.play();
-  i.style.opacity="0";
 }
 
 function stopPreview(card){
   if(window.innerWidth<768) return;
 
   let v=card.querySelector("video");
-  let i=card.querySelector("img");
-
   v.pause();
   v.style.display="none";
-  i.style.opacity="1";
 }
 
 /* MODAL */
