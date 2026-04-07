@@ -13,14 +13,7 @@ body{
   color:#fff;
 }
 
-/* TOP AD */
-.top-ad{
-  width:100%;
-  text-align:center;
-  background:#000;
-  padding:8px 0;
-}
-
+/* TOP */
 .top{
   display:flex;
   justify-content:space-between;
@@ -57,13 +50,17 @@ button{
   overflow:hidden;
 }
 
-/* SKELETON */
+/* SKELETON (NO REMOVAL EFFECT) */
 .skeleton{
   width:100%;
   height:160px;
   background:linear-gradient(90deg,#222,#333,#222);
   background-size:200% 100%;
   animation:shimmer 1.2s infinite;
+  position:absolute;
+  top:0;
+  left:0;
+  z-index:1;
 }
 
 @keyframes shimmer{
@@ -71,13 +68,17 @@ button{
   100%{background-position:200% 0;}
 }
 
+/* IMAGE (NO TRANSITION = NO BLUR) */
 .card img{
   width:100%;
   height:160px;
   object-fit:cover;
-  display:none;
+  display:block;
+  position:relative;
+  z-index:2;
 }
 
+/* VIDEO */
 .card video{
   position:absolute;
   top:0;
@@ -86,9 +87,10 @@ button{
   height:160px;
   object-fit:cover;
   display:none;
-  z-index:2;
+  z-index:3;
 }
 
+/* TITLE */
 .card h3{
   padding:10px;
   font-size:14px;
@@ -130,11 +132,6 @@ button{
 
 <body>
 
-<!-- TOP BANNER AD -->
-<div class="top-ad">
-<script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
-</div>
-
 <div class="top">
   <h2>StreamHub</h2>
   <button onclick="openModal()">+ Upload</button>
@@ -166,91 +163,90 @@ var VV = [
     title: "Desi Video",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto,so_2/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
   },
   {
     id: 1775465413152,
     title: "mms 1",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto,so_2/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
   },
   {
     id: 1775466142591,
     title: "mms 2",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
   },
   {
     id: 1775466284046,
     title: "mms 3",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
   },
   {
     id: 1775466312534,
     title: "mms 4",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
   },
   {
     id: 1775466395097,
     title: "mms 5",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
   },
   {
     id: 1775466443234,
     title: "mms 6",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
   },
   {
     id: 1775466552155,
     title: "mms 7",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775326499/680_vsuooe.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326499/680_vsuooe.jpg"
   }
 ];
 
-/* PRELOAD NEXT */
-function preloadNextVideos(index){
-  for(let i=index+1;i<=index+2;i++){
-    if(VV[i]){
-      let link=document.createElement("link");
-      link.rel="preload";
-      link.as="video";
-      link.href=VV[i].url;
-      document.head.appendChild(link);
+/* PRELOAD */
+function preloadNextVideos(i){
+  for(let x=i+1;x<=i+2;x++){
+    if(VV[x]){
+      let l=document.createElement("link");
+      l.rel="preload";
+      l.as="video";
+      l.href=VV[x].url;
+      document.head.appendChild(l);
     }
   }
 }
 
 /* RENDER */
 function render(){
-  var grid=document.getElementById("grid");
+  let grid=document.getElementById("grid");
   grid.innerHTML="";
 
-  VV.forEach((v,index)=>{
-    var a=document.createElement("a");
+  VV.forEach((v,i)=>{
+    let a=document.createElement("a");
     a.href=PL+"?url="+encodeURIComponent(v.url);
     a.target="_blank";
 
     a.innerHTML=`
       <div class="card"
-        onmouseenter="playPreview(this,${index})"
+        onmouseenter="playPreview(this,${i})"
         onmouseleave="stopPreview(this)">
 
         <div class="skeleton"></div>
 
-        <img src="${v.th}" loading="lazy" decoding="async"
-        onload="this.style.display='block'; this.previousElementSibling.remove();">
+        <img src="${v.th}" loading="lazy">
 
         <video muted loop preload="none">
           <source src="${v.url}" type="video/mp4">
@@ -264,11 +260,11 @@ function render(){
 }
 render();
 
-/* HOVER (NO BLUR) */
-function playPreview(card,index){
+/* PREVIEW (CLEAN - NO BLUR) */
+function playPreview(card,i){
   if(window.innerWidth<768) return;
 
-  preloadNextVideos(index);
+  preloadNextVideos(i);
 
   let v=card.querySelector("video");
   v.style.display="block";
