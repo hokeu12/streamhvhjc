@@ -13,7 +13,6 @@ body{
   color:#fff;
 }
 
-/* TOP */
 .top{
   display:flex;
   justify-content:space-between;
@@ -44,41 +43,19 @@ button{
 
 /* CARD */
 .card{
-  position:relative;
   background:#151522;
   border-radius:10px;
   overflow:hidden;
+  position:relative;
 }
 
-/* SKELETON (NO REMOVAL EFFECT) */
-.skeleton{
-  width:100%;
-  height:160px;
-  background:linear-gradient(90deg,#222,#333,#222);
-  background-size:200% 100%;
-  animation:shimmer 1.2s infinite;
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:1;
-}
-
-@keyframes shimmer{
-  0%{background-position:-200% 0;}
-  100%{background-position:200% 0;}
-}
-
-/* IMAGE (NO TRANSITION = NO BLUR) */
 .card img{
   width:100%;
   height:160px;
   object-fit:cover;
   display:block;
-  position:relative;
-  z-index:2;
 }
 
-/* VIDEO */
 .card video{
   position:absolute;
   top:0;
@@ -87,45 +64,24 @@ button{
   height:160px;
   object-fit:cover;
   display:none;
-  z-index:3;
 }
 
-/* TITLE */
 .card h3{
-  padding:10px;
-  font-size:14px;
-}
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-box{
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
-}
-
-.modal input{
-  width:100%;
-  margin-bottom:10px;
   padding:8px;
-  border:none;
+  font-size:14px;
+  margin:0;
 }
 
-#codeBox{
-  background:#000;
-  padding:10px;
+.meta{
+  padding:0 8px 10px;
   font-size:12px;
-  word-break:break-all;
-  margin-top:10px;
+  color:#aaa;
+}
+
+#loader{
+  text-align:center;
+  padding:20px;
+  color:#888;
 }
 </style>
 </head>
@@ -134,161 +90,201 @@ button{
 
 <div class="top">
   <h2>StreamHub</h2>
-  <button onclick="openModal()">+ Upload</button>
+  <button>+ Upload</button>
 </div>
 
 <div class="grid" id="grid"></div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3>Add Video</h3>
-    <input id="title" placeholder="Title">
-    <input id="cat" placeholder="Category">
-    <input id="url" placeholder="Video URL">
-    <input id="th" placeholder="Thumbnail URL">
-    <button onclick="generate()">Generate Code</button>
-    <div id="codeBox"></div>
-    <button onclick="closeModal()">Close</button>
-  </div>
-</div>
+<div id="loader">Loading...</div>
 
 <script>
-var PL="player.html";
+var PL = "player.html";
 
-/* VIDEO LIST */
+/* =========================
+   FULL VIDEO LIST (YOUR DATA)
+========================= */
+
 var VV = [
   {
     id: 1775464380763,
     title: "Desi Video",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg",
+    views: 0,
+    createdAt: Date.now() - 900000
   },
   {
     id: 1775465413152,
     title: "mms 1",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg",
+    views: 0,
+    createdAt: Date.now() - 800000
   },
   {
     id: 1775466142591,
     title: "mms 2",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg",
+    views: 0,
+    createdAt: Date.now() - 700000
   },
   {
     id: 1775466284046,
     title: "mms 3",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg",
+    views: 0,
+    createdAt: Date.now() - 600000
   },
   {
     id: 1775466312534,
     title: "mms 4",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327866/PBLBBHOT_2_ngmeyn.jpg",
+    views: 0,
+    createdAt: Date.now() - 500000
   },
   {
     id: 1775466395097,
     title: "mms 5",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg",
+    views: 0,
+    createdAt: Date.now() - 400000
   },
   {
     id: 1775466443234,
     title: "mms 6",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg",
+    views: 0,
+    createdAt: Date.now() - 300000
   },
   {
     id: 1775466552155,
     title: "mms 7",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326499/680_vsuooe.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326499/680_vsuooe.jpg",
+    views: 0,
+    createdAt: Date.now() - 200000
   }
 ];
 
-/* PRELOAD */
-function preloadNextVideos(i){
-  for(let x=i+1;x<=i+2;x++){
-    if(VV[x]){
-      let l=document.createElement("link");
-      l.rel="preload";
-      l.as="video";
-      l.href=VV[x].url;
-      document.head.appendChild(l);
-    }
+/* =========================
+   VIEW SYSTEM
+========================= */
+
+function addView(id){
+  let v = JSON.parse(localStorage.getItem("views") || "{}");
+  v[id] = (v[id] || 0) + 1;
+  localStorage.setItem("views", JSON.stringify(v));
+}
+
+/* =========================
+   TRENDING ALGO
+========================= */
+
+function getTrend(v){
+  let views = JSON.parse(localStorage.getItem("views") || "{}")[v.id] || 0;
+  let age = (Date.now() - v.createdAt) / 3600000;
+  return (views * 10) + (1000 / (age + 2));
+}
+
+VV.sort((a,b)=>getTrend(b)-getTrend(a));
+
+/* =========================
+   INFINITE SCROLL
+========================= */
+
+let index = 0;
+let batch = 6;
+let grid = document.getElementById("grid");
+
+function loadMore(){
+  let slice = VV.slice(index, index + batch);
+
+  slice.forEach(renderCard);
+
+  index += batch;
+
+  if(index >= VV.length){
+    document.getElementById("loader").innerText = "No more videos";
   }
 }
 
-/* RENDER */
-function render(){
-  let grid=document.getElementById("grid");
-  grid.innerHTML="";
+/* =========================
+   RENDER CARD
+========================= */
 
-  VV.forEach((v,i)=>{
-    let a=document.createElement("a");
-    a.href=PL+"?url="+encodeURIComponent(v.url);
-    a.target="_blank";
+function renderCard(v){
+  let a = document.createElement("a");
+  a.href = PL + "?url=" + encodeURIComponent(v.url);
 
-    a.innerHTML=`
-      <div class="card"
-        onmouseenter="playPreview(this,${i})"
-        onmouseleave="stopPreview(this)">
+  a.onclick = () => addView(v.id);
 
-        <div class="skeleton"></div>
+  let views = JSON.parse(localStorage.getItem("views") || "{}")[v.id] || 0;
 
-        <img src="${v.th}" loading="lazy">
+  a.innerHTML = `
+    <div class="card"
+      onmouseenter="playPreview(this)"
+      onmouseleave="stopPreview(this)">
 
-        <video muted loop preload="none">
-          <source src="${v.url}" type="video/mp4">
-        </video>
+      <img src="${v.th}" loading="lazy">
 
-        <h3>${v.title}</h3>
+      <video muted loop preload="none">
+        <source src="${v.url}">
+      </video>
+
+      <h3>${v.title}</h3>
+
+      <div class="meta">
+        👀 ${views} views • 🔥 Trending
       </div>
-    `;
-    grid.appendChild(a);
-  });
+    </div>
+  `;
+
+  grid.appendChild(a);
 }
-render();
 
-/* PREVIEW (CLEAN - NO BLUR) */
-function playPreview(card,i){
-  if(window.innerWidth<768) return;
+/* =========================
+   PREVIEW SYSTEM
+========================= */
 
-  preloadNextVideos(i);
+function playPreview(card){
+  if(window.innerWidth < 768) return;
 
-  let v=card.querySelector("video");
-  v.style.display="block";
-  v.currentTime=2;
-  v.play();
+  let video = card.querySelector("video");
+  video.style.display = "block";
+  video.currentTime = 1;
+  video.play();
 }
 
 function stopPreview(card){
-  if(window.innerWidth<768) return;
-
-  let v=card.querySelector("video");
-  v.pause();
-  v.style.display="none";
+  let video = card.querySelector("video");
+  video.pause();
+  video.style.display = "none";
 }
 
-/* MODAL */
-function openModal(){modal.style.display="flex";}
-function closeModal(){modal.style.display="none";}
+/* =========================
+   SCROLL LOAD
+========================= */
 
-/* GENERATE */
-function generate(){
-  let id=Date.now();
-  codeBox.innerText=`{id:${id},title:"${title.value}",cat:"${cat.value}",url:"${url.value}",th:"${th.value}"},`;
-}
+window.addEventListener("scroll",()=>{
+  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){
+    loadMore();
+  }
+});
+
+/* INIT */
+loadMore();
 </script>
 
 </body>
