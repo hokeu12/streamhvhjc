@@ -230,7 +230,7 @@ function renderCard(v){
 
   a.onclick = () => addView(v.id);
 
-  let views = JSON.parse(localStorage.getItem("views") || "{}")[v.id] || 0;
+
 
   a.innerHTML = `
     <div class="card"
@@ -246,7 +246,7 @@ function renderCard(v){
       <h3>${v.title}</h3>
 
       <div class="meta">
-        👀 ${views} views • 🔥 Trending
+         • 🔥 Trending
       </div>
     </div>
   `;
