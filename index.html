@@ -13,7 +13,7 @@ body{
   color:#fff;
 }
 
-/* 🔥 TOP AD STYLE */
+/* TOP AD */
 .top-ad{
   width:100%;
   text-align:center;
@@ -49,6 +49,7 @@ button{
   .grid{grid-template-columns:repeat(2,1fr);}
 }
 
+/* CARD */
 .card{
   position:relative;
   background:#151522;
@@ -56,11 +57,25 @@ button{
   overflow:hidden;
 }
 
+/* SKELETON */
+.skeleton{
+  width:100%;
+  height:160px;
+  background:linear-gradient(90deg,#222,#333,#222);
+  background-size:200% 100%;
+  animation:shimmer 1.2s infinite;
+}
+
+@keyframes shimmer{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+
 .card img{
   width:100%;
   height:160px;
   object-fit:cover;
-  transition:0.3s;
+  display:none;
 }
 
 .card video{
@@ -115,9 +130,9 @@ button{
 
 <body>
 
-<!-- 🔥 TOP BANNER AD (PERFECT PLACEMENT) -->
+<!-- TOP BANNER AD -->
 <div class="top-ad">
-  <script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
+<script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
 </div>
 
 <div class="top">
@@ -144,82 +159,98 @@ button{
 <script>
 var PL="player.html";
 
-/* VIDEO LIST */
+/* VIDEO LIST (ALL YOUR VIDEOS) */
 var VV = [
   {
     id: 1775464380763,
     title: "Desi Video",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto,so_2/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
   },
   {
     id: 1775465413152,
     title: "mms 1",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto,so_2/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
   },
   {
     id: 1775466142591,
     title: "mms 2",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
   },
   {
     id: 1775466284046,
     title: "mms 3",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
   },
   {
     id: 1775466312534,
     title: "mms 4",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
   },
   {
     id: 1775466395097,
     title: "mms 5",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
   },
   {
     id: 1775466443234,
     title: "mms 6",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
   },
   {
     id: 1775466552155,
     title: "mms 7",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775326499/680_vsuooe.jpg"
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,q_auto,f_auto,so_1/v1775326499/680_vsuooe.jpg"
   }
 ];
+
+/* PRELOAD NEXT */
+function preloadNextVideos(index){
+  for(let i=index+1;i<=index+2;i++){
+    if(VV[i]){
+      let link=document.createElement("link");
+      link.rel="preload";
+      link.as="video";
+      link.href=VV[i].url;
+      document.head.appendChild(link);
+    }
+  }
+}
 
 /* RENDER */
 function render(){
   var grid=document.getElementById("grid");
   grid.innerHTML="";
 
-  VV.forEach(v=>{
+  VV.forEach((v,index)=>{
     var a=document.createElement("a");
     a.href=PL+"?url="+encodeURIComponent(v.url);
     a.target="_blank";
 
     a.innerHTML=`
       <div class="card"
-        onmouseenter="playPreview(this)"
+        onmouseenter="playPreview(this,${index})"
         onmouseleave="stopPreview(this)">
 
-        <img src="${v.th}" loading="lazy">
+        <div class="skeleton"></div>
+
+        <img src="${v.th}" loading="lazy" decoding="async"
+        onload="this.style.display='block'; this.previousElementSibling.remove();">
 
         <video muted loop preload="none">
           <source src="${v.url}" type="video/mp4">
@@ -233,42 +264,40 @@ function render(){
 }
 render();
 
-/* HOVER PREVIEW */
-function playPreview(card){
-  if(window.innerWidth < 768) return;
-  var video = card.querySelector("video");
-  var img = card.querySelector("img");
+/* HOVER */
+function playPreview(card,index){
+  if(window.innerWidth<768) return;
 
-  video.style.display="block";
-  video.currentTime = 2;
-  video.play();
-  img.style.opacity="0";
+  preloadNextVideos(index);
+
+  let v=card.querySelector("video");
+  let i=card.querySelector("img");
+
+  v.style.display="block";
+  v.currentTime=2;
+  v.play();
+  i.style.opacity="0";
 }
 
 function stopPreview(card){
-  if(window.innerWidth < 768) return;
-  var video = card.querySelector("video");
-  var img = card.querySelector("img");
+  if(window.innerWidth<768) return;
 
-  video.pause();
-  video.style.display="none";
-  img.style.opacity="1";
+  let v=card.querySelector("video");
+  let i=card.querySelector("img");
+
+  v.pause();
+  v.style.display="none";
+  i.style.opacity="1";
 }
 
 /* MODAL */
-function openModal(){document.getElementById("modal").style.display="flex";}
-function closeModal(){document.getElementById("modal").style.display="none";}
+function openModal(){modal.style.display="flex";}
+function closeModal(){modal.style.display="none";}
 
 /* GENERATE */
 function generate(){
-  var t=document.getElementById("title").value;
-  var c=document.getElementById("cat").value;
-  var u=document.getElementById("url").value;
-  var th=document.getElementById("th").value;
-
-  var id=Date.now();
-  var code=`{id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}"},`;
-  document.getElementById("codeBox").innerText=code;
+  let id=Date.now();
+  codeBox.innerText=`{id:${id},title:"${title.value}",cat:"${cat.value}",url:"${url.value}",th:"${th.value}"},`;
 }
 </script>
 
