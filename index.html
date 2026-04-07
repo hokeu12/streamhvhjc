@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -12,6 +11,14 @@ body{
   font-family:sans-serif;
   background:#0b0b12;
   color:#fff;
+}
+
+/* 🔥 TOP AD STYLE */
+.top-ad{
+  width:100%;
+  text-align:center;
+  background:#000;
+  padding:8px 0;
 }
 
 .top{
@@ -31,114 +38,6 @@ button{
 }
 
 /* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  padding:20px;
-}
-
-@media(max-width:768px){
-  .grid{grid-template-columns:repeat(2,1fr);}
-}
-
-.card{
-  position:relative;
-  background:#151522;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-}
-
-.card video{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:160px;
-  object-fit:cover;
-  display:none;
-}
-
-.card h3{
-  padding:10px;
-  font-size:14px;
-}
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-box{
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  width:300px;
-}
-
-.modal input{
-  width:100%;
-  margin-bottom:10px;
-  padding:8px;
-  border:none;
-}
-
-#codeBox{
-  background:#000;
-  padding:10px;
-  font-size:12px;
-  word-break:break-all;
-  margin-top:10px;
-}
-</style>
-
-</head>
-
-<body>
-
-<!-- 🔥 TOP BANNER AD -->
-<div style="text-align:center; padding:10px;">
-  <script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
-</div>
-
-<div class="top">
-  <h2>StreamHub</h2>
-  <button onclick="openModal()">+ Upload</button>
-</div>{
-  margin:0;
-  font-family:sans-serif;
-  background:#0b0b12;
-  color:#fff;
-}
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px;
-}
-
-button{
-  background:#e8293e;
-  border:none;
-  color:#fff;
-  padding:8px 12px;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-/* ✅ ORIGINAL GRID (UNCHANGED) */
 .grid{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -215,6 +114,11 @@ button{
 </head>
 
 <body>
+
+<!-- 🔥 TOP BANNER AD (PERFECT PLACEMENT) -->
+<div class="top-ad">
+  <script src="https://pl28997809.profitablecpmratenetwork.com/b8/7d/81/b87d8149540da4612ff212f58c224f74.js"></script>
+</div>
 
 <div class="top">
   <h2>StreamHub</h2>
@@ -329,7 +233,7 @@ function render(){
 }
 render();
 
-/* HOVER PREVIEW (DESKTOP ONLY) */
+/* HOVER PREVIEW */
 function playPreview(card){
   if(window.innerWidth < 768) return;
   var video = card.querySelector("video");
