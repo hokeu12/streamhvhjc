@@ -43,10 +43,10 @@ button{
 
 /* CARD */
 .card{
+  position:relative;
   background:#151522;
   border-radius:10px;
   overflow:hidden;
-  position:relative;
 }
 
 .card img{
@@ -66,225 +66,241 @@ button{
   display:none;
 }
 
+/* TITLE */
 .card h3{
-  padding:8px;
+  padding:10px;
   font-size:14px;
   margin:0;
 }
 
-.meta{
-  padding:0 8px 10px;
-  font-size:12px;
-  color:#aaa;
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
 }
 
-#loader{
-  text-align:center;
+.modal-box{
+  background:#111;
   padding:20px;
-  color:#888;
+  border-radius:10px;
+  width:300px;
+}
+
+.modal input{
+  width:100%;
+  margin-bottom:10px;
+  padding:8px;
+  border:none;
+}
+
+#codeBox{
+  background:#000;
+  padding:10px;
+  font-size:12px;
+  word-break:break-all;
+  margin-top:10px;
+}
+
+/* skeleton loader */
+.skeleton{
+  height:160px;
+  background:linear-gradient(90deg,#222,#333,#222);
+  animation:shimmer 1.2s infinite;
+}
+
+@keyframes shimmer{
+  0%{background-position:-200px 0}
+  100%{background-position:200px 0}
 }
 </style>
 </head>
 
 <body>
 
+<!-- TOP -->
 <div class="top">
   <h2>StreamHub</h2>
-  <button>+ Upload</button>
+  <button onclick="openModal()">+ Upload</button>
 </div>
 
+<!-- GRID -->
 <div class="grid" id="grid"></div>
-<div id="loader">Loading...</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Add Video</h3>
+    <input id="title" placeholder="Title">
+    <input id="cat" placeholder="Category">
+    <input id="url" placeholder="Video URL">
+    <input id="th" placeholder="Thumbnail URL">
+
+    <button onclick="generate()">Add Video</button>
+
+    <div id="codeBox"></div>
+
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
 
 <script>
-var PL = "player.html";
 
-/* =========================
-   FULL VIDEO LIST (YOUR DATA)
-========================= */
+var PL="player.html";
 
+/* VIDEO LIST */
 var VV = [
   {
     id: 1775464380763,
     title: "Desi Video",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg",
-    views: 0,
-    createdAt: Date.now() - 900000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
   },
   {
     id: 1775465413152,
     title: "mms 1",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg",
-    views: 0,
-    createdAt: Date.now() - 800000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_2/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
   },
   {
     id: 1775466142591,
     title: "mms 2",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg",
-    views: 0,
-    createdAt: Date.now() - 700000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
   },
   {
     id: 1775466284046,
     title: "mms 3",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg",
-    views: 0,
-    createdAt: Date.now() - 600000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
   },
   {
     id: 1775466312534,
     title: "mms 4",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327866/PBLBBHOT_2_ngmeyn.jpg",
-    views: 0,
-    createdAt: Date.now() - 500000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
   },
   {
     id: 1775466395097,
     title: "mms 5",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg",
-    views: 0,
-    createdAt: Date.now() - 400000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327860/Download_VID_20250804_WA0021_mp4_vnhhiv.jpg"
   },
   {
     id: 1775466443234,
     title: "mms 6",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg",
-    views: 0,
-    createdAt: Date.now() - 300000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775327830/74789868DiskWala_File_b21cbbdce4_pbdz9m.jpg"
   },
   {
     id: 1775466552155,
     title: "mms 7",
     cat: "mms",
     url: "https://res.cloudinary.com/dabgszxqm/video/upload/v1775326499/680_vsuooe.mp4",
-    th: "https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,q_auto,f_auto/v1775326499/680_vsuooe.jpg",
-    views: 0,
-    createdAt: Date.now() - 200000
+    th: "https://res.cloudinary.com/dabgszxqm/video/upload/ar_9:16,c_fill,so_1/v1775326499/680_vsuooe.jpg"
   }
 ];
 
-/* =========================
-   VIEW SYSTEM
-========================= */
+/* RENDER */
+var grid = document.getElementById("grid");
 
-function addView(id){
-  let v = JSON.parse(localStorage.getItem("views") || "{}");
-  v[id] = (v[id] || 0) + 1;
-  localStorage.setItem("views", JSON.stringify(v));
-}
+function render(){
+  grid.innerHTML = "";
 
-/* =========================
-   TRENDING ALGO
-========================= */
+  VV.forEach(v=>{
+    let a=document.createElement("a");
+    a.href=PL+"?url="+encodeURIComponent(v.url);
+    a.target="_blank";
 
-function getTrend(v){
-  let views = JSON.parse(localStorage.getItem("views") || "{}")[v.id] || 0;
-  let age = (Date.now() - v.createdAt) / 3600000;
-  return (views * 10) + (1000 / (age + 2));
-}
+    a.innerHTML=`
+      <div class="card"
+        onmouseenter="playPreview(this)"
+        onmouseleave="stopPreview(this)">
 
-VV.sort((a,b)=>getTrend(b)-getTrend(a));
+        <div class="skeleton"></div>
 
-/* =========================
-   INFINITE SCROLL
-========================= */
+        <img src="${v.th}" loading="lazy" onload="this.previousElementSibling.style.display='none'">
 
-let index = 0;
-let batch = 6;
-let grid = document.getElementById("grid");
+        <video muted loop preload="metadata">
+          <source src="${v.url}" type="video/mp4">
+        </video>
 
-function loadMore(){
-  let slice = VV.slice(index, index + batch);
-
-  slice.forEach(renderCard);
-
-  index += batch;
-
-  if(index >= VV.length){
-    document.getElementById("loader").innerText = "No more videos";
-  }
-}
-
-/* =========================
-   RENDER CARD
-========================= */
-
-function renderCard(v){
-  let a = document.createElement("a");
-  a.href = PL + "?url=" + encodeURIComponent(v.url);
-
-  a.onclick = () => addView(v.id);
-
-
-
-  a.innerHTML = `
-    <div class="card"
-      onmouseenter="playPreview(this)"
-      onmouseleave="stopPreview(this)">
-
-      <img src="${v.th}" loading="lazy">
-
-      <video muted loop preload="none">
-        <source src="${v.url}">
-      </video>
-
-      <h3>${v.title}</h3>
-
-      <div class="meta">
-         • 🔥 Trending
+        <h3>${v.title}</h3>
       </div>
-    </div>
-  `;
+    `;
 
-  grid.appendChild(a);
+    grid.appendChild(a);
+  });
 }
+render();
 
-/* =========================
-   PREVIEW SYSTEM
-========================= */
-
+/* HOVER PREVIEW */
 function playPreview(card){
   if(window.innerWidth < 768) return;
 
   let video = card.querySelector("video");
-  video.style.display = "block";
-  video.currentTime = 1;
+  let img = card.querySelector("img");
+
+  video.style.display="block";
+  video.currentTime = 2;
   video.play();
+
+  img.style.opacity="0";
 }
 
 function stopPreview(card){
+  if(window.innerWidth < 768) return;
+
   let video = card.querySelector("video");
+  let img = card.querySelector("img");
+
   video.pause();
-  video.style.display = "none";
+  video.style.display="none";
+  img.style.opacity="1";
 }
 
-/* =========================
-   SCROLL LOAD
-========================= */
+/* UPLOAD FIX */
+function generate(){
+  var t=document.getElementById("title").value;
+  var c=document.getElementById("cat").value;
+  var u=document.getElementById("url").value;
+  var th=document.getElementById("th").value;
 
-window.addEventListener("scroll",()=>{
-  if(window.innerHeight + window.scrollY >= document.body.offsetHeight - 300){
-    loadMore();
-  }
-});
+  var id=Date.now();
 
-/* INIT */
-loadMore();
+  VV.unshift({
+    id:id,
+    title:t,
+    cat:c,
+    url:u,
+    th:th
+  });
+
+  render();
+
+  document.getElementById("codeBox").innerText =
+    "✅ Video added successfully!";
+}
+
+/* MODAL */
+function openModal(){
+  document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+  document.getElementById("modal").style.display="none";
+}
+
 </script>
 
 </body>
