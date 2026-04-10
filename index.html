@@ -101,7 +101,7 @@ button{
   font-size:12px;
   color:#4caf50;
   opacity:0;
-  transition:opacity 0.4s ease;
+  transition:opacity .4s;
 }
 .copy-msg.show{
   opacity:1;
@@ -148,9 +148,9 @@ button{
     <hr>
 
     <h3>Bulk Upload (JSON)</h3>
-    <textarea id="bulkData"></textarea>
+    <textarea id="bulkData" placeholder='[{"title":"Video","url":"..."}]'></textarea>
 
-    <button onclick="copyBulk()">📋 Copy JSON</button>
+    <button onclick="copyText('bulkData','bulkMsg')">📋 Copy JSON</button>
     <div id="bulkMsg" class="copy-msg">Copied ✓</div>
 
     <button onclick="bulkUpload()">Upload Bulk</button>
@@ -158,7 +158,7 @@ button{
     <hr>
 
     <h3>Smart Converter</h3>
-    <textarea id="rawInput"></textarea>
+    <textarea id="rawInput" placeholder="Paste multiple embed objects..."></textarea>
 
     <button onclick="convertEmbed()">Convert</button>
 
@@ -174,8 +174,8 @@ button{
 
 var PL="player.html";
 
-/* DATA */
-var VV = [
+/* VIDEO DATA */
+var VV=[
   {id:1775817048469,title:"Clip 870",cat:"Clip 870",dur:"",q:"HD",rt:"",yr:"2026",vw:0,
    url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",
    th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg",
@@ -384,7 +384,7 @@ function stopPreview(card){
   i.style.opacity="1";
 }
 
-/* GENERATE */
+/* MANUAL GENERATE */
 function generate(){
 
   var t=val("title");
@@ -406,58 +406,6 @@ function generate(){
   render();
 }
 
-/* BULK COPY */
-function copyBulk(){
-  copyText("bulkData","bulkMsg");
-}
-
-/* CONVERTER */
-var convertedData=[];
-
-function convertEmbed(){
-  var raw=val("rawInput");
-  convertedData=[];
-  var matches=raw.match(/{[^}]+}/g);
-
-  if(!matches) return;
-
-  matches.forEach((str,i)=>{
-    var url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
-    var title="Clip "+(i+1);
-    var th=autoThumb(url);
-
-    convertedData.push({
-      id:Date.now()+Math.random(),
-      title:title,
-      cat:title,
-      url:url,
-      th:th
-    });
-  });
-
-  var code=convertedData.map(v =>
-    `{id:${v.id},title:"${v.title}",cat:"${v.cat}",url:"${v.url}",th:"${v.th}"},`
-  ).join("\n");
-
-  document.getElementById("convertOutput").innerHTML=`
-    <pre id="finalCode">${code}</pre>
-    <button onclick="copyText('finalCode','convMsg')">📋 Copy</button>
-    <div id="convMsg" class="copy-msg">Copied ✓</div>
-  `;
-}
-
-/* UNIVERSAL COPY */
-function copyText(id,msgId){
-  var text=document.getElementById(id).innerText || document.getElementById(id).value;
-
-  navigator.clipboard.writeText(text);
-
-  var msg=document.getElementById(msgId);
-  msg.classList.add("show");
-
-  setTimeout(()=>msg.classList.remove("show"),1200);
-}
-
 /* BULK UPLOAD */
 function bulkUpload(){
   try{
@@ -475,6 +423,61 @@ function bulkUpload(){
 
     render();
   }catch(e){}
+}
+
+/* SMART CONVERTER (MULTI FIX) */
+var convertedData=[];
+
+function convertEmbed(){
+
+  var raw=val("rawInput");
+  if(!raw) return;
+
+  convertedData=[];
+
+  var matches = raw.match(/{[\s\S]*?}/g);
+  if(!matches) return;
+
+  matches.forEach((str,i)=>{
+    var url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
+    var title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
+    var cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
+    var th=autoThumb(url);
+
+    convertedData.push({
+      id:Date.now()+Math.random(),
+      title:title,
+      cat:cat,
+      url:url,
+      th:th
+    });
+  });
+
+  var jsonOutput = JSON.stringify(convertedData,null,2);
+
+  document.getElementById("convertOutput").innerHTML=`
+    <pre id="finalCode">${jsonOutput}</pre>
+    <button onclick="copyText('finalCode','convMsg')">📋 Copy JSON</button>
+    <div id="convMsg" class="copy-msg">Copied ✓</div>
+  `;
+}
+
+/* ADD TO SITE */
+function addConverted(){
+  convertedData.forEach(v=>VV.unshift(v));
+  render();
+}
+
+/* COPY FUNCTION */
+function copyText(id,msgId){
+  var text=document.getElementById(id).innerText || document.getElementById(id).value;
+
+  navigator.clipboard.writeText(text);
+
+  var msg=document.getElementById(msgId);
+  msg.classList.add("show");
+
+  setTimeout(()=>msg.classList.remove("show"),1200);
 }
 
 /* HELPERS */
