@@ -84,7 +84,9 @@ button{
   background:#111;
   padding:20px;
   border-radius:10px;
-  width:340px;
+  width:360px;
+  max-height:90vh;
+  overflow:auto;
 }
 
 .modal input, textarea{
@@ -94,7 +96,7 @@ button{
   border:none;
 }
 
-#codeBox{
+#codeBox, #convertOutput{
   background:#000;
   padding:10px;
   font-size:12px;
@@ -126,7 +128,7 @@ button{
 <div class="modal" id="modal">
   <div class="modal-box">
 
-    <h3>Upload System</h3>
+    <h3>Manual Upload</h3>
 
     <input id="title" placeholder="Title">
     <input id="cat" placeholder="Category">
@@ -139,9 +141,20 @@ button{
 
     <hr>
 
-    <h4>Bulk Upload</h4>
+    <h3>Bulk Upload (JSON)</h3>
     <textarea id="bulkData" placeholder='[{"title":"Video","url":"...","th":"..."}]'></textarea>
     <button onclick="bulkUpload()">Upload Bulk</button>
+
+    <hr>
+
+    <h3>Smart Converter</h3>
+    <textarea id="rawInput" placeholder="Paste embed code here..."></textarea>
+
+    <button onclick="convertEmbed()">Convert</button>
+
+    <div id="convertOutput"></div>
+
+    <button onclick="addConverted()">Add to Site</button>
 
     <button onclick="closeModal()">Close</button>
   </div>
@@ -152,10 +165,10 @@ button{
 var PL="player.html";
 
 /* =========================
-   YOUR FULL VIDEO DATABASE
+   YOUR VIDEO DATABASE
 ========================= */
 var VV = [
-  /* 👉 PASTE YOUR FULL VV ARRAY HERE */
+  // 👉 PASTE YOUR FULL VV ARRAY HERE
 
   {id:1775817048469,title:"Clip 870",cat:"Clip 870",dur:"",q:"HD",rt:"",yr:"2026",vw:0,
    url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",
@@ -340,7 +353,7 @@ function render(){
       <div class="card"
         onmouseenter="playPreview(this)"
         onmouseleave="stopPreview(this)">
-        <img src="${v.th}">
+        <img src="${v.th}" loading="lazy">
         <video muted loop><source src="${v.url}"></video>
         <h3>${v.title}</h3>
       </div>
@@ -351,9 +364,7 @@ function render(){
 }
 render();
 
-/* =========================
-   PREVIEW
-========================= */
+/* PREVIEW */
 function playPreview(card){
   if(window.innerWidth<768) return;
   let v=card.querySelector("video");
@@ -371,7 +382,7 @@ function stopPreview(card){
 }
 
 /* =========================
-   GENERATE + COPY
+   MANUAL GENERATE + COPY
 ========================= */
 function generate(){
 
@@ -399,7 +410,7 @@ function copyCode(){
 }
 
 /* =========================
-   BULK UPLOAD (SMART PARSE)
+   BULK UPLOAD
 ========================= */
 function bulkUpload(){
 
@@ -426,7 +437,85 @@ function bulkUpload(){
   }
 }
 
-/* AUTO THUMB (from your tool logic) */
+/* =========================
+   SMART CONVERTER
+========================= */
+var convertedData=[];
+
+function convertEmbed(){
+
+  var raw=document.getElementById("rawInput").value;
+
+  if(!raw){
+    alert("Paste embed code!");
+    return;
+  }
+
+  convertedData=[];
+
+  var matches=raw.match(/{[^}]+}/g);
+
+  if(!matches){
+    alert("Invalid format!");
+    return;
+  }
+
+  matches.forEach((str,i)=>{
+
+    var url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
+    var title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||"Clip "+(i+1);
+    var cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||"Clip "+(i+1);
+
+    var th=autoThumb(url);
+
+    convertedData.push({
+      id:Date.now()+Math.random(),
+      title:title,
+      cat:cat,
+      url:url,
+      th:th
+    });
+  });
+
+  showConverted();
+}
+
+function showConverted(){
+
+  var box=document.getElementById("convertOutput");
+
+  var code=convertedData.map(v =>
+    `{id:${v.id},title:"${v.title}",cat:"${v.cat}",url:"${v.url}",th:"${v.th}"},`
+  ).join("\n");
+
+  box.innerHTML=`
+    <pre id="finalCode">${code}</pre>
+    <button onclick="copyConverted()">📋 Copy</button>
+  `;
+}
+
+function copyConverted(){
+  var text=document.getElementById("finalCode").innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied!");
+}
+
+function addConverted(){
+
+  if(!convertedData.length){
+    alert("Nothing to add!");
+    return;
+  }
+
+  convertedData.forEach(v=>VV.unshift(v));
+
+  render();
+  alert("Added to site!");
+}
+
+/* =========================
+   HELPERS
+========================= */
 function autoThumb(url){
   if(!url.includes("cloudinary")) return "";
   return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
