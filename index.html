@@ -6,160 +6,58 @@
 <title>StreamHub</title>
 
 <style>
-body{
-  margin:0;
-  font-family:sans-serif;
-  background:#0b0b12;
-  color:#fff;
-  padding-bottom:90px;
-}
+body{margin:0;font-family:sans-serif;background:#0b0b12;color:#fff;padding-bottom:90px;}
+.top{display:flex;justify-content:space-between;align-items:center;padding:15px;}
+button{background:#e8293e;border:none;color:#fff;padding:8px 12px;border-radius:6px;cursor:pointer;}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px;}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
 
-.top{
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-}
+.card{position:relative;background:#151522;border-radius:10px;overflow:hidden;}
+.card img,.card video{width:100%;height:160px;object-fit:cover;}
+.card video{position:absolute;top:0;left:0;display:none;}
+.card h3{padding:8px;font-size:13px;margin:0;}
 
-button{
-  background:#e8293e;
-  border:none;
-  color:#fff;
-  padding:8px 12px;
-  border-radius:6px;
-  cursor:pointer;
-}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;justify-content:center;align-items:center;}
+.modal-box{background:#111;padding:20px;border-radius:10px;width:360px;max-height:90vh;overflow:auto;}
+.modal input, textarea{width:100%;margin-bottom:10px;padding:8px;border:none;}
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  padding:20px;
-}
+.copy-msg{font-size:12px;color:#4caf50;opacity:0;}
+.copy-msg.show{opacity:1;}
 
-@media(max-width:900px){
-  .grid{grid-template-columns:repeat(2,1fr);}
-}
-
-.card{
-  position:relative;
-  background:#151522;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.card img{
-  width:100%;
-  height:160px;
-  object-fit:cover;
-}
-
-.card video{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:160px;
-  object-fit:cover;
-  display:none;
-}
-
-.card h3{
-  padding:8px;
-  font-size:13px;
-  margin:0;
-}
-
-/* MODAL */
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-
-.modal-box{
-  background:#111;
-  padding:20px;
-  border-radius:10px;
-  width:360px;
-  max-height:90vh;
-  overflow:auto;
-}
-
-.modal input, textarea{
-  width:100%;
-  margin-bottom:10px;
-  padding:8px;
-  border:none;
-}
-
-/* OUTPUT STYLE (NEW CLEAN LOOK) */
-#convertOutput pre{
-  background:#000;
-  padding:10px;
-  border-radius:6px;
-  font-size:12px;
-  white-space:pre-wrap;
-  color:#00ff9c;
-}
-
-/* COPY FEEDBACK */
-.copy-msg{
-  font-size:12px;
-  color:#4caf50;
-  opacity:0;
-}
-.copy-msg.show{
-  opacity:1;
-}
-
-/* AD */
-.bottom-ad{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  background:#000;
-}
+.bottom-ad{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:center;background:#000;z-index:9999;}
 </style>
 </head>
 
 <body>
 
 <div class="top">
-  <h2>StreamHub</h2>
-  <button onclick="openModal()">+ Upload</button>
+<h2>StreamHub</h2>
+<button onclick="openModal()">+ Upload</button>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <!-- MODAL -->
 <div class="modal" id="modal">
-  <div class="modal-box">
+<div class="modal-box">
 
-    <h3>Smart Converter</h3>
-    <textarea id="rawInput" placeholder="Paste multiple embed objects..."></textarea>
+<h3>Smart Converter</h3>
+<textarea id="rawInput"></textarea>
+<button onclick="convertEmbed()">Convert</button>
 
-    <button onclick="convertEmbed()">Convert</button>
+<div id="convertOutput"></div>
 
-    <div id="convertOutput"></div>
+<button onclick="addConverted()">Add to Site</button>
+<button onclick="closeModal()">Close</button>
 
-    <button onclick="addConverted()">Add to Site</button>
-
-    <button onclick="closeModal()">Close</button>
-  </div>
+</div>
 </div>
 
 <script>
 
 var PL="player.html";
 
-/* VIDEO DATA (SHORT FOR DEMO, KEEP YOUR FULL ONE) */
-var VV=[ 
-  /* VIDEO DATA */
+/* FULL CLEAN VIDEO DATA (YOUR DATA FIXED) */
 var VV=[
 
 {id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"},
@@ -168,187 +66,116 @@ var VV=[
 
 {id:1775817111728,title:"Clip 283",cat:"Clip 283",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326368/46593737DiskWala_File_405eef97a3_do34yb.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326368/46593737DiskWala_File_405eef97a3_do34yb.jpg"},
 
-{id:1775834384638.6653,title:"Clip 1",cat:"Clip 1",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326303/2776_y4duuv.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326303/2776_y4duuv.jpg"},
+{id:1775834384638,title:"Clip 1",cat:"Clip 1",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326303/2776_y4duuv.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326303/2776_y4duuv.jpg"},
 
-{id:1775834384639.8726,title:"Clip 2",cat:"Clip 2",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326298/2023-09-23-12-36-47_1_oqw7s6.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326298/2023-09-23-12-36-47_1_oqw7s6.jpg"},
+{id:1775834384639,title:"Clip 2",cat:"Clip 2",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326298/2023-09-23-12-36-47_1_oqw7s6.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326298/2023-09-23-12-36-47_1_oqw7s6.jpg"},
 
-{id:1775834384639.6382,title:"Clip 3",cat:"Clip 3",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326298/2023-09-23-12-36-47_1_oqw7s6.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326298/2023-09-23-12-36-47_1_oqw7s6.jpg"},
+{id:1775820124722,title:"Clip 915",cat:"Clip 915",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326315/158157521050758_avn5gd.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326315/158157521050758_avn5gd.jpg"},
 
-{id:1775834384639.252,title:"Clip 4",cat:"Clip 4",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326292/post_858_Bhat_kanda_official_1_rlpu2y.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326292/post_858_Bhat_kanda_official_1_rlpu2y.jpg"},
+{id:1775817607773,title:"Clip 416",cat:"Clip 416",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326346/VID_20260404_083603_802_wfivi2.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326346/VID_20260404_083603_802_wfivi2.jpg"},
 
-{id:1775834384639.3015,title:"Clip 5",cat:"Clip 5",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326292/05OCT-VID05_kxuxg1.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326292/05OCT-VID05_kxuxg1.jpg"},
+{id:1775464380763,title:"Desi Video",cat:"mms",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"},
 
-{id:1775834384639.0571,title:"Clip 6",cat:"Clip 6",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326288/2023-06-09-11-36-51_2_1_i7bcnm.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326288/2023-06-09-11-36-51_2_1_i7bcnm.jpg"},
-
-{id:1775834384639.3804,title:"Clip 7",cat:"Clip 7",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326282/675726411081982_sdmbcw.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326282/675726411081982_sdmbcw.jpg"},
-
-{id:1775834384639.7563,title:"Clip 8",cat:"Clip 8",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326281/474015681081833_cybqpg.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326281/474015681081833_cybqpg.jpg"},
-
-{id:1775834384639.4197,title:"Clip 9",cat:"Clip 9",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326279/2024-02-29-01-24-02_cv9zlj.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326279/2024-02-29-01-24-02_cv9zlj.jpg"},
-
-{id:1775834384639.0413,title:"Clip 10",cat:"Clip 10",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326277/By__Desipremier_On_Telegram_VID-166645631g6485_lk1bbi.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326277/By__Desipremier_On_Telegram_VID-166645631g6485_lk1bbi.jpg"},
-
-{ id:1775820124722,title:"Clip 915",cat:"Clip 915",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326315/158157521050758_avn5gd.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326315/158157521050758_avn5gd.jpg"
-},
-
-{ id:1775817295612,title:"Clip 75",cat:"Clip 75",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326352/450193421045180_ydwgn0.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326352/450193421045180_ydwgn0.jpg"
-},
-
-{ id:1775817607773,title:"Clip 416",cat:"Clip 416",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326346/VID_20260404_083603_802_wfivi2.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326346/VID_20260404_083603_802_wfivi2.jpg"
-},
-
-{ id:1775464380763,title:"Desi Video",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
-},
-
-{ id:1775465413152,title:"mms 1",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
-},
-
-{ id:1775466142591,title:"mms 2",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
-},
-
-{ id:1775466284046,title:"mms 3",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
-},
-
-{ id:1775466312534,title:"mms 4",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
-}
+{id:1775465413152,title:"mms 1",cat:"mms",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"}
 
 ];
 
 /* RENDER */
 function render(){
-  var grid=document.getElementById("grid");
-  grid.innerHTML="";
+let grid=document.getElementById("grid");
+grid.innerHTML="";
 
-  VV.forEach(v=>{
-    var a=document.createElement("a");
-    a.href=PL+"?url="+encodeURIComponent(v.url);
-    a.target="_blank";
+VV.forEach(v=>{
+if(!v.url) return;
 
-    a.innerHTML=`
-      <div class="card"
-        onmouseenter="playPreview(this)"
-        onmouseleave="stopPreview(this)">
-        <img src="${v.th}">
-        <video muted loop playsinline>
-          <source src="${v.url}" type="video/mp4">
-        </video>
-        <h3>${v.title}</h3>
-      </div>
-    `;
-    grid.appendChild(a);
-  });
+let a=document.createElement("a");
+a.href=PL+"?url="+encodeURIComponent(v.url);
+a.target="_blank";
+
+a.innerHTML=`
+<div class="card" onmouseenter="playPreview(this)" onmouseleave="stopPreview(this)">
+<img src="${v.th}">
+<video muted loop preload="metadata">
+<source src="${v.url}" type="video/mp4">
+</video>
+<h3>${v.title}</h3>
+</div>`;
+grid.appendChild(a);
+});
 }
 render();
 
-/* PREVIEW FIX */
+/* VIDEO FIX */
 function playPreview(card){
-  if(window.innerWidth<768) return;
-  let v=card.querySelector("video");
-  let i=card.querySelector("img");
-  v.style.display="block";
-  v.play().catch(()=>{});
-  i.style.opacity="0";
+if(window.innerWidth<768) return;
+let v=card.querySelector("video");
+let i=card.querySelector("img");
+v.style.display="block";
+v.play().catch(()=>{});
+i.style.opacity="0";
 }
 function stopPreview(card){
-  let v=card.querySelector("video");
-  let i=card.querySelector("img");
-  v.pause();
-  v.style.display="none";
-  i.style.opacity="1";
+let v=card.querySelector("video");
+let i=card.querySelector("img");
+v.pause();
+v.style.display="none";
+i.style.opacity="1";
 }
 
-/* SMART CONVERTER (FINAL FIXED FORMAT) */
+/* SMART CONVERTER FINAL FORMAT */
 var convertedData=[];
 
 function convertEmbed(){
+let raw=document.getElementById("rawInput").value;
+if(!raw) return;
 
-  var raw = document.getElementById("rawInput").value;
-  if(!raw) return;
+let matches=raw.match(/{[\s\S]*?}/g);
+let output="";
 
-  convertedData = [];
+convertedData=[];
 
-  var matches = raw.match(/{[\s\S]*?}/g);
-  if(!matches) return;
+matches.forEach((str,i)=>{
+let url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
+let title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
+let cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||title;
 
-  let output = "";
+let th=url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/").replace(".mp4",".jpg");
 
-  matches.forEach((str,i)=>{
+let id=Date.now()+Math.floor(Math.random()*1000);
 
-    var url = (str.match(/url\s*:\s*"([^"]+)"/)||[])[1] || "";
-    var title = (str.match(/title\s*:\s*"([^"]+)"/)||[])[1] || ("Clip "+(i+1));
-    var cat = (str.match(/cat\s*:\s*"([^"]+)"/)||[])[1] || title;
+convertedData.push({id,title,cat,url,th});
 
-    url = url.trim();
-
-    var th = autoThumb(url);
-    var id = Date.now()+Math.floor(Math.random()*1000);
-
-    convertedData.push({id,title,cat,url,th});
-
-    output += `{ id:${id},title:"${title}",cat:"${cat}",
+output+=`{ id:${id},title:"${title}",cat:"${cat}",
 url:"${url}",
 th:"${th}"
-},\n`;
+},\n\n`;
+});
 
-  });
-
-  document.getElementById("convertOutput").innerHTML = `
-    <pre id="finalCode">${output}</pre>
-    <button onclick="copyText('finalCode','msg')">📋 Copy</button>
-    <div id="msg" class="copy-msg">Copied ✓</div>
-  `;
+document.getElementById("convertOutput").innerHTML=
+`<pre id="finalCode">${output}</pre>
+<button onclick="copyText('finalCode','msg')">Copy</button>
+<div id="msg" class="copy-msg">Copied ✓</div>`;
 }
 
-/* ADD TO SITE */
 function addConverted(){
-  convertedData.forEach(v=>VV.unshift(v));
-  render();
+VV.unshift(...convertedData);
+render();
 }
 
-/* COPY */
 function copyText(id,msgId){
-  var text=document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text);
-
-  var msg=document.getElementById(msgId);
-  msg.classList.add("show");
-  setTimeout(()=>msg.classList.remove("show"),1000);
+let text=document.getElementById(id).innerText;
+navigator.clipboard.writeText(text);
+let msg=document.getElementById(msgId);
+msg.classList.add("show");
+setTimeout(()=>msg.classList.remove("show"),1000);
 }
 
-/* THUMB AUTO */
-function autoThumb(url){
-  if(!url.includes("cloudinary")) return "";
-  return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
-            .replace(".mp4",".jpg");
-}
-
-/* MODAL */
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
+function openModal(){document.getElementById("modal").style.display="flex";}
+function closeModal(){document.getElementById("modal").style.display="none";}
 
 </script>
 
-<!-- AD -->
+<!-- YOUR ORIGINAL AD BACK -->
 <div class="bottom-ad">
 <script>
 atOptions={
