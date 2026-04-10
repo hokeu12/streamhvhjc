@@ -17,7 +17,6 @@ body{
 .top{
   display:flex;
   justify-content:space-between;
-  align-items:center;
   padding:15px;
 }
 
@@ -96,12 +95,21 @@ button{
   border:none;
 }
 
+/* OUTPUT STYLE (NEW CLEAN LOOK) */
+#convertOutput pre{
+  background:#000;
+  padding:10px;
+  border-radius:6px;
+  font-size:12px;
+  white-space:pre-wrap;
+  color:#00ff9c;
+}
+
 /* COPY FEEDBACK */
 .copy-msg{
   font-size:12px;
   color:#4caf50;
   opacity:0;
-  transition:opacity .4s;
 }
 .copy-msg.show{
   opacity:1;
@@ -111,12 +119,10 @@ button{
 .bottom-ad{
   position:fixed;
   bottom:0;
-  left:0;
   width:100%;
   display:flex;
   justify-content:center;
   background:#000;
-  z-index:9999;
 }
 </style>
 </head>
@@ -133,29 +139,6 @@ button{
 <!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
-
-    <h3>Manual Upload</h3>
-
-    <input id="title" placeholder="Title">
-    <input id="cat" placeholder="Category">
-    <input id="url" placeholder="Video URL">
-    <input id="th" placeholder="Thumbnail URL">
-
-    <button onclick="generate()">Generate Code</button>
-
-    <div id="codeBox"></div>
-
-    <hr>
-
-    <h3>Bulk Upload (JSON)</h3>
-    <textarea id="bulkData" placeholder='[{"title":"Video","url":"..."}]'></textarea>
-
-    <button onclick="copyText('bulkData','bulkMsg')">📋 Copy JSON</button>
-    <div id="bulkMsg" class="copy-msg">Copied ✓</div>
-
-    <button onclick="bulkUpload()">Upload Bulk</button>
-
-    <hr>
 
     <h3>Smart Converter</h3>
     <textarea id="rawInput" placeholder="Paste multiple embed objects..."></textarea>
@@ -174,7 +157,9 @@ button{
 
 var PL="player.html";
 
-/* VIDEO DATA */
+/* VIDEO DATA (SHORT FOR DEMO, KEEP YOUR FULL ONE) */
+var VV=[ 
+  /* VIDEO DATA */
 var VV=[
 
 {id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"},
@@ -245,7 +230,6 @@ th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1
 
 ];
 
-
 /* RENDER */
 function render(){
   var grid=document.getElementById("grid");
@@ -261,7 +245,9 @@ function render(){
         onmouseenter="playPreview(this)"
         onmouseleave="stopPreview(this)">
         <img src="${v.th}">
-        <video muted loop><source src="${v.url}"></video>
+        <video muted loop playsinline>
+          <source src="${v.url}" type="video/mp4">
+        </video>
         <h3>${v.title}</h3>
       </div>
     `;
@@ -270,13 +256,13 @@ function render(){
 }
 render();
 
-/* PREVIEW */
+/* PREVIEW FIX */
 function playPreview(card){
   if(window.innerWidth<768) return;
   let v=card.querySelector("video");
   let i=card.querySelector("img");
   v.style.display="block";
-  v.play();
+  v.play().catch(()=>{});
   i.style.opacity="0";
 }
 function stopPreview(card){
@@ -287,81 +273,45 @@ function stopPreview(card){
   i.style.opacity="1";
 }
 
-/* MANUAL GENERATE */
-function generate(){
-
-  var t=val("title");
-  var c=val("cat");
-  var u=val("url");
-  var th=val("th");
-
-  var id=Date.now();
-
-  var code=`{id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}"},`;
-
-  document.getElementById("codeBox").innerHTML=`
-    <div id="embedText">${code}</div>
-    <button onclick="copyText('embedText','manualMsg')">📋 Copy</button>
-    <div id="manualMsg" class="copy-msg">Copied ✓</div>
-  `;
-
-  VV.unshift({id:id,title:t,cat:c,url:u,th:th});
-  render();
-}
-
-/* BULK UPLOAD */
-function bulkUpload(){
-  try{
-    var arr=JSON.parse(val("bulkData"));
-
-    arr.forEach(v=>{
-      VV.unshift({
-        id:Date.now()+Math.random(),
-        title:v.title||"Untitled",
-        cat:v.cat||"",
-        url:v.url,
-        th:v.th||autoThumb(v.url)
-      });
-    });
-
-    render();
-  }catch(e){}
-}
-
-/* SMART CONVERTER (MULTI FIX) */
+/* SMART CONVERTER (FINAL FIXED FORMAT) */
 var convertedData=[];
 
 function convertEmbed(){
 
-  var raw=val("rawInput");
+  var raw = document.getElementById("rawInput").value;
   if(!raw) return;
 
-  convertedData=[];
+  convertedData = [];
 
   var matches = raw.match(/{[\s\S]*?}/g);
   if(!matches) return;
 
-  matches.forEach((str,i)=>{
-    var url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
-    var title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
-    var cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
-    var th=autoThumb(url);
+  let output = "";
 
-    convertedData.push({
-      id:Date.now()+Math.random(),
-      title:title,
-      cat:cat,
-      url:url,
-      th:th
-    });
+  matches.forEach((str,i)=>{
+
+    var url = (str.match(/url\s*:\s*"([^"]+)"/)||[])[1] || "";
+    var title = (str.match(/title\s*:\s*"([^"]+)"/)||[])[1] || ("Clip "+(i+1));
+    var cat = (str.match(/cat\s*:\s*"([^"]+)"/)||[])[1] || title;
+
+    url = url.trim();
+
+    var th = autoThumb(url);
+    var id = Date.now()+Math.floor(Math.random()*1000);
+
+    convertedData.push({id,title,cat,url,th});
+
+    output += `{ id:${id},title:"${title}",cat:"${cat}",
+url:"${url}",
+th:"${th}"
+},\n`;
+
   });
 
-  var jsonOutput = JSON.stringify(convertedData,null,2);
-
-  document.getElementById("convertOutput").innerHTML=`
-    <pre id="finalCode">${jsonOutput}</pre>
-    <button onclick="copyText('finalCode','convMsg')">📋 Copy JSON</button>
-    <div id="convMsg" class="copy-msg">Copied ✓</div>
+  document.getElementById("convertOutput").innerHTML = `
+    <pre id="finalCode">${output}</pre>
+    <button onclick="copyText('finalCode','msg')">📋 Copy</button>
+    <div id="msg" class="copy-msg">Copied ✓</div>
   `;
 }
 
@@ -371,27 +321,21 @@ function addConverted(){
   render();
 }
 
-/* COPY FUNCTION */
+/* COPY */
 function copyText(id,msgId){
-  var text=document.getElementById(id).innerText || document.getElementById(id).value;
-
+  var text=document.getElementById(id).innerText;
   navigator.clipboard.writeText(text);
 
   var msg=document.getElementById(msgId);
   msg.classList.add("show");
-
-  setTimeout(()=>msg.classList.remove("show"),1200);
+  setTimeout(()=>msg.classList.remove("show"),1000);
 }
 
-/* HELPERS */
+/* THUMB AUTO */
 function autoThumb(url){
   if(!url.includes("cloudinary")) return "";
   return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
             .replace(".mp4",".jpg");
-}
-
-function val(id){
-  return document.getElementById(id).value;
 }
 
 /* MODAL */
@@ -404,7 +348,7 @@ function closeModal(){
 
 </script>
 
-<!-- BOTTOM AD -->
+<!-- AD -->
 <div class="bottom-ad">
 <script>
 atOptions={
