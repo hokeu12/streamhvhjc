@@ -7,7 +7,7 @@
 
 <style>
 body{margin:0;font-family:sans-serif;background:#0b0b12;color:#fff;padding-bottom:90px;}
-.top{display:flex;justify-content:space-between;padding:15px;}
+.top{display:flex;justify-content:space-between;align-items:center;padding:15px;}
 button{background:#e8293e;border:none;color:#fff;padding:8px 12px;border-radius:6px;cursor:pointer;}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px;}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr);}}
@@ -37,14 +37,34 @@ button{background:#e8293e;border:none;color:#fff;padding:8px 12px;border-radius:
 <div class="modal" id="modal">
 <div class="modal-box">
 
-<h3>Smart Converter (FIXED)</h3>
-<textarea id="rawInput" placeholder="Paste objects here..."></textarea>
+<h3>Manual Upload</h3>
+<input id="title" placeholder="Title">
+<input id="cat" placeholder="Category">
+<input id="url" placeholder="Video URL">
+<input id="th" placeholder="Thumbnail URL">
 
+<button onclick="generate()">Generate Code</button>
+<div id="codeBox"></div>
+
+<hr>
+
+<h3>Bulk Upload (JSON)</h3>
+<textarea id="bulkData" placeholder='[{"title":"Video","url":"..."}]'></textarea>
+<button onclick="copyText('bulkData','bulkMsg')">📋 Copy JSON</button>
+<div id="bulkMsg" class="copy-msg">Copied ✓</div>
+<button onclick="bulkUpload()">Upload Bulk</button>
+
+<hr>
+
+<h3>Smart Converter (FINAL)</h3>
+<textarea id="rawInput" placeholder="Paste multiple objects..."></textarea>
 <button onclick="convertEmbed()">Convert</button>
 
 <div id="convertOutput"></div>
 
 <button onclick="addConverted()">Add to Site</button>
+
+<hr>
 
 <button onclick="closeModal()">Close</button>
 
@@ -57,8 +77,7 @@ var PL="player.html";
 
 /* VIDEO DATA */
 var VV=[
-{id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"},
-{id:1775817079262,title:"Clip 744",cat:"Clip 744",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326371/38307397DiskWala_File_0af9b1fd3a_wqmgo4.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326371/38307397DiskWala_File_0af9b1fd3a_wqmgo4.jpg"}
+{id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"}
 ];
 
 /* RENDER */
@@ -91,56 +110,82 @@ let v=c.querySelector("video"),i=c.querySelector("img");
 v.pause();v.style.display="none";i.style.opacity="1";
 }
 
-/* SMART CONVERTER (FINAL FIX) */
+/* MANUAL */
+function generate(){
+let t=val("title"),c=val("cat"),u=val("url").trim(),th=val("th").trim()||autoThumb(u);
+let id=Date.now();
+
+let code=`{ id:${id},title:"${t}",cat:"${c}",
+url:"${u}",
+th:"${th}"
+},`;
+
+document.getElementById("codeBox").innerHTML=`
+<pre id="embedText">${code}</pre>
+<button onclick="copyText('embedText','manualMsg')">📋 Copy</button>
+<div id="manualMsg" class="copy-msg">Copied ✓</div>
+`;
+
+VV.unshift({id:id,title:t,cat:c,url:u,th:th});
+render();
+}
+
+/* BULK */
+function bulkUpload(){
+try{
+let arr=JSON.parse(val("bulkData"));
+arr.forEach(v=>{
+let url=v.url.trim();
+if(!url.includes(".mp4")) return;
+VV.unshift({
+id:Date.now()+Math.random(),
+title:v.title||"Untitled",
+cat:v.cat||"",
+url:url,
+th:v.th||autoThumb(url)
+});
+});
+render();
+}catch(e){alert("Invalid JSON");}
+}
+
+/* SMART CONVERTER */
 var convertedData=[];
 
 function convertEmbed(){
-
-let raw=document.getElementById("rawInput").value;
+let raw=val("rawInput");
 if(!raw) return;
 
 convertedData=[];
-let matches = raw.match(/{[\s\S]*?}/g);
+let matches=raw.match(/{[\s\S]*?}/g);
 if(!matches) return;
 
-let finalCode="";
+let output="";
 
 matches.forEach((str,i)=>{
-
 let url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
 url=url.trim();
-
-if(!url.includes(".mp4")) return; // skip invalid
+if(!url.includes(".mp4")) return;
 
 let title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
 let cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||title;
 
-let th = autoThumb(url);
+let th=autoThumb(url);
 
-let obj={
-id:Date.now()+Math.random(),
-title:title,
-cat:cat,
-url:url,
-th:th
-};
-
+let obj={id:Date.now()+Math.random(),title,cat,url,th};
 convertedData.push(obj);
 
-/* OUTPUT FORMAT EXACT */
-finalCode += `{ id:${obj.id},title:"${obj.title}",cat:"${obj.cat}",
+output+=`{ id:${obj.id},title:"${obj.title}",cat:"${obj.cat}",
 url:"${obj.url}",
 th:"${obj.th}"
 },\n\n`;
-
 });
 
 document.getElementById("convertOutput").innerHTML=`
-<pre id="finalCode">${finalCode}</pre>
-<button onclick="copyText('finalCode','msg')">📋 Copy</button>
-<div id="msg" class="copy-msg">Copied ✓</div>
+<pre id="finalCode">${output}</pre>
+<button onclick="copyText('finalCode','convMsg')">📋 Copy</button>
+<div id="convMsg" class="copy-msg">Copied ✓</div>
 `;
-
 }
 
 /* ADD */
@@ -151,19 +196,20 @@ render();
 
 /* COPY */
 function copyText(id,msgId){
-let text=document.getElementById(id).innerText;
+let text=document.getElementById(id).innerText||document.getElementById(id).value;
 navigator.clipboard.writeText(text);
 let m=document.getElementById(msgId);
 m.classList.add("show");
 setTimeout(()=>m.classList.remove("show"),1200);
 }
 
-/* AUTO THUMB FIX */
+/* HELPERS */
 function autoThumb(url){
 if(!url.includes("cloudinary")) return "";
 return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
 .replace(".mp4",".jpg");
 }
+function val(id){return document.getElementById(id).value;}
 
 /* MODAL */
 function openModal(){document.getElementById("modal").style.display="flex";}
@@ -171,7 +217,7 @@ function closeModal(){document.getElementById("modal").style.display="none";}
 
 </script>
 
-<!-- BOTTOM AD (YOUR ORIGINAL) -->
+<!-- BOTTOM AD -->
 <div class="bottom-ad">
 <script>
 atOptions={
