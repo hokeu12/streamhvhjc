@@ -56,8 +56,8 @@ button{background:#e8293e;border:none;color:#fff;padding:8px 12px;border-radius:
 
 <hr>
 
-<h3>Smart Converter (FINAL)</h3>
-<textarea id="rawInput" placeholder="Paste multiple objects..."></textarea>
+<h3>Smart Converter (FIXED)</h3>
+<textarea id="rawInput" placeholder="Paste messy objects here..."></textarea>
 <button onclick="convertEmbed()">Convert</button>
 
 <div id="convertOutput"></div>
@@ -74,9 +74,7 @@ button{background:#e8293e;border:none;color:#fff;padding:8px 12px;border-radius:
 <script>
 
 var PL="player.html";
-
-/* VIDEO DATA */
-var VV=[
+var VV=[const videos = [
 
 {id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"},
 
@@ -149,10 +147,7 @@ function generate(){
 let t=val("title"),c=val("cat"),u=val("url").trim(),th=val("th").trim()||autoThumb(u);
 let id=Date.now();
 
-let code=`{ id:${id},title:"${t}",cat:"${c}",
-url:"${u}",
-th:"${th}"
-},`;
+let code=`{ id:${id},title:"${t}",cat:"${c}",url:"${u}",th:"${th}" },`;
 
 document.getElementById("codeBox").innerHTML=`
 <pre id="embedText">${code}</pre>
@@ -160,7 +155,7 @@ document.getElementById("codeBox").innerHTML=`
 <div id="manualMsg" class="copy-msg">Copied ✓</div>
 `;
 
-VV.unshift({id:id,title:t,cat:c,url:u,th:th});
+VV.unshift({id,title:t,cat:c,url:u,th});
 render();
 }
 
@@ -169,54 +164,68 @@ function bulkUpload(){
 try{
 let arr=JSON.parse(val("bulkData"));
 arr.forEach(v=>{
-let url=v.url.trim();
-if(!url.includes(".mp4")) return;
+if(!v.url?.includes(".mp4")) return;
 VV.unshift({
 id:Date.now()+Math.random(),
 title:v.title||"Untitled",
 cat:v.cat||"",
-url:url,
-th:v.th||autoThumb(url)
+url:v.url,
+th:v.th||autoThumb(v.url)
 });
 });
 render();
 }catch(e){alert("Invalid JSON");}
 }
 
-/* SMART CONVERTER */
+/* ================= SMART CONVERTER FIX ================= */
+
 var convertedData=[];
+
+function cleanToJSON(str){
+return str
+.replace(/'/g,'"')
+.replace(/([{,]\s*)(\w+)\s*:/g,'$1"$2":')
+.replace(/,\s*}/g,'}')
+.replace(/,\s*]/g,']')
+.trim();
+}
 
 function convertEmbed(){
 let raw=val("rawInput");
 if(!raw) return;
 
 convertedData=[];
-let matches=raw.match(/{[\s\S]*?}/g);
-if(!matches) return;
-
 let output="";
 
-matches.forEach((str,i)=>{
-let url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
-url=url.trim();
-if(!url.includes(".mp4")) return;
+let blocks=raw.match(/{[\s\S]*?}/g);
+if(!blocks) return;
 
-let title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
-let cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||title;
+blocks.forEach((b,i)=>{
+try{
 
-let th=autoThumb(url);
+let jsonStr=cleanToJSON(b);
+let obj=JSON.parse(jsonStr);
 
-let obj={id:Date.now()+Math.random(),title,cat,url,th};
-convertedData.push(obj);
+if(!obj.url || !obj.url.includes(".mp4")) return;
 
-output+=`{ id:${obj.id},title:"${obj.title}",cat:"${obj.cat}",
-url:"${obj.url}",
-th:"${obj.th}"
-},\n\n`;
+let finalObj={
+id:Date.now()+Math.random(),
+title:obj.title||("Clip "+(i+1)),
+cat:obj.cat||obj.title||"",
+url:obj.url,
+th:obj.th||autoThumb(obj.url)
+};
+
+convertedData.push(finalObj);
+
+output+=`{ id:${finalObj.id},title:"${finalObj.title}",cat:"${finalObj.cat}",url:"${finalObj.url}",th:"${finalObj.th}" },\n\n`;
+
+}catch(e){}
+
 });
 
 document.getElementById("convertOutput").innerHTML=`
-<pre id="finalCode">${output}</pre>
+<pre id="finalCode">${output || "No valid data found"}</pre>
 <button onclick="copyText('finalCode','convMsg')">📋 Copy</button>
 <div id="convMsg" class="copy-msg">Copied ✓</div>
 `;
@@ -230,8 +239,9 @@ render();
 
 /* COPY */
 function copyText(id,msgId){
-let text=document.getElementById(id).innerText||document.getElementById(id).value;
-navigator.clipboard.writeText(text);
+let el=document.getElementById(id);
+navigator.clipboard.writeText(el.innerText||el.value);
+
 let m=document.getElementById(msgId);
 m.classList.add("show");
 setTimeout(()=>m.classList.remove("show"),1200);
@@ -240,7 +250,8 @@ setTimeout(()=>m.classList.remove("show"),1200);
 /* HELPERS */
 function autoThumb(url){
 if(!url.includes("cloudinary")) return "";
-return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
+return url
+.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
 .replace(".mp4",".jpg");
 }
 function val(id){return document.getElementById(id).value;}
