@@ -70,7 +70,6 @@ button{
   margin:0;
 }
 
-/* MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -96,18 +95,14 @@ button{
   border:none;
 }
 
-/* COPY FEEDBACK */
 .copy-msg{
   font-size:12px;
   color:#4caf50;
   opacity:0;
   transition:opacity .4s;
 }
-.copy-msg.show{
-  opacity:1;
-}
+.copy-msg.show{opacity:1;}
 
-/* AD */
 .bottom-ad{
   position:fixed;
   bottom:0;
@@ -130,7 +125,6 @@ button{
 
 <div class="grid" id="grid"></div>
 
-<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="modal-box">
 
@@ -147,18 +141,8 @@ button{
 
     <hr>
 
-    <h3>Bulk Upload (JSON)</h3>
-    <textarea id="bulkData" placeholder='[{"title":"Video","url":"..."}]'></textarea>
-
-    <button onclick="copyText('bulkData','bulkMsg')">📋 Copy JSON</button>
-    <div id="bulkMsg" class="copy-msg">Copied ✓</div>
-
-    <button onclick="bulkUpload()">Upload Bulk</button>
-
-    <hr>
-
-    <h3>Smart Converter</h3>
-    <textarea id="rawInput" placeholder="Paste multiple embed objects..."></textarea>
+    <h3>Smart Converter (FIXED)</h3>
+    <textarea id="rawInput" placeholder="Paste ANY messy objects..."></textarea>
 
     <button onclick="convertEmbed()">Convert</button>
 
@@ -175,82 +159,12 @@ button{
 var PL="player.html";
 
 /* VIDEO DATA */
-var VV=[
-
-{id:1775817048469,title:"Clip 870",cat:"Clip 870",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326381/default_deeceh.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326381/default_deeceh.jpg"},
-
-{id:1775817079262,title:"Clip 744",cat:"Clip 744",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326371/38307397DiskWala_File_0af9b1fd3a_wqmgo4.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326371/38307397DiskWala_File_0af9b1fd3a_wqmgo4.jpg"},
-
-{id:1775817111728,title:"Clip 283",cat:"Clip 283",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326368/46593737DiskWala_File_405eef97a3_do34yb.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326368/46593737DiskWala_File_405eef97a3_do34yb.jpg"},
-
-{id:1775834384638.6653,title:"Clip 1",cat:"Clip 1",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326303/2776_y4duuv.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326303/2776_y4duuv.jpg"},
-
-{id:1775834384639.8726,title:"Clip 2",cat:"Clip 2",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326298/2023-09-23-12-36-47_1_oqw7s6.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326298/2023-09-23-12-36-47_1_oqw7s6.jpg"},
-
-{id:1775834384639.6382,title:"Clip 3",cat:"Clip 3",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326298/2023-09-23-12-36-47_1_oqw7s6.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326298/2023-09-23-12-36-47_1_oqw7s6.jpg"},
-
-{id:1775834384639.252,title:"Clip 4",cat:"Clip 4",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326292/post_858_Bhat_kanda_official_1_rlpu2y.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326292/post_858_Bhat_kanda_official_1_rlpu2y.jpg"},
-
-{id:1775834384639.3015,title:"Clip 5",cat:"Clip 5",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326292/05OCT-VID05_kxuxg1.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326292/05OCT-VID05_kxuxg1.jpg"},
-
-{id:1775834384639.0571,title:"Clip 6",cat:"Clip 6",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326288/2023-06-09-11-36-51_2_1_i7bcnm.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326288/2023-06-09-11-36-51_2_1_i7bcnm.jpg"},
-
-{id:1775834384639.3804,title:"Clip 7",cat:"Clip 7",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326282/675726411081982_sdmbcw.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326282/675726411081982_sdmbcw.jpg"},
-
-{id:1775834384639.7563,title:"Clip 8",cat:"Clip 8",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326281/474015681081833_cybqpg.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326281/474015681081833_cybqpg.jpg"},
-
-{id:1775834384639.4197,title:"Clip 9",cat:"Clip 9",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326279/2024-02-29-01-24-02_cv9zlj.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326279/2024-02-29-01-24-02_cv9zlj.jpg"},
-
-{id:1775834384639.0413,title:"Clip 10",cat:"Clip 10",url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326277/By__Desipremier_On_Telegram_VID-166645631g6485_lk1bbi.mp4",th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326277/By__Desipremier_On_Telegram_VID-166645631g6485_lk1bbi.jpg"},
-
-{ id:1775820124722,title:"Clip 915",cat:"Clip 915",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326315/158157521050758_avn5gd.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326315/158157521050758_avn5gd.jpg"
-},
-
-{ id:1775817295612,title:"Clip 75",cat:"Clip 75",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326352/450193421045180_ydwgn0.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326352/450193421045180_ydwgn0.jpg"
-},
-
-{ id:1775817607773,title:"Clip 416",cat:"Clip 416",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326346/VID_20260404_083603_802_wfivi2.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326346/VID_20260404_083603_802_wfivi2.jpg"
-},
-
-{ id:1775464380763,title:"Desi Video",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326398/By__Desi4d_On_Telegram__79_h8zwxw.jpg"
-},
-
-{ id:1775465413152,title:"mms 1",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775326342/2023-10-31-14-44-38_3_dzvcp9.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775326342/2023-10-31-14-44-38_3_dzvcp9.jpg"
-},
-
-{ id:1775466142591,title:"mms 2",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327963/Download_VID_20251012_WA0054_mp4_d6gkdz.jpg"
-},
-
-{ id:1775466284046,title:"mms 3",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327915/71165637college_girl_ke_bf_se_sambhog_ka_hindi_xxx_porn_video_yyb0cr.jpg"
-},
-
-{ id:1775466312534,title:"mms 4",cat:"mms",
-url:"https://res.cloudinary.com/dabgszxqm/video/upload/v1775327866/PBLBBHOT_2_ngmeyn.mp4",
-th:"https://res.cloudinary.com/dabgszxqm/video/upload/c_fill,ar_9:16,g_auto,so_1/v1775327866/PBLBBHOT_2_ngmeyn.jpg"
-}
-
-];
-
+var VV=[];
 
 /* RENDER */
 function render(){
   var grid=document.getElementById("grid");
   grid.innerHTML="";
-
   VV.forEach(v=>{
     var a=document.createElement("a");
     a.href=PL+"?url="+encodeURIComponent(v.url);
@@ -272,24 +186,19 @@ render();
 
 /* PREVIEW */
 function playPreview(card){
-  if(window.innerWidth<768) return;
+  if(window.innerWidth<768)return;
   let v=card.querySelector("video");
   let i=card.querySelector("img");
-  v.style.display="block";
-  v.play();
-  i.style.opacity="0";
+  v.style.display="block"; v.play(); i.style.opacity="0";
 }
 function stopPreview(card){
   let v=card.querySelector("video");
   let i=card.querySelector("img");
-  v.pause();
-  v.style.display="none";
-  i.style.opacity="1";
+  v.pause(); v.style.display="none"; i.style.opacity="1";
 }
 
-/* MANUAL GENERATE */
+/* MANUAL (UNCHANGED) */
 function generate(){
-
   var t=val("title");
   var c=val("cat");
   var u=val("url");
@@ -309,78 +218,82 @@ function generate(){
   render();
 }
 
-/* BULK UPLOAD */
-function bulkUpload(){
-  try{
-    var arr=JSON.parse(val("bulkData"));
-
-    arr.forEach(v=>{
-      VV.unshift({
-        id:Date.now()+Math.random(),
-        title:v.title||"Untitled",
-        cat:v.cat||"",
-        url:v.url,
-        th:v.th||autoThumb(v.url)
-      });
-    });
-
-    render();
-  }catch(e){}
-}
-
-/* SMART CONVERTER (MULTI FIX) */
+/* 🔥 SMART CONVERTER FINAL FIX */
 var convertedData=[];
 
 function convertEmbed(){
 
   var raw=val("rawInput");
-  if(!raw) return;
+  if(!raw){
+    alert("Paste something bro");
+    return;
+  }
 
   convertedData=[];
 
+  // CLEAN INPUT (handles trailing commas, brackets etc)
+  raw = raw.replace(/,\s*]/g,"]");
+  raw = raw.replace(/,\s*}/g,"}");
+
   var matches = raw.match(/{[\s\S]*?}/g);
-  if(!matches) return;
+
+  if(!matches){
+    document.getElementById("convertOutput").innerHTML="❌ No valid data found";
+    return;
+  }
+
+  var output="";
 
   matches.forEach((str,i)=>{
-    var url=(str.match(/url\s*:\s*"([^"]+)"/)||[])[1]||"";
-    var title=(str.match(/title\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
-    var cat=(str.match(/cat\s*:\s*"([^"]+)"/)||[])[1]||("Clip "+(i+1));
-    var th=autoThumb(url);
 
-    convertedData.push({
+    var url=(str.match(/url\s*:\s*["']([^"']+)["']/)||[])[1]||"";
+
+    if(!url || !url.includes(".mp4")) return;
+
+    var title=(str.match(/title\s*:\s*["']([^"']*)["']/)||[])[1]||("Clip "+(i+1));
+    var cat=(str.match(/cat\s*:\s*["']([^"']*)["']/)||[])[1]||title;
+
+    var th=(str.match(/th\s*:\s*["']([^"']+)["']/)||[])[1]||autoThumb(url);
+
+    var obj={
       id:Date.now()+Math.random(),
       title:title,
       cat:cat,
       url:url,
       th:th
-    });
+    };
+
+    convertedData.push(obj);
+
+    // ✅ OUTPUT VALID JS OBJECT LITERAL
+    output+=`{id:${obj.id},title:"${obj.title}",cat:"${obj.cat}",url:"${obj.url}",th:"${obj.th}"},\n`;
   });
 
-  var jsonOutput = JSON.stringify(convertedData,null,2);
+  if(!output){
+    document.getElementById("convertOutput").innerHTML="❌ No valid mp4 found";
+    return;
+  }
 
   document.getElementById("convertOutput").innerHTML=`
-    <pre id="finalCode">${jsonOutput}</pre>
-    <button onclick="copyText('finalCode','convMsg')">📋 Copy JSON</button>
+    <pre id="finalCode">${output}</pre>
+    <button onclick="copyText('finalCode','convMsg')">📋 Copy</button>
     <div id="convMsg" class="copy-msg">Copied ✓</div>
   `;
 }
 
-/* ADD TO SITE */
+/* ADD */
 function addConverted(){
   convertedData.forEach(v=>VV.unshift(v));
   render();
 }
 
-/* COPY FUNCTION */
+/* COPY */
 function copyText(id,msgId){
-  var text=document.getElementById(id).innerText || document.getElementById(id).value;
-
+  var text=document.getElementById(id).innerText;
   navigator.clipboard.writeText(text);
-
-  var msg=document.getElementById(msgId);
-  msg.classList.add("show");
-
-  setTimeout(()=>msg.classList.remove("show"),1200);
+  var m=document.getElementById(msgId);
+  m.classList.add("show");
+  setTimeout(()=>m.classList.remove("show"),1200);
 }
 
 /* HELPERS */
@@ -389,33 +302,13 @@ function autoThumb(url){
   return url.replace("/video/upload/","/video/upload/c_fill,ar_9:16,g_auto,so_1/")
             .replace(".mp4",".jpg");
 }
-
-function val(id){
-  return document.getElementById(id).value;
-}
+function val(id){return document.getElementById(id).value;}
 
 /* MODAL */
-function openModal(){
-  document.getElementById("modal").style.display="flex";
-}
-function closeModal(){
-  document.getElementById("modal").style.display="none";
-}
+function openModal(){document.getElementById("modal").style.display="flex";}
+function closeModal(){document.getElementById("modal").style.display="none";}
 
 </script>
-
-<!-- BOTTOM AD -->
-<div class="bottom-ad">
-<script>
-atOptions={
-key:"3407cae831ba7308f892ce3e722d876e",
-format:"iframe",
-height:50,
-width:320
-};
-</script>
-<script src="https://www.highperformanceformat.com/3407cae831ba7308f892ce3e722d876e/invoke.js"></script>
-</div>
 
 </body>
 </html>
