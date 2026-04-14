@@ -71,6 +71,15 @@ button{
   margin:5px;
 }
 
+/* URL INPUT ROW */
+.url-row{
+  display:flex;
+  gap:5px;
+}
+.url-row input{
+  flex:1;
+}
+
 /* MODAL */
 .modal{
   position:fixed;
@@ -139,7 +148,14 @@ button{
 <h3>Manual Upload</h3>
 <input id="title" placeholder="Title">
 <input id="cat" placeholder="Category">
-<input id="url" placeholder="Video URL">
+
+<!-- 🔥 UPDATED URL INPUT -->
+<div class="url-row">
+  <input id="url" placeholder="Video URL">
+  <button onclick="pasteURL()">📋</button>
+  <button onclick="clearURL()">❌</button>
+</div>
+
 <input id="th" placeholder="Thumbnail URL">
 
 <button onclick="generate()">Generate Code</button>
@@ -199,7 +215,7 @@ let totalPages=Math.ceil(VV.length/perPage)||1;
 document.getElementById("pageNum").innerText="Page "+currentPage+" / "+totalPages;
 }
 
-/* PAGINATION CONTROLS */
+/* PAGINATION */
 function nextPage(){
 if(currentPage < Math.ceil(VV.length/perPage)){
 currentPage++;
@@ -222,6 +238,19 @@ v.style.display="block";v.play();i.style.opacity="0";
 function stopPreview(c){
 let v=c.querySelector("video"),i=c.querySelector("img");
 v.pause();v.style.display="none";i.style.opacity="1";
+}
+
+/* 🔥 PASTE + CLEAR */
+async function pasteURL(){
+try{
+let text=await navigator.clipboard.readText();
+document.getElementById("url").value=text;
+}catch{
+alert("Clipboard blocked");
+}
+}
+function clearURL(){
+document.getElementById("url").value="";
 }
 
 /* MANUAL UPLOAD */
